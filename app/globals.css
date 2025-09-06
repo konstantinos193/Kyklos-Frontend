@@ -229,11 +229,52 @@
   
   /* Professional spacing utilities */
   .section-padding {
-    @apply py-16 md:py-20 lg:py-24;
+    @apply py-12 sm:py-16 md:py-20 lg:py-24;
   }
   
   .container-padding {
-    @apply px-4 sm:px-6 lg:px-8;
+    @apply px-3 sm:px-4 md:px-6 lg:px-8;
+  }
+
+  /* Mobile-first responsive utilities */
+  .mobile-full-width {
+    @apply w-full sm:w-auto;
+  }
+
+  .mobile-center {
+    @apply text-center sm:text-left;
+  }
+
+  .mobile-stack {
+    @apply flex flex-col sm:flex-row;
+  }
+
+  .mobile-grid-1 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+
+  .mobile-grid-2 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .mobile-text-responsive {
+    @apply text-sm sm:text-base md:text-lg lg:text-xl;
+  }
+
+  .mobile-heading-responsive {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl;
+  }
+
+  .mobile-padding-responsive {
+    @apply p-4 sm:p-6 md:p-8 lg:p-10;
+  }
+
+  .mobile-margin-responsive {
+    @apply m-4 sm:m-6 md:m-8 lg:m-10;
+  }
+
+  .mobile-gap-responsive {
+    @apply gap-4 sm:gap-6 md:gap-8 lg:gap-10;
   }
   
   /* Professional shadows */

@@ -4,7 +4,7 @@ import { StatisticsCards, HeroImage, StatisticsTitle, statisticsContent } from "
 
 export function StatisticsSection() {
   return (
-    <section id="statistics" className="py-20 bg-gradient-to-br from-slate-800 to-slate-900">
+    <section id="statistics" className="py-16 sm:py-20 bg-gradient-to-br from-slate-800 to-slate-900">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Title */}
         <StatisticsTitle 
@@ -13,14 +13,14 @@ export function StatisticsSection() {
         />
         
         {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           {/* Left - Statistics Cards */}
-          <div>
+          <div className="order-2 lg:order-1">
             <StatisticsCards stats={statisticsContent.stats} />
           </div>
           
           {/* Right - Hero Image with Banners */}
-          <div>
+          <div className="order-1 lg:order-2">
             <HeroImage content={statisticsContent} />
           </div>
         </div>

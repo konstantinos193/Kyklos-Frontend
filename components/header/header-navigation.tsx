@@ -44,7 +44,7 @@ export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: H
 
   if (isMobile) {
     return (
-      <div className="space-y-1">
+      <div className="space-y-2">
         {navigation.map((item) => {
           if (item.isDropdown && item.dropdownItems) {
             return (
@@ -67,22 +67,11 @@ export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: H
                   handleNavClick(item.href);
                 }
               }}
-              className={`block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200 ${
-                activeSection === item.href ? "font-semibold" : ""
+              className={`block px-4 py-4 text-lg font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-all duration-200 touch-manipulation ${
+                activeSection === item.href ? "font-semibold bg-yellow-50 border-l-4 border-[#E7B109]" : "border-l-4 border-transparent"
               }`}
               style={{
                 color: activeSection === item.href ? '#E7B109' : '#374151',
-                backgroundColor: activeSection === item.href ? '#FEF3C7' : 'transparent'
-              }}
-              onMouseEnter={(e) => {
-                if (activeSection !== item.href) {
-                  e.currentTarget.style.color = '#E7B109';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (activeSection !== item.href) {
-                  e.currentTarget.style.color = '#374151';
-                }
               }}
             >
               {item.label}
