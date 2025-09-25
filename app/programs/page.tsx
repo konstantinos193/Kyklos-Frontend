@@ -1,4 +1,4 @@
-import { ProgramsSection } from "@/components/programs-section";
+import { ProgramsSection } from "@/components/programs/programs-section";
 
 export default function ProgramsPage() {
   return (
