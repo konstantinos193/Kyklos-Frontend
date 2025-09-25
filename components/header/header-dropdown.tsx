@@ -15,9 +15,10 @@ interface HeaderDropdownProps {
   items: DropdownItem[];
   isMobile?: boolean;
   className?: string;
+  triggerClassName?: string;
 }
 
-export function HeaderDropdown({ label, items, isMobile = false, className = "" }: HeaderDropdownProps) {
+export function HeaderDropdown({ label, items, isMobile = false, className = "", triggerClassName = "" }: HeaderDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -105,7 +106,7 @@ export function HeaderDropdown({ label, items, isMobile = false, className = "" 
     >
       <button
         onClick={handleToggle}
-        className="flex items-center text-sm font-medium text-gray-700 transition-colors duration-200 group px-3 py-2 rounded-md hover:bg-gray-50"
+        className={`flex items-center text-sm font-medium text-gray-700 transition-colors duration-200 group rounded-md ${triggerClassName}`}
                   onMouseEnter={(e) => e.currentTarget.style.color = '#E7B109'}
                   onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}
       >

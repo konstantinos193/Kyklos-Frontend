@@ -1,36 +1,36 @@
-export interface ProgramFeature {
+export interface Subject {
   name: string;
-  description?: string;
+  hours: number;
+  description: string;
+  icon: string;
 }
 
-export interface Program {
+export interface ProgramLevel {
   id: string;
+  name: string;
+  description: string;
+  duration: string;
+  subjects: Subject[];
+  totalHours: number;
+  color: "blue" | "green" | "purple" | "yellow" | "red" | "indigo";
+}
+
+export interface ProgramFeature {
   title: string;
   description: string;
-  icon: React.ComponentType<{ className?: string }>;
-  gradient: string;
-  features: ProgramFeature[];
-  price?: {
-    amount: string;
-    period: string;
-  };
-  duration?: string;
-  level: "beginner" | "intermediate" | "advanced" | "all";
-  isPopular?: boolean;
+  icon: string;
 }
 
-export interface ProgramsSectionData {
-  header: {
-    title: string;
-    subtitle: string;
-    description: string;
-  };
-  programs: Program[];
-  cta: {
-    label: string;
-    href: string;
-  };
-  background: {
-    gradient: string;
-  };
+export interface ProgramCTA {
+  label: string;
+  href: string;
+  description: string;
+}
+
+export interface ProgramData {
+  title: string;
+  subtitle: string;
+  levels: ProgramLevel[];
+  features: ProgramFeature[];
+  cta: ProgramCTA;
 }

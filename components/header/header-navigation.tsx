@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { usePathname } from "next/navigation";
 import { NavigationItem } from "./types";
 import { HeaderDropdown } from "./header-dropdown";
 
@@ -11,40 +12,83 @@ interface HeaderNavigationProps {
 }
 
 export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: HeaderNavigationProps) {
-  const [activeSection, setActiveSection] = useState("");
+  const [activeSection, setActiveSection] = useState<string>("");
+  const pathname = usePathname();
+  const [maxVisible, setMaxVisible] = useState<number>(9);
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = navigation.map(item => item.href.substring(1));
-      const currentSection = sections.find(section => {
-        const element = document.getElementById(section);
+      const sections = navigation
+        .filter((item) => item.href.startsWith('#'))
+        .map((item) => item.href.replace('#', ''));
+
+      let currentSection = "";
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId);
         if (element) {
           const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            currentSection = `#${sectionId}`;
+            break;
+          }
         }
-        return false;
-      });
-      setActiveSection(currentSection ? `#${currentSection}` : "");
+      }
+      setActiveSection(currentSection);
     };
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Check initial state
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, [navigation]);
 
+  useEffect(() => {
+    const computeMaxVisible = () => {
+      const width = window.innerWidth;
+      // Even more conservative to ensure no overlap at lg
+      if (width >= 1536) return setMaxVisible(8); // 2xl
+      if (width >= 1280) return setMaxVisible(6); // xl
+      if (width >= 1024) return setMaxVisible(4); // lg
+      return setMaxVisible(navigation.length);
+    };
+    computeMaxVisible();
+    window.addEventListener("resize", computeMaxVisible);
+    return () => window.removeEventListener("resize", computeMaxVisible);
+  }, [navigation.length]);
+
   const handleNavClick = (href: string) => {
-    if (href.startsWith('#')) {
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
+    const id = href.replace('#', '');
+    const element = document.getElementById(id);
+    if (element) {
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - headerOffset;
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+      setActiveSection(href);
     }
-    // For external links, let the browser handle navigation
+  };
+
+  const { visibleNav } = useMemo(() => {
+    if (isMobile) {
+      return { visibleNav: navigation } as { visibleNav: NavigationItem[] };
+    }
+    const pinnedLabels = ["Ποιοί Είμαστε", "Πρόγραμμα Σπουδών", "Επικοινωνία"];
+    const pinned = navigation.filter((n) => pinnedLabels.includes(n.label));
+    const others = navigation.filter((n) => !pinnedLabels.includes(n.label));
+
+    const slotsLeft = Math.max(0, maxVisible - pinned.length);
+    const vis = [...pinned, ...others.slice(0, slotsLeft)];
+
+    return { visibleNav: vis };
+  }, [navigation, maxVisible, isMobile]);
+
+  const isItemActive = (item: NavigationItem) => {
+    if (item.href.startsWith('#')) return activeSection === item.href;
+    return item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
   };
 
   if (isMobile) {
     return (
-      <div className="space-y-2">
+      <div className="flex flex-col space-y-4">
         {navigation.map((item) => {
           if (item.isDropdown && item.dropdownItems) {
             return (
@@ -57,6 +101,8 @@ export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: H
             );
           }
 
+          const isActive = isItemActive(item);
+
           return (
             <a
               key={item.href}
@@ -67,12 +113,11 @@ export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: H
                   handleNavClick(item.href);
                 }
               }}
-              className={`block px-4 py-4 text-lg font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition-all duration-200 touch-manipulation ${
-                activeSection === item.href ? "font-semibold bg-yellow-50 border-l-4 border-[#E7B109]" : "border-l-4 border-transparent"
+              className={`text-base font-medium px-3 py-2 rounded-md transition-colors duration-200 ${
+                isActive
+                  ? 'text-[#E7B109] bg-[#FEF3C7]'
+                  : 'text-gray-700 hover:text-[#E7B109] hover:bg-gray-50'
               }`}
-              style={{
-                color: activeSection === item.href ? '#E7B109' : '#374151',
-              }}
             >
               {item.label}
             </a>
@@ -83,8 +128,8 @@ export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: H
   }
 
   return (
-    <div className="flex items-center space-x-8">
-      {navigation.map((item) => {
+    <div className="flex items-center gap-2.5 xl:gap-3.5 2xl:gap-4 whitespace-nowrap">
+      {visibleNav.map((item) => {
         if (item.isDropdown && item.dropdownItems) {
           return (
             <HeaderDropdown
@@ -92,9 +137,12 @@ export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: H
               label={item.label}
               items={item.dropdownItems}
               isMobile={false}
+              triggerClassName="px-1.5 xl:px-2 py-1.5"
             />
           );
         }
+
+        const isActive = isItemActive(item);
 
         return (
           <a
@@ -106,23 +154,11 @@ export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: H
                 handleNavClick(item.href);
               }
             }}
-            className={`text-sm font-medium text-gray-700 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-50 ${
-              activeSection === item.href ? "font-semibold" : ""
+            className={`text-[13px] sm:text-sm font-medium px-1.5 xl:px-2 py-1.5 transition-colors duration-200 border-b-2 ${
+              isActive
+                ? 'text-[#E7B109] border-[#E7B109]'
+                : 'text-gray-700 border-transparent hover:text-[#E7B109] hover:border-[#FDE68A]'
             }`}
-            style={{
-              color: activeSection === item.href ? '#E7B109' : '#374151',
-              backgroundColor: activeSection === item.href ? '#FEF3C7' : 'transparent'
-            }}
-            onMouseEnter={(e) => {
-              if (activeSection !== item.href) {
-                e.currentTarget.style.color = '#E7B109';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (activeSection !== item.href) {
-                e.currentTarget.style.color = '#374151';
-              }
-            }}
           >
             {item.label}
           </a>

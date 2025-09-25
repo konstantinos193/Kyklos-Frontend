@@ -2,6 +2,8 @@ import type React from "react"
 import type { Metadata, Viewport } from "next"
 import "./globals.css"
 import ClientLayout from "./ClientLayout"
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -208,7 +210,9 @@ export default function RootLayout({
           __html: JSON.stringify(structuredData),
         }}
       />
+      <Header />
       {children}
+      <Footer />
     </ClientLayout>
   )
 }

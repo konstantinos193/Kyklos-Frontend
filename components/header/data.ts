@@ -1,40 +1,83 @@
-import { HeaderData } from "./types";
+export interface NavigationItem {
+  label: string;
+  href: string;
+  isDropdown?: boolean;
+  dropdownItems?: NavigationItem[];
+}
+
+export interface HeaderData {
+  logo: {
+    symbol: string;
+    text: string;
+    href: string;
+    image?: string;
+  };
+  navigation: NavigationItem[];
+  mobileTitle?: string;
+}
 
 export const headerData: HeaderData = {
   logo: {
-    symbol: "Κ",
-    text: "ΚΥΚΛΟΣ Εκπαίδευση",
+    symbol: "🎓",
+    text: "EduCenter",
     href: "/",
-    image: "/placeholder-logo.png"
   },
   navigation: [
-    { label: "Αρχική", href: "/" },
     { 
-      label: "Προγράμματα", 
-      href: "javascript:void(0)",
+      label: "Ποιοί Είμαστε", 
+      href: "/about"
+    },
+    { 
+      label: "Επικαιρότητα", 
+      href: "/current-affairs",
       isDropdown: true,
       dropdownItems: [
-        { label: "Γυμνάσιο", href: "#programs", description: "Προγράμματα για μαθητές Γυμνασίου" },
-        { label: "Λύκειο", href: "#programs", description: "Προγράμματα για μαθητές Λυκείου" },
-        { label: "Ελληνική Γλώσσα", href: "#programs", description: "Εξειδικευμένα μαθήματα γλώσσας" },
-        { label: "Λογοτεχνία", href: "#programs", description: "Μαθήματα λογοτεχνίας και ανάλυσης" }
+        { label: "Εκπαιδευτικά Νέα", href: "/current-affairs/education" },
+        { label: "Πανεπιστήμια", href: "/current-affairs/universities" }
       ]
     },
-    { label: "Σχετικά", href: "#about" },
+    { label: "Επιτυχόντες", href: "/success-stories" },
     { 
-      label: "Υπηρεσίες", 
-      href: "javascript:void(0)",
+      label: "Πρόγραμμα Σπουδών", 
+      href: "/curriculum",
       isDropdown: true,
       dropdownItems: [
-        { label: "Εξατομικευμένη Διδασκαλία", href: "#about", description: "Προσωποποιημένη εκπαίδευση" },
-        { label: "Προετοιμασία Πανελληνίων", href: "#about", description: "Εξειδικευμένη προετοιμασία" },
-        { label: "Θεματολόγια", href: "#about", description: "Πλήρη θεματολόγια εξετάσεων" },
-        { label: "Online Μαθήματα", href: "#about", description: "Διαδικτυακά μαθήματα" }
+        { label: "Μαθηματικά", href: "/curriculum/mathematics" },
+        { label: "Φυσική", href: "/curriculum/physics" },
+        { label: "Χημεία", href: "/curriculum/chemistry" },
+        { label: "Βιολογία", href: "/curriculum/biology" }
       ]
     },
-    { label: "Επιτυχόντες", href: "#testimonials" },
-    { label: "Επικοινωνία", href: "#contact" }
-  ],
-  buttons: [],
-  mobileMenuTitle: "Μενού"
+    { 
+      label: "Θέματα Πανελληνίων", 
+      href: "/panhellenic",
+      isDropdown: true,
+      dropdownItems: [
+        { label: "Θέματα 2024", href: "/panhellenic/2024" },
+        { label: "Θέματα 2023", href: "/panhellenic/2023" },
+        { label: "Αρχείο Θεμάτων", href: "/panhellenic/archive" }
+      ]
+    },
+    { 
+      label: "Νέα - Εκδηλώσεις", 
+      href: "/news",
+      isDropdown: true,
+      dropdownItems: [
+        { label: "Ανακοινώσεις", href: "/news/announcements" },
+        { label: "Εκδηλώσεις", href: "/news/events" },
+        { label: "Σεμινάρια", href: "/news/seminars" }
+      ]
+    },
+    { label: "Επικοινωνία", href: "/contact" }
+  ]
+};
+
+// Configuration for responsive behavior
+export const headerConfig = {
+  pinnedLabels: ["Ποιοί Είμαστε", "Πρόγραμμα Σπουδών", "Επικοινωνία"],
+  maxVisibleByBreakpoint: {
+    lg: 5,
+    xl: 7,
+    "2xl": 8
+  }
 };

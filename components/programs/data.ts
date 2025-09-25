@@ -1,97 +1,147 @@
-import { BookIcon, StarIcon, GlobeIcon, ZapIcon } from "@/components/icons";
-import { ProgramsSectionData } from "./types";
+import { ProgramData, ProgramLevel, Subject } from "./types";
 
-export const programsData: ProgramsSectionData = {
-  header: {
-    title: "Τα Προγράμματά μας",
-    subtitle: "Εξειδικευμένη Εκπαίδευση",
-    description: "Επιλέξτε από τα εξειδικευμένα εκπαιδευτικά προγράμματά μας που σχεδιάστηκαν για να καλύψουν κάθε εκπαιδευτική ανάγκη."
-  },
-  programs: [
+export const programsData: ProgramData = {
+  title: "Προγράμματα Σπουδών",
+  subtitle: "Εξειδικευμένα μαθήματα Ελληνικής Γλώσσας & Λογοτεχνίας",
+  levels: [
     {
-      id: "lykeio",
-      title: "Λύκειο",
-      description: "Προετοιμασία για Πανελλήνιες εξετάσεις με εξειδικευμένους καθηγητές και σύγχρονα μεθόδους διδασκαλίας.",
-      icon: BookIcon,
-      gradient: "from-blue-600 to-blue-700",
-      features: [
-        { name: "Μαθηματικά", description: "Άλγεβρα, Γεωμετρία, Μαθηματική Ανάλυση" },
-        { name: "Φυσική", description: "Μηχανική, Ηλεκτρομαγνητισμός, Κβαντική" },
-        { name: "Χημεία", description: "Οργανική, Ανόργανη, Φυσικοχημεία" },
-        { name: "Βιολογία", description: "Ανθρώπινη Βιολογία, Γενετική, Οικολογία" }
+      id: "gymnasium-greek",
+      name: "Ελληνική Γλώσσα - Γυμνάσιο",
+      description: "Βασικές αρχές ελληνικής γλώσσας και λογοτεχνίας",
+      duration: "3 έτη",
+      subjects: [
+        {
+          name: "Α' Γυμνασίου",
+          hours: 2,
+          description: "Βασική γραμματική και ανάγνωση",
+          icon: "📚"
+        },
+        {
+          name: "Β' Γυμνασίου", 
+          hours: 3,
+          description: "Σύνταξη και λογοτεχνική ανάλυση",
+          icon: "📖"
+        },
+        {
+          name: "Γ' Γυμνασίου",
+          hours: 3,
+          description: "Σύνθεση και προετοιμασία για Λύκειο",
+          icon: "✍️"
+        }
       ],
-      price: {
-        amount: "€120",
-        period: "μήνα"
-      },
-      duration: "10 μήνες",
-      level: "advanced",
-      isPopular: true
+      totalHours: 8,
+      color: "blue"
     },
     {
-      id: "gymnasio",
-      title: "Γυμνάσιο",
-      description: "Ολοκληρωμένη εκπαιδευτική υποστήριξη για όλα τα μαθήματα με προσωποποιημένη προσέγγιση.",
-      icon: StarIcon,
-      gradient: "from-emerald-600 to-emerald-700",
-      features: [
-        { name: "Μαθηματικά", description: "Αλγεβρικές εξισώσεις και γεωμετρία" },
-        { name: "Φυσικές Επιστήμες", description: "Φυσική, Χημεία, Βιολογία" },
-        { name: "Γλώσσα", description: "Ελληνική γλώσσα και λογοτεχνία" },
-        { name: "Ιστορία", description: "Ελληνική και παγκόσμια ιστορία" }
+      id: "lyceum-greek",
+      name: "Ελληνική Γλώσσα - Λύκειο",
+      description: "Εξειδικευμένη εκπαίδευση για πανελλήνιες εξετάσεις",
+      duration: "3 έτη",
+      subjects: [
+        {
+          name: "Α' Λυκείου",
+          hours: 2,
+          description: "Έκθεση και λογοτεχνία",
+          icon: "✍️"
+        },
+        {
+          name: "Β' Λυκείου",
+          hours: 2,
+          description: "Αρχαία ελληνική γλώσσα",
+          icon: "🏛️"
+        },
+        {
+          name: "Γ' Λυκείου",
+          hours: 2,
+          description: "Προετοιμασία πανελληνίων",
+          icon: "🎓"
+        }
       ],
-      price: {
-        amount: "€90",
-        period: "μήνα"
-      },
-      duration: "9 μήνες",
-      level: "intermediate"
+      totalHours: 6,
+      color: "yellow"
     },
     {
-      id: "foreign-languages",
-      title: "Ξένες Γλώσσες",
-      description: "Αγγλικά, Γερμανικά, Γαλλικά με πιστοποιημένους εκπαιδευτές και σύγχρονα εργαλεία.",
-      icon: GlobeIcon,
-      gradient: "from-purple-600 to-purple-700",
-      features: [
-        { name: "Αγγλικά", description: "Cambridge, IELTS, TOEFL προετοιμασία" },
-        { name: "Γερμανικά", description: "Goethe-Zertifikat προετοιμασία" },
-        { name: "Γαλλικά", description: "DELF, DALF προετοιμασία" },
-        { name: "Πιστοποιήσεις", description: "Διεθνείς πιστοποιήσεις γλωσσομάθειας" }
+      id: "mathematics",
+      name: "Μαθηματικά",
+      description: "Συστηματική εκπαίδευση μαθηματικών",
+      duration: "6 έτη",
+      subjects: [
+        {
+          name: "Γυμνάσιο",
+          hours: 3,
+          description: "Βασικά μαθηματικά και γεωμετρία",
+          icon: "📐"
+        },
+        {
+          name: "Α' Λυκείου",
+          hours: 3,
+          description: "Άλγεβρα και γεωμετρία",
+          icon: "🔢"
+        },
+        {
+          name: "Β' Λυκείου",
+          hours: 4,
+          description: "Μαθηματικά κατεύθυνσης",
+          icon: "📊"
+        }
       ],
-      price: {
-        amount: "€80",
-        period: "μήνα"
-      },
-      duration: "6-12 μήνες",
-      level: "all"
+      totalHours: 10,
+      color: "green"
     },
     {
-      id: "special-programs",
-      title: "Ειδικά Προγράμματα",
-      description: "Εντατικά προγράμματα και ιδιαίτερα μαθήματα προσαρμοσμένα στις ανάγκες κάθε μαθητή.",
-      icon: ZapIcon,
-      gradient: "from-amber-600 to-amber-700",
-      features: [
-        { name: "Εντατικά", description: "Συμπυκνωμένα προγράμματα" },
-        { name: "Ιδιαίτερα", description: "Προσωποποιημένη διδασκαλία" },
-        { name: "Ομαδικά", description: "Μικρές ομάδες 3-5 ατόμων" },
-        { name: "Online", description: "Διαδικτυακά μαθήματα" }
+      id: "sciences",
+      name: "Θετικές Επιστήμες",
+      description: "Φυσική, Χημεία, Βιολογία",
+      duration: "6 έτη",
+      subjects: [
+        {
+          name: "Φυσική",
+          hours: 2,
+          description: "Βασικές αρχές και πειράματα",
+          icon: "⚡"
+        },
+        {
+          name: "Χημεία",
+          hours: 1,
+          description: "Οργανική και ανόργανη χημεία",
+          icon: "🧪"
+        },
+        {
+          name: "Βιολογία",
+          hours: 1,
+          description: "Επιστήμες υγείας",
+          icon: "🧬"
+        }
       ],
-      price: {
-        amount: "€150",
-        period: "μήνα"
-      },
-      duration: "Προσαρμοζόμενη",
-      level: "all",
-      isPopular: false
+      totalHours: 4,
+      color: "purple"
+    }
+  ],
+  features: [
+    {
+      title: "Εξατομικευμένη Διδασκαλία",
+      description: "Προσωποποιημένα προγράμματα για κάθε μαθητή",
+      icon: "🎯"
+    },
+    {
+      title: "Εμπειρογνωμοσύνη",
+      description: "25+ χρόνια εμπειρίας στην εκπαίδευση",
+      icon: "👨‍🏫"
+    },
+    {
+      title: "95% Επιτυχία",
+      description: "Αποδεδειγμένα αποτελέσματα στις εξετάσεις",
+      icon: "🏆"
+    },
+    {
+      title: "Σύγχρονα Εργαλεία",
+      description: "Ηλεκτρονικά μέσα και βιβλιοθήκη",
+      icon: "💻"
     }
   ],
   cta: {
-    label: "Δείτε Όλα τα Προγράμματα",
-    href: "#all-programs"
-  },
-  background: {
-    gradient: "bg-gradient-to-b from-slate-50 to-white"
+    label: "Επικοινωνήστε μαζί μας",
+    href: "#contact",
+    description: "Μάθετε περισσότερα για τα προγράμματά μας"
   }
 };

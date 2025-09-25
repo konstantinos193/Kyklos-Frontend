@@ -1,7 +1,7 @@
+export { ProgramsSection } from "./programs-section";
 export { ProgramsHeader } from "./programs-header";
-export { ProgramCard } from "./program-card";
 export { ProgramsGrid } from "./programs-grid";
-export { ProgramsCTA } from "./programs-cta";
-export { ProgramsBackground } from "./programs-background";
+export { ProgramsFeatures } from "./programs-features";
+export { ProgramLevelCard } from "./program-level-card";
 export { programsData } from "./data";
-export type { ProgramsSectionData, Program, ProgramFeature } from "./types";
+export type { ProgramData, ProgramLevel, Subject, ProgramFeature, ProgramCTA } from "./types";
