@@ -2,35 +2,9 @@ import { CoursesContent } from "./types";
 
 export const coursesContent: CoursesContent = {
   title: "Πρόγραμμα Σπουδών",
-  subtitle: "Γυμνασίου - Λυκείου",
+  subtitle: "Λυκείου - Γυμνασίου - ΕΠΑΛ",
   courses: [
-    {
-      id: "g-lykeiou-epal",
-      title: "Γ' Λυκείου",
-      category: "epal",
-      categoryLabel: "#ΕΠΑΛ",
-      duration: "9 ώρες",
-      applyHref: "#contact",
-      moreHref: "#g-lykeiou-epal"
-    },
-    {
-      id: "b-lykeioy-epal",
-      title: "Β' Λυκείου",
-      category: "epal",
-      categoryLabel: "#ΕΠΑΛ",
-      duration: "9 ώρες",
-      applyHref: "#contact",
-      moreHref: "#b-lykeioy-epal"
-    },
-    {
-      id: "a-lykeioy-epal",
-      title: "Α' Λυκείου",
-      category: "epal",
-      categoryLabel: "#ΕΠΑΛ",
-      duration: "6 ώρες",
-      applyHref: "#contact",
-      moreHref: "#a-lykeioy-epal"
-    },
+    // Λύκειο (top)
     {
       id: "g-lykeioy",
       title: "Γ' Λυκείου",
@@ -60,6 +34,7 @@ export const coursesContent: CoursesContent = {
       applyHref: "#contact",
       moreHref: "#a-lykeioy"
     },
+    // Γυμνάσιο (middle)
     {
       id: "g-gymnasioy",
       title: "Γ' Γυμνασίου",
@@ -86,6 +61,34 @@ export const coursesContent: CoursesContent = {
       duration: "6 ώρες",
       applyHref: "#contact",
       moreHref: "#a-gymnasioy"
+    },
+    // ΕΠΑΛ (bottom)
+    {
+      id: "g-lykeiou-epal",
+      title: "Γ' Λυκείου",
+      category: "epal",
+      categoryLabel: "#ΕΠΑΛ",
+      duration: "9 ώρες",
+      applyHref: "#contact",
+      moreHref: "#g-lykeiou-epal"
+    },
+    {
+      id: "b-lykeioy-epal",
+      title: "Β' Λυκείου",
+      category: "epal",
+      categoryLabel: "#ΕΠΑΛ",
+      duration: "9 ώρες",
+      applyHref: "#contact",
+      moreHref: "#b-lykeioy-epal"
+    },
+    {
+      id: "a-lykeioy-epal",
+      title: "Α' Λυκείου",
+      category: "epal",
+      categoryLabel: "#ΕΠΑΛ",
+      duration: "6 ώρες",
+      applyHref: "#contact",
+      moreHref: "#a-lykeioy-epal"
     }
   ]
 };
