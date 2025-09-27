@@ -18,7 +18,7 @@ export function FooterLogo({ logo, socialLinks }: FooterLogoProps) {
               alt={logo.text}
               width={64}
               height={64}
-              className="w-full h-full object-contain bg-white"
+              className="w-full h-full object-contain"
             />
           </div>
         ) : (
