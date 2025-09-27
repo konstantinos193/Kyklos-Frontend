@@ -12,13 +12,13 @@ export function FooterLogo({ logo, socialLinks }: FooterLogoProps) {
     <div className="space-y-6">
       <div className="flex items-center gap-4 mb-6">
         {logo.image ? (
-          <div className="w-16 h-16 bg-gradient-to-br from-[#E7B109] to-[#D97706] rounded-2xl flex items-center justify-center shadow-lg p-2">
+          <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg">
             <Image
               src={logo.image}
               alt={logo.text}
-              width={48}
-              height={48}
-              className="w-full h-full object-contain"
+              width={64}
+              height={64}
+              className="w-full h-full object-contain bg-white"
             />
           </div>
         ) : (
