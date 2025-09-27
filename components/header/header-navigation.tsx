@@ -115,8 +115,8 @@ export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: H
               }}
               className={`text-base font-medium px-3 py-2 rounded-md transition-colors duration-200 ${
                 isActive
-                  ? 'text-[#E7B109] bg-[#FEF3C7]'
-                  : 'text-gray-700 hover:text-[#E7B109] hover:bg-gray-50'
+                  ? 'text-[#CE3B49] bg-[#FEF2F2]'
+                  : 'text-gray-700 hover:text-[#CE3B49] hover:bg-gray-50'
               }`}
             >
               {item.label}
@@ -156,8 +156,8 @@ export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: H
             }}
             className={`text-[13px] sm:text-sm font-medium px-1.5 xl:px-2 py-1.5 transition-colors duration-200 border-b-2 ${
               isActive
-                ? 'text-[#E7B109] border-[#E7B109]'
-                : 'text-gray-700 border-transparent hover:text-[#E7B109] hover:border-[#FDE68A]'
+                ? 'text-[#CE3B49] border-[#CE3B49]'
+                : 'text-gray-700 border-transparent hover:text-[#CE3B49] hover:border-[#FECACA]'
             }`}
           >
             {item.label}
