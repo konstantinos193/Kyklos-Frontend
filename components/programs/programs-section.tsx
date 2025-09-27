@@ -1,6 +1,5 @@
 "use client";
 
-import { ProgramsHeader } from "./programs-header";
 import { ProgramsFeatures } from "./programs-features";
 import { programsData } from "./data";
 
@@ -8,11 +7,6 @@ export function ProgramsSection() {
   return (
     <section id="programs" className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-slate-50 via-white to-blue-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <ProgramsHeader 
-          title={programsData.title}
-          subtitle={programsData.subtitle}
-        />
 
 
         {/* Features */}
