@@ -139,19 +139,19 @@ export default function RootLayout({
     "url": "https://kyklosedu.gr",
     "logo": "https://kyklosedu.gr/logo.png",
     "image": "https://kyklosedu.gr/og-image.jpg",
-    "telephone": "Phone Number",
+    "telephone": "2681026671",
     "email": "Email Address",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Street Address",
-      "addressLocality": "City, Postal Code",
+      "streetAddress": "Βασιλέως Κωνσταντίνου 42",
+      "addressLocality": "Αρτα",
       "addressCountry": "GR"
     },
     "foundingDate": "1999",
     "numberOfEmployees": "5-10",
     "areaServed": {
       "@type": "City",
-      "name": "Athens, Greece"
+      "name": "Αρτα, Greece"
     },
     "serviceType": [
       "Ελληνική Γλώσσα",

@@ -18,11 +18,11 @@ export const footerData: FooterData = {
     { label: "Επικοινωνία", href: "#contact" }
   ],
   contact: {
-    phone: "Phone Number",
+    phone: "2681026671",
     email: "Email Address",
     address: {
-      street: "Street Address",
-      city: "City, Postal Code"
+      street: "Βασιλέως Κωνσταντίνου 42",
+      city: "Αρτα"
     }
   },
   socialLinks: [
