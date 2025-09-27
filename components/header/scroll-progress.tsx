@@ -22,7 +22,7 @@ export function ScrollProgress() {
     <div className="fixed top-0 left-0 right-0 z-[60] h-1 transform origin-left transition-transform duration-150 ease-out"
          style={{ 
            transform: `scaleX(${scrollProgress / 100})`,
-           background: 'linear-gradient(to right, #E7B109, #D97706, #B45309)'
+           background: 'linear-gradient(to right, #CE3B49, #D97706, #B45309)'
          }}
     />
   );

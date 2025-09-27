@@ -66,7 +66,7 @@ export function HeaderDropdown({ label, items, isMobile = false, className = "",
         <button
           onClick={handleToggle}
           className="flex items-center justify-between w-full px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
-                  onMouseEnter={(e) => e.currentTarget.style.color = '#E7B109'}
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#CE3B49'}
                   onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}
         >
           {label}
@@ -85,7 +85,7 @@ export function HeaderDropdown({ label, items, isMobile = false, className = "",
                 href={item.href}
                 onClick={handleItemClick}
                 className="block px-3 py-2 text-sm text-gray-600 hover:bg-white hover:text-gray-900 rounded-md transition-colors duration-200"
-                onMouseEnter={(e) => e.currentTarget.style.color = '#E7B109'}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#CE3B49'}
                 onMouseLeave={(e) => e.currentTarget.style.color = '#6B7280'}
               >
                 {item.label}
@@ -107,7 +107,7 @@ export function HeaderDropdown({ label, items, isMobile = false, className = "",
       <button
         onClick={handleToggle}
         className={`flex items-center text-sm font-medium text-gray-700 transition-colors duration-200 group rounded-md ${triggerClassName}`}
-                  onMouseEnter={(e) => e.currentTarget.style.color = '#E7B109'}
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#CE3B49'}
                   onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}
       >
         {label}
@@ -123,7 +123,7 @@ export function HeaderDropdown({ label, items, isMobile = false, className = "",
                 href={item.href}
                 onClick={handleItemClick}
                 className="flex items-start px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-200 group"
-                  onMouseEnter={(e) => e.currentTarget.style.color = '#E7B109'}
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#CE3B49'}
                   onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}
               >
                 <div className="flex-1">

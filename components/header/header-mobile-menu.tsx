@@ -95,12 +95,12 @@ export function HeaderMobileMenu({
                     e.preventDefault();
                     handleNavClick(item.href);
                   }}
-                  className={`font-medium py-2 px-3 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#E7B109] focus:ring-offset-2 ${
+                  className={`font-medium py-2 px-3 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#CE3B49] focus:ring-offset-2 ${
                     isScrolled 
                       ? "text-[#5A5A5A] hover:text-[#1F1F1F] hover:bg-gray-100" 
                       : "text-[#5A5A5A] hover:text-[#1F1F1F] hover:bg-gray-100"
                   } ${
-                    activeSection === item.href ? "text-[#E7B109] bg-[#E7B109]/10" : ""
+                    activeSection === item.href ? "text-[#CE3B49] bg-[#CE3B49]/10" : ""
                   }`}
                   aria-current={activeSection === item.href ? "page" : undefined}
                 >
@@ -118,8 +118,8 @@ export function HeaderMobileMenu({
                     className={`${
                       button.variant === "outline"
                         ? "border-[#0047AB] text-[#0047AB] hover:bg-[#0047AB] hover:text-white"
-                        : "bg-gradient-to-r from-[#E7B109] to-[#FFD84D] text-white hover:from-[#B8860B] hover:to-[#E7B109]"
-                    } transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#E7B109] focus:ring-offset-2`}
+                        : "bg-gradient-to-r from-[#CE3B49] to-[#FF6B6B] text-white hover:from-[#B91C1C] hover:to-[#CE3B49]"
+                    } transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#CE3B49] focus:ring-offset-2`}
                   >
                     {button.label}
                   </Button>
