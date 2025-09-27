@@ -95,13 +95,13 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo.png", sizes: "any" },
       { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+      { url: "/logo.png", sizes: "192x192", type: "image/png" },
+      { url: "/logo.png", sizes: "512x512", type: "image/png" },
     ],
     apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/logo.png", sizes: "180x180", type: "image/png" },
     ],
     other: [
       {
@@ -137,7 +137,7 @@ export default function RootLayout({
     "alternateName": "Φροντιστήριο Κύκλος",
     "description": "Εξειδικευμένο φροντιστήριο Ελληνικής Γλώσσας & Λογοτεχνίας. 25+ έτη εμπειρίας, 95% επιτυχία, 500+ μαθητές.",
     "url": "https://kyklosedu.gr",
-    "logo": "https://kyklosedu.gr/icon-512.png",
+    "logo": "https://kyklosedu.gr/logo.png",
     "image": "https://kyklosedu.gr/og-image.jpg",
     "telephone": "Phone Number",
     "email": "Email Address",

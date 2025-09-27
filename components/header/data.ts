@@ -19,8 +19,9 @@ export interface HeaderData {
 export const headerData: HeaderData = {
   logo: {
     symbol: "🎓",
-    text: "EduCenter",
+    text: "ΚΥΚΛΟΣ Εκπαίδευση",
     href: "/",
+    image: "/logo.png",
   },
   navigation: [
     { 
