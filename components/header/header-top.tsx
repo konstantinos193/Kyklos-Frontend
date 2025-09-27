@@ -12,11 +12,11 @@ export function HeaderTop() {
             <ul className="flex flex-wrap items-center gap-4">
               <li className="flex items-center gap-1 hover:text-gray-800 transition-colors">
                 <LocationIcon className="w-3 h-3" />
-                <span>Your Address Here</span>
+                <span>Βασιλέως Κωνσταντίνου 42, Αρτα</span>
               </li>
               <li className="flex items-center gap-1 hover:text-gray-800 transition-colors">
                 <PhoneIcon className="w-3 h-3" />
-                <span>Your Phone Number</span>
+                <span>2681026671</span>
               </li>
               <li className="flex items-center gap-1 hover:text-gray-800 transition-colors">
                 <MailIcon className="w-3 h-3" />
