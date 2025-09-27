@@ -4,7 +4,7 @@ import { LocationIcon, PhoneIcon, MailIcon, FacebookIcon, InstagramIcon } from "
 
 export function HeaderTop() {
   return (
-    <div className="bg-gray-50 text-gray-600 py-2 text-sm">
+    <div className="bg-slate-200 text-slate-600 py-2 text-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-wrap justify-between items-center">
           {/* Left side - Contact Info */}

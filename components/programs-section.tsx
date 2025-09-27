@@ -8,7 +8,7 @@ import { programsData } from "./programs/data";
 
 export function ProgramsSection() {
   return (
-    <section id="programs" className="section-padding relative overflow-hidden bg-slate-50">
+    <section id="programs" className="section-padding relative overflow-hidden bg-slate-200">
       {/* Background */}
       <ProgramsBackground gradient={programsData.background.gradient} />
       

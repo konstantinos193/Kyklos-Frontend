@@ -5,7 +5,7 @@ import { programsData } from "./data";
 
 export function ProgramsSection() {
   return (
-    <section id="programs" className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-slate-50 via-white to-blue-50">
+    <section id="programs" className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-slate-200 via-slate-100 to-slate-200">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
 
 
