@@ -28,7 +28,7 @@ export function FooterLogo({ logo, socialLinks }: FooterLogoProps) {
         )}
         <div>
           <h3 className="text-2xl font-bold text-white mb-1">{logo.text}</h3>
-          <div className="w-12 h-1 bg-gradient-to-r from-[#E7B109] to-[#D97706] rounded-full"></div>
+          <div className="w-12 h-1 bg-gradient-to-r from-[#E7B109] via-[#CE3B49] to-[#D97706] rounded-full"></div>
         </div>
       </div>
       

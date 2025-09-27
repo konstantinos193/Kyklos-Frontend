@@ -30,7 +30,7 @@ export function HeaderTop() {
             <a 
               href="#" 
               className="transition-colors font-medium"
-              style={{ color: '#E7B109' }}
+              style={{ color: '#CE3B49' }}
             >
               My Account
             </a>

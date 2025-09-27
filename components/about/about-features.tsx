@@ -50,7 +50,7 @@ export function AboutFeatures({
                 <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
                   Γιατί να Επιλέξετε το <span className="text-[#E7B109]">ΚΥΚΛΟΣ</span>;
                 </h2>
-                <div className="w-16 h-1 bg-gradient-to-r from-[#E7B109] to-[#D97706] rounded-full"></div>
+                <div className="w-16 h-1 bg-gradient-to-r from-[#E7B109] via-[#CE3B49] to-[#D97706] rounded-full"></div>
                 <p className="mt-6 text-lg text-slate-600 leading-relaxed">
                   Η προσέγγισή μας βασίζεται σε αποδεδειγμένες μεθόδους και σύγχρονα εργαλεία 
                   για να εξασφαλίσουμε την επιτυχία κάθε μαθητή.
@@ -63,7 +63,7 @@ export function AboutFeatures({
                   <div key={idx} className="group">
                     <div className="flex items-start gap-4 p-6 bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-100 hover:border-[#E7B109]/20">
                       <div className="flex-shrink-0">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#E7B109] to-[#D97706] flex items-center justify-center text-white text-xl shadow-md group-hover:scale-110 transition-transform duration-300">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#E7B109] via-[#CE3B49] to-[#D97706] flex items-center justify-center text-white text-xl shadow-md group-hover:scale-110 transition-transform duration-300">
                           {item.icon}
                         </div>
                       </div>
@@ -81,7 +81,7 @@ export function AboutFeatures({
               <div className="pt-4">
                 <a
                   href="/contact"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-[#E7B109] to-[#D97706] hover:from-[#D97706] hover:to-[#B45309] text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-[#E7B109] via-[#CE3B49] to-[#D97706] hover:from-[#D97706] hover:via-[#B45309] hover:to-[#CE3B49] text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
                 >
                   Μάθετε Περισσότερα
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
