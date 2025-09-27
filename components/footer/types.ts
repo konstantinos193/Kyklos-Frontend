@@ -24,6 +24,7 @@ export interface FooterData {
     text: string;
     symbol: string;
     description: string;
+    image?: string;
   };
   quickLinks: QuickLink[];
   contact: ContactInfo;

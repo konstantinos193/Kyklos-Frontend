@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { FooterData } from "./types";
 import { FacebookIcon, InstagramIcon, TwitterIcon, LinkedInIcon } from "@/components/icons";
 
@@ -10,9 +11,21 @@ export function FooterLogo({ logo, socialLinks }: FooterLogoProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-16 h-16 bg-gradient-to-br from-[#E7B109] to-[#D97706] rounded-2xl flex items-center justify-center shadow-lg">
-          <span className="text-white font-bold text-3xl">{logo.symbol}</span>
-        </div>
+        {logo.image ? (
+          <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg">
+            <Image
+              src={logo.image}
+              alt={logo.text}
+              width={64}
+              height={64}
+              className="w-full h-full object-contain bg-white"
+            />
+          </div>
+        ) : (
+          <div className="w-16 h-16 bg-gradient-to-br from-[#E7B109] to-[#D97706] rounded-2xl flex items-center justify-center shadow-lg">
+            <span className="text-white font-bold text-3xl">{logo.symbol}</span>
+          </div>
+        )}
         <div>
           <h3 className="text-2xl font-bold text-white mb-1">{logo.text}</h3>
           <div className="w-12 h-1 bg-gradient-to-r from-[#E7B109] to-[#D97706] rounded-full"></div>

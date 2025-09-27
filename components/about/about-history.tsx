@@ -16,7 +16,7 @@ const defaultContent = `Τα <b>Φροντιστήρια ΚΥΚΛΟΣ</b> ιδρ
 
 export function AboutHistory({
   title = "Ίδρυση",
-  imageUrl = "https://placehold.co/600x400/E7B109/FFFFFF?text=ΚΥΚΛΟΣ+Logo",
+  imageUrl = "/logo.png",
   content = defaultContent
 }: AboutHistoryProps) {
   return (

@@ -2,9 +2,10 @@ import { FooterData } from "./types";
 
 export const footerData: FooterData = {
   logo: {
-    text: "Φροντιστήριο Κύκλος",
+    text: "ΚΥΚΛΟΣ Εκπαίδευση",
     symbol: "Φ",
-    description: "Προσφέρουμε ποιοτική εκπαίδευση εδώ και 25+ χρόνια. Η επιτυχία των μαθητών μας είναι η δική μας επιτυχία."
+    description: "Προσφέρουμε ποιοτική εκπαίδευση εδώ και 25+ χρόνια. Η επιτυχία των μαθητών μας είναι η δική μας επιτυχία.",
+    image: "/logo.png"
   },
   quickLinks: [
     { label: "Αρχική", href: "#home" },
