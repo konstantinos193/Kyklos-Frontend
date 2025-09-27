@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     description: "Εξειδικευμένο φροντιστήριο Ελληνικής Γλώσσας & Λογοτεχνίας. 25+ έτη εμπειρίας, 95% επιτυχία, 500+ μαθητές.",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/logo.png",
         width: 1200,
         height: 630,
         alt: "ΚΥΚΛΟΣ Εκπαίδευση - Φροντιστήριο Ελληνικής Γλώσσας",
@@ -90,7 +90,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "ΚΥΚΛΟΣ Εκπαίδευση - Ελληνική Γλώσσα & Λογοτεχνία",
     description: "Εξειδικευμένο φροντιστήριο Ελληνικής Γλώσσας & Λογοτεχνίας. 25+ έτη εμπειρίας, 95% επιτυχία.",
-    images: ["/twitter-image.jpg"],
+    images: ["/logo.png"],
     creator: "@kyklosedu",
   },
   icons: {
@@ -138,7 +138,7 @@ export default function RootLayout({
     "description": "Εξειδικευμένο φροντιστήριο Ελληνικής Γλώσσας & Λογοτεχνίας. 25+ έτη εμπειρίας, 95% επιτυχία, 500+ μαθητές.",
     "url": "https://kyklosedu.gr",
     "logo": "https://kyklosedu.gr/logo.png",
-    "image": "https://kyklosedu.gr/og-image.jpg",
+    "image": "https://kyklosedu.gr/logo.png",
     "telephone": "2681026671",
     "email": "Email Address",
     "address": {
