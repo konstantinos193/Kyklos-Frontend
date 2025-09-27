@@ -26,7 +26,7 @@ export function AboutFacilities({
                 <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-6 campus-title">
                   {title}
                 </h2>
-                <div className="w-16 h-1 bg-gradient-to-r from-[#E7B109] to-[#D97706] rounded-full mb-8 line"></div>
+                <div className="w-16 h-1 bg-gradient-to-r from-[#CE3B49] to-[#D97706] rounded-full mb-8 line"></div>
                 <div
                   className="text-slate-700 leading-relaxed space-y-4 text-base"
                   dangerouslySetInnerHTML={{ __html: content }}

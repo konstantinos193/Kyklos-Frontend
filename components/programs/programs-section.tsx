@@ -27,7 +27,7 @@ export function ProgramsSection() {
           </p>
           <a
             href={programsData.cta.href}
-            className="inline-flex items-center px-8 py-4 bg-white text-[#CE3B49] font-semibold rounded-lg hover:bg-gray-100 hover:text-[#E7B109] transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+            className="inline-flex items-center px-8 py-4 bg-white text-[#CE3B49] font-semibold rounded-lg hover:bg-gray-100 hover:text-[#CE3B49] transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
           >
             {programsData.cta.label}
             <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

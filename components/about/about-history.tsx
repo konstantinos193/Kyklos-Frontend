@@ -27,7 +27,7 @@ export function AboutHistory({
             <h2 className="text-4xl sm:text-5xl font-bold mb-6 campus-title">
               {title}
             </h2>
-            <div className="w-20 h-1 bg-gradient-to-r from-[#E7B109] to-[#D97706] rounded-full mx-auto line"></div>
+            <div className="w-20 h-1 bg-gradient-to-r from-[#CE3B49] to-[#D97706] rounded-full mx-auto line"></div>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center campus-visit-wrapper">
@@ -42,11 +42,11 @@ export function AboutHistory({
                 {/* Stats */}
                 <div className="mt-12 grid grid-cols-2 gap-6">
                   <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10">
-                    <div className="text-3xl font-bold text-[#E7B109] mb-2">1995</div>
+                    <div className="text-3xl font-bold text-[#CE3B49] mb-2">1995</div>
                     <div className="text-sm text-slate-400">Έτος Ίδρυσης</div>
                   </div>
                   <div className="text-center p-6 bg-white/5 rounded-xl border border-white/10">
-                    <div className="text-3xl font-bold text-[#E7B109] mb-2">25+</div>
+                    <div className="text-3xl font-bold text-[#CE3B49] mb-2">25+</div>
                     <div className="text-sm text-slate-400">Έτη Εμπειρίας</div>
                   </div>
                 </div>

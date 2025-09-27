@@ -54,7 +54,7 @@ export function FooterLogo({ logo, socialLinks }: FooterLogoProps) {
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-12 h-12 bg-gray-700 hover:bg-[#E7B109] rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#E7B109] focus:ring-offset-2 focus:ring-offset-gray-900"
+              className="w-12 h-12 bg-gray-700 hover:bg-[#CE3B49] rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#CE3B49] focus:ring-offset-2 focus:ring-offset-gray-900"
               aria-label={`Follow us on ${social.name}`}
             >
               {getIcon()}

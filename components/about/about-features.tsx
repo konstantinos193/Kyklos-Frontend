@@ -48,7 +48,7 @@ export function AboutFeatures({
             <div className="space-y-8">
               <div>
                 <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
-                  Γιατί να Επιλέξετε το <span className="text-[#E7B109]">ΚΥΚΛΟΣ</span>;
+                  Γιατί να Επιλέξετε το <span className="text-[#CE3B49]">ΚΥΚΛΟΣ</span>;
                 </h2>
                 <div className="w-16 h-1 bg-gradient-to-r from-[#E7B109] via-[#CE3B49] to-[#D97706] rounded-full"></div>
                 <p className="mt-6 text-lg text-slate-600 leading-relaxed">
@@ -61,7 +61,7 @@ export function AboutFeatures({
               <div className="grid sm:grid-cols-2 gap-6">
                 {features.map((item, idx) => (
                   <div key={idx} className="group">
-                    <div className="flex items-start gap-4 p-6 bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-100 hover:border-[#E7B109]/20">
+                    <div className="flex items-start gap-4 p-6 bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-100 hover:border-[#CE3B49]/20">
                       <div className="flex-shrink-0">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#E7B109] via-[#CE3B49] to-[#D97706] flex items-center justify-center text-white text-xl shadow-md group-hover:scale-110 transition-transform duration-300">
                           {item.icon}
