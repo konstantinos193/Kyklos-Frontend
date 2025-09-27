@@ -1,7 +1,6 @@
 "use client";
 
 import { ProgramsHeader } from "./programs-header";
-import { ProgramsGrid } from "./programs-grid";
 import { ProgramsFeatures } from "./programs-features";
 import { programsData } from "./data";
 
@@ -15,10 +14,6 @@ export function ProgramsSection() {
           subtitle={programsData.subtitle}
         />
 
-        {/* Programs Grid */}
-        <div className="mb-16 sm:mb-20">
-          <ProgramsGrid levels={programsData.levels} />
-        </div>
 
         {/* Features */}
         <div className="mb-12 sm:mb-16">
