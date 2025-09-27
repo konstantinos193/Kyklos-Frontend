@@ -2,7 +2,7 @@ import { FooterData } from "./types";
 
 export const footerData: FooterData = {
   logo: {
-    text: "ΚΥΚΛΟΣ Εκπαίδευση",
+    text: "ΚΥΚΛΟΣ",
     symbol: "Φ",
     description: "Προσφέρουμε ποιοτική εκπαίδευση εδώ και 25+ χρόνια. Η επιτυχία των μαθητών μας είναι η δική μας επιτυχία.",
     image: "/logo.png"
