@@ -17,7 +17,6 @@ export function NewsletterForm({
   onError 
 }: NewsletterFormProps) {
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
@@ -36,13 +35,12 @@ export function NewsletterForm({
     setMessage('');
 
     try {
-      const response = await newsletterAPI.subscribe(email.trim(), name.trim());
+      const response = await newsletterAPI.subscribe(email.trim());
 
       if (response.success) {
         setMessage(response.message);
         setMessageType('success');
         setEmail('');
-        setName('');
         onSuccess?.(response.message);
       } else {
         setMessage(response.message);
@@ -121,18 +119,6 @@ export function NewsletterForm({
           </div>
         </div>
 
-        {/* Optional name field */}
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Το όνομά σας (προαιρετικό)"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full pl-4 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#E7B109] focus:ring-2 focus:ring-[#E7B109]/20 focus:outline-none transition-all duration-300"
-            disabled={isLoading}
-          />
-        </div>
-
         {/* Message display */}
         {showSuccessMessage && message && (
           <div className={`p-4 rounded-xl text-center font-medium ${
@@ -143,10 +129,6 @@ export function NewsletterForm({
             {message}
           </div>
         )}
-
-        <p className="text-sm text-gray-500 text-center">
-          Δεν θα μοιραστούμε το email σας με τρίτους. Μπορείτε να απεγγραφείτε ανά πάσα στιγμή.
-        </p>
       </form>
     </div>
   );
