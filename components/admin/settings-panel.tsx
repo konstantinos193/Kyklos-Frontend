@@ -14,7 +14,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 
-export function SettingsPanel() {
+export default function SettingsPanel() {
   const [activeTab, setActiveTab] = useState('general');
   const [settings, setSettings] = useState({
     general: {

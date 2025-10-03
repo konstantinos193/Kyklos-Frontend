@@ -16,15 +16,22 @@ const apiClient = axios.create({
 // Request interceptor for logging and optimization
 apiClient.interceptors.request.use(
   (config) => {
+    // Create a deep clone to avoid mutating read-only structures
+    const cfg = {
+      ...config,
+      headers: { ...(config.headers as any) },
+      params: config.params ? { ...config.params } : undefined
+    };
+    
     // Add cache control headers for GET requests
-    if (config.method === 'get') {
-      config.headers['Cache-Control'] = 'public, max-age=300'; // 5 minutes
+    if (cfg.method === 'get') {
+      cfg.headers['Cache-Control'] = 'public, max-age=300'; // 5 minutes
     }
     
     // Add request timestamp for debugging
-    config.metadata = { startTime: Date.now() };
+    (cfg as any).metadata = { startTime: Date.now() };
     
-    return config;
+    return cfg;
   },
   (error) => {
     return Promise.reject(error);
@@ -35,8 +42,8 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => {
     // Log performance metrics
-    const duration = Date.now() - response.config.metadata?.startTime;
-    if (duration > 1000) {
+    const duration = Date.now() - (response.config as any).metadata?.startTime;
+    if (duration > 5000) { // Only warn for calls over 5 seconds
       console.warn(`Slow API call: ${response.config.url} took ${duration}ms`);
     }
     
@@ -51,7 +58,7 @@ apiClient.interceptors.response.use(
       if (status === 429) {
         console.error('Rate limit exceeded');
       } else if (status >= 500) {
-        console.error('Server error:', data.message);
+        console.error('Server error:', data?.message);
       }
     } else if (error.request) {
       // Network error
@@ -112,6 +119,17 @@ export const newsletterAPI = {
 export const healthAPI = {
   check: async () => {
     const response = await apiClient.get('/health');
+    return response.data;
+  },
+};
+
+// Admin
+export const adminAPI = {
+  getStats: async (): Promise<{
+    success: boolean;
+    data?: { totalUsers: number; totalBlogs: number; totalSubscribers: number; totalViews: number };
+  }> => {
+    const response = await apiClient.get('/api/admin/stats');
     return response.data;
   },
 };

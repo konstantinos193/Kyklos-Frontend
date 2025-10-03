@@ -276,6 +276,24 @@
   .mobile-gap-responsive {
     @apply gap-4 sm:gap-6 md:gap-8 lg:gap-10;
   }
+
+  /* Responsive media defaults */
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .prose img {
+    @apply w-full h-auto rounded-lg;
+  }
+
+  /* Table responsiveness */
+  .table-responsive {
+    @apply w-full overflow-x-auto;
+  }
+  .table-responsive table {
+    @apply min-w-full;
+  }
   
   /* Professional shadows */
   .shadow-professional {

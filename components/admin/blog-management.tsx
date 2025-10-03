@@ -34,7 +34,7 @@ interface BlogPost {
   featured: boolean;
 }
 
-export function BlogManagement() {
+export default function BlogManagement() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');

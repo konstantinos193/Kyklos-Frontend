@@ -36,7 +36,7 @@ function StatCard({ title, value, change, changeType, icon: Icon, color }: StatC
   );
 }
 
-export function StatsOverview() {
+export default function StatsOverview() {
   const [stats, setStats] = useState({
     totalSubscribers: 0,
     activePosts: 0,

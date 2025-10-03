@@ -30,7 +30,7 @@ interface NewsletterData {
   };
 }
 
-export function EmailDashboard() {
+export default function EmailDashboard() {
   const [stats, setStats] = useState<SubscriberStats | null>(null);
   const [subscribers, setSubscribers] = useState<NewsletterData | null>(null);
   const [loading, setLoading] = useState(true);
