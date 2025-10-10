@@ -25,30 +25,55 @@ export default function CurriculumPage() {
 
   return (
     <main className="relative">
-      {/* Banner matching About styling */}
-      <AboutBanner
-        title="Πρόγραμμα Σπουδών"
-        backgroundImage={
-          "https://placehold.co/1600x500/E7B109/FFFFFF?text=%CE%A0%CF%81%CF%8C%CE%B3%CF%81%CE%B1%CE%BC%CE%BC%CE%B1+%CE%A3%CF%80%CE%BF%CF%85%CE%B4%CF%8E%CE%BD"
-        }
-        overlayOpacity={0.35}
-      />
+      {/* Banner - custom hero markup */}
+      <div className="relative w-full bg-gradient-to-tr from-[#0f172a] via-[#1f2937] to-[#E7B109]">
+        <div
+          className="absolute inset-0 opacity-15"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)',
+            backgroundSize: '24px 24px, 24px 24px',
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{ backgroundColor: '#0b1c2a', opacity: 0.35 }}
+        />
+        <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+          <div className="max-w-7xl">
+            <div className="text-left">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">Πρόγραμμα Σπουδών</h1>
+              <div className="mt-4 h-1 w-20 bg-gradient-to-r from-[#CF3B49] to-[#E7B109] rounded-full"></div>
+              <p className="mt-4 text-sm sm:text-base text-white/80 max-w-2xl">
+                Σύγχρονο πρόγραμμα σπουδών με εξατομικευμένη υποστήριξη, στοχευμένη προετοιμασία και μετρήσιμα αποτελέσματα.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0">
+          <div className="h-1 w-full bg-gradient-to-r from-[#CF3B49] to-[#E7B109]"></div>
+        </div>
+      </div>
 
       {/* Subjects */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {subjects.map((s, i) => {
-            const palettes = [
-              { bg: "F3F4F6", fg: "1F2937" }, // gray
-              { bg: "FFE4E6", fg: "9F1239" }, // rose
-              { bg: "E0F2FE", fg: "0369A1" }, // sky
-              { bg: "ECFDF5", fg: "065F46" }, // emerald
-              { bg: "FEF3C7", fg: "92400E" }, // amber
-              { bg: "EDE9FE", fg: "5B21B6" }, // violet
-            ];
-            const pal = palettes[i % palettes.length];
-            const text = encodeURIComponent(s.label);
-            const imageUrl = `https://placehold.co/800x320/${pal.bg}/${pal.fg}?text=${text}`;
+            const imageMap: Record<string, string> = {
+              "Μαθηματικά": "https://imgs.search.brave.com/5rp0OgtpqI4OfqiG9H8jfK4OhDzxDJls5BPZFfmlaiQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTU0/ODg4NTc0L3Bob3Rv/L2JsYWNrYm9hcmQt/ZnVsbC1vZi1lcXVh/dGlvbnMuanBnP3M9/NjEyeDYxMiZ3PTAm/az0yMCZjPUhvRXZl/Q2xhZ21HN3Zwcldy/d1FpeVBZOVhmbmwy/LTBPeGQyeGdYal9p/VEk9",
+              "Φυσική": "https://thumbs.dreamstime.com/b/physics-wall-equations-written-famous-black-board-193222178.jpg",
+              "Χημεία": "https://plus.unsplash.com/premium_photo-1661434779070-cf8fc0e253ab?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              "Βιολογία": "https://cdn.pixabay.com/photo/2018/07/15/10/44/dna-3539309_640.jpg",
+              "Άλγεβρα": "https://cdn.pixabay.com/photo/2015/11/15/07/47/geometry-1044090_1280.jpg",
+              "Γεωμετρία": "https://img.freepik.com/premium-photo/mathematical-geometry-shapes-dark-background-3d-render_975254-1828.jpg?semt=ais_hybrid&w=740&q=80",
+              "Αρχαία": "https://www.postposmo.com/wp-content/uploads/2021/02/PINTURA-ROMANA-3.jpeg",
+              "Έκθεση - Λογοτεχνία": "/logotexnia.png",
+              "Ιστορία": "https://images.stockcake.com/public/f/6/5/f6504098-3aee-4cad-a8cd-96aef63eaeb7_large/historical-artifact-display-stockcake.jpg",
+              "Λατινικά": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Aristotle_latin_manuscript.jpg",
+              "ΑΟΘ / Οικονομικά": "https://img.freepik.com/free-vector/hand-drawn-flat-design-stock-market-concept_23-2149154264.jpg",
+              "Πληροφορική": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2F6c41P3JIMTpPP1sMciktCZ_LG6eX3pnag&s",
+            };
+            const imageUrl = imageMap[s.label] || "https://source.unsplash.com/800x320/?education,school";
             return (
               <SubjectCard
                 key={s.href}
@@ -57,6 +82,7 @@ export default function CurriculumPage() {
                 description={s.description}
                 icon={(i % 3 === 0 ? "book" : i % 3 === 1 ? "cap" : "target") as any}
                 imageUrl={imageUrl}
+                priority={i < 2}
               />
             );
           })}

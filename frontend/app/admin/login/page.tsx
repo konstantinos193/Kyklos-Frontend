@@ -20,16 +20,23 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      // Simulate login API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // For demo purposes, accept any email/password
-      if (formData.email && formData.password) {
-        // Store admin session (in real app, use proper auth)
+      const response = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Store admin session
         localStorage.setItem('adminLoggedIn', 'true');
+        localStorage.setItem('adminToken', data.data.token);
         router.push('/admin');
       } else {
-        setError('Please enter both email and password');
+        setError(data.message || 'Login failed. Please try again.');
       }
     } catch (err) {
       setError('Login failed. Please try again.');

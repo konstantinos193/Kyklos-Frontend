@@ -343,3 +343,5 @@ export function EmailDashboard() {
     </div>
   );
 }
+
+export default EmailDashboard;

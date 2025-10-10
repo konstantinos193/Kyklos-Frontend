@@ -14,10 +14,33 @@ export default function AdminLayout({
 
   useEffect(() => {
     // Check if admin is logged in
-    const checkAuth = () => {
+    const checkAuth = async () => {
       const adminLoggedIn = localStorage.getItem('adminLoggedIn');
-      if (adminLoggedIn === 'true') {
-        setIsAuthenticated(true);
+      const adminToken = localStorage.getItem('adminToken');
+      
+      if (adminLoggedIn === 'true' && adminToken) {
+        try {
+          // Verify token with backend
+          const response = await fetch('/api/admin/auth/verify', {
+            headers: {
+              'Authorization': `Bearer ${adminToken}`,
+            },
+          });
+          
+          if (response.ok) {
+            setIsAuthenticated(true);
+          } else {
+            // Token is invalid, clear storage and redirect
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('adminToken');
+            router.push('/admin/login');
+          }
+        } catch (error) {
+          // Network error, clear storage and redirect
+          localStorage.removeItem('adminLoggedIn');
+          localStorage.removeItem('adminToken');
+          router.push('/admin/login');
+        }
       } else {
         router.push('/admin/login');
       }

@@ -5,6 +5,29 @@ import { AboutFeatures } from "@/components/about/about-features";
 import { AboutHistory } from "@/components/about/about-history";
 import { AboutFacilities } from "@/components/about/about-facilities";
 import { AboutSection } from "@/components/about-section";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Σχετικά με εμάς | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+  description: "Γνωρίστε το ΚΥΚΛΟΣ Φροντιστήριο στην Άρτα! 25+ χρόνια εμπειρίας στην εκπαίδευση, 95% επιτυχία στις Πανελλαδικές εξετάσεις. Εξειδικευμένοι καθηγητές, σύγχρονες εγκαταστάσεις και προσωποποιημένη προετοιμασία για Γυμνάσιο & Λύκειο.",
+  keywords: [
+    "σχετικά με εμάς",
+    "φροντιστήριο άρτα ιστορία",
+    "φροντιστήριο κύκλος άρτα",
+    "εμπειρία φροντιστηρίου",
+    "καθηγητές φροντιστηρίου άρτα",
+    "εγκαταστάσεις φροντιστηρίου",
+    "μαθησιακό κέντρο άρτα",
+    "εκπαιδευτική φιλοσοφία",
+    "στόχοι φροντιστηρίου",
+    "ιστορία φροντιστηρίου άρτα"
+  ],
+  openGraph: {
+    title: "Σχετικά με εμάς | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+    description: "Γνωρίστε το ΚΥΚΛΟΣ Φροντιστήριο στην Άρτα! 25+ χρόνια εμπειρίας, 95% επιτυχία στις Πανελλαδικές εξετάσεις.",
+    images: ["/logo.png"],
+  },
+};
 
 export default function AboutPage() {
   return (

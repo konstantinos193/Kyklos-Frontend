@@ -12,7 +12,8 @@ import {
   Tag,
   Search,
   Filter,
-  MoreVertical
+  MoreVertical,
+  FileText
 } from 'lucide-react';
 
 interface BlogPost {
@@ -306,3 +307,5 @@ export function BlogManagement() {
     </div>
   );
 }
+
+export default BlogManagement;

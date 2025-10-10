@@ -116,6 +116,38 @@ export const healthAPI = {
   },
 };
 
+// Admin API functions
+export const adminAPI = {
+  getStats: async () => {
+    const response = await apiClient.get('/api/admin/stats');
+    return response.data;
+  },
+  
+  getUsers: async (params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  } = {}) => {
+    const response = await apiClient.get('/api/admin/users', { params });
+    return response.data;
+  },
+  
+  createUser: async (userData: any) => {
+    const response = await apiClient.post('/api/admin/users', userData);
+    return response.data;
+  },
+  
+  updateUser: async (id: string, userData: any) => {
+    const response = await apiClient.patch(`/api/admin/users/${id}`, userData);
+    return response.data;
+  },
+  
+  deleteUser: async (id: string) => {
+    const response = await apiClient.delete(`/api/admin/users/${id}`);
+    return response.data;
+  }
+};
+
 // Export the axios instance as 'api' for convenience
 export const api = apiClient;
 
