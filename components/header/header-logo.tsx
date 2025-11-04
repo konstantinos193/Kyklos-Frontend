@@ -16,6 +16,8 @@ export function HeaderLogo({ logo, isScrolled }: HeaderLogoProps) {
           width={isScrolled ? 100 : 120}
           height={isScrolled ? 32 : 40}
           className="object-contain transition-all duration-300"
+          loading="eager"
+          priority
         />
       ) : (
         <div className="flex items-center gap-2 sm:gap-3">

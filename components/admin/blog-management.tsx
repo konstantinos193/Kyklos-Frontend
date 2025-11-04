@@ -12,7 +12,8 @@ import {
   Tag,
   Search,
   Filter,
-  MoreVertical
+  MoreVertical,
+  FileText
 } from 'lucide-react';
 
 interface BlogPost {
@@ -34,7 +35,7 @@ interface BlogPost {
   featured: boolean;
 }
 
-export default function BlogManagement() {
+export function BlogManagement() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -58,9 +59,9 @@ export default function BlogManagement() {
         ...(searchTerm && { search: searchTerm })
       });
 
-      const response = await api.get(`/blog?${params}`);
-      setPosts(response.data.posts || []);
-      setTotalPages(Math.ceil((response.data.total || 0) / 10));
+      const response = await api.get(`/api/blog?${params}`);
+      setPosts(response.data.data || []);
+      setTotalPages(Math.ceil((response.data.pagination?.total || 0) / 10));
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {
@@ -72,7 +73,7 @@ export default function BlogManagement() {
     if (!confirm('Are you sure you want to delete this post?')) return;
 
     try {
-      await api.delete(`/blog/${id}`);
+      await api.delete(`/api/blog/${id}`);
       fetchPosts();
     } catch (error) {
       console.error('Error deleting post:', error);
@@ -82,7 +83,7 @@ export default function BlogManagement() {
 
   const handleToggleFeatured = async (id: string, currentFeatured: boolean) => {
     try {
-      await api.patch(`/blog/${id}`, { featured: !currentFeatured });
+      await api.put(`/api/blog/${id}`, { featured: !currentFeatured });
       fetchPosts();
     } catch (error) {
       console.error('Error updating post:', error);
@@ -306,3 +307,5 @@ export default function BlogManagement() {
     </div>
   );
 }
+
+export default BlogManagement;

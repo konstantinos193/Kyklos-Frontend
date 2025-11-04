@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { adminAPI } from '@/lib/api';
 import { 
   Save, 
   RefreshCw, 
@@ -14,24 +15,24 @@ import {
   AlertTriangle
 } from 'lucide-react';
 
-export default function SettingsPanel() {
+export function SettingsPanel() {
   const [activeTab, setActiveTab] = useState('general');
   const [settings, setSettings] = useState({
     general: {
       siteName: 'ΚΥΚΛΟΣ Φροντιστήριο',
       siteDescription: 'Εκπαιδευτικό Κέντρο Αριστείας',
       siteUrl: 'https://kyklosedu.gr',
-      adminEmail: 'admin@kyklosedu.gr',
+      adminEmail: 'grkyklos-@hotmail.gr',
       timezone: 'Europe/Athens',
       language: 'el'
     },
     email: {
       smtpHost: 'smtp.gmail.com',
       smtpPort: '587',
-      smtpUser: 'noreply@kyklosedu.gr',
+      smtpUser: 'grkyklos-@hotmail.gr',
       smtpSecure: false,
       fromName: 'ΚΥΚΛΟΣ Φροντιστήριο',
-      fromEmail: 'noreply@kyklosedu.gr'
+      fromEmail: 'grkyklos-@hotmail.gr'
     },
     security: {
       enableTwoFactor: false,
@@ -58,6 +59,26 @@ export default function SettingsPanel() {
   });
 
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Load settings on component mount
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      setLoading(true);
+      const response = await adminAPI.getSettings();
+      if (response.success) {
+        setSettings(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading settings:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const tabs = [
     { id: 'general', label: 'General', icon: Globe },
@@ -69,10 +90,19 @@ export default function SettingsPanel() {
 
   const handleSave = async () => {
     setSaving(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setSaving(false);
-    alert('Settings saved successfully!');
+    try {
+      const response = await adminAPI.updateSettings(settings);
+      if (response.success) {
+        alert('Settings saved successfully!');
+      } else {
+        alert('Error saving settings: ' + response.message);
+      }
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      alert('Error saving settings. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleReset = () => {
@@ -429,6 +459,17 @@ export default function SettingsPanel() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E7B109] mx-auto mb-4"></div>
+          <p className="text-gray-600">Φόρτωση ρυθμίσεων...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -490,3 +531,5 @@ export default function SettingsPanel() {
     </div>
   );
 }
+
+export default SettingsPanel;

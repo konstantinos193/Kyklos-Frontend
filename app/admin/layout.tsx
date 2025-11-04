@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { getApiUrl } from '@/lib/api-url';
 
 export default function AdminLayout({
   children,
@@ -14,10 +15,42 @@ export default function AdminLayout({
 
   useEffect(() => {
     // Check if admin is logged in
-    const checkAuth = () => {
-      const adminLoggedIn = localStorage.getItem('adminLoggedIn');
-      if (adminLoggedIn === 'true') {
-        setIsAuthenticated(true);
+    const checkAuth = async () => {
+      // Check both localStorage and sessionStorage for token
+      const adminToken = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+      const adminInfo = localStorage.getItem('adminInfo') || sessionStorage.getItem('adminInfo');
+      
+      if (adminToken && adminInfo) {
+        try {
+          // Verify token with backend
+          const response = await fetch(`${getApiUrl()}/api/admin/auth/verify`, {
+            headers: {
+              'Authorization': `Bearer ${adminToken}`,
+            },
+          });
+          
+          if (response.ok) {
+            setIsAuthenticated(true);
+          } else {
+            // Token is invalid, clear all storage and redirect
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminInfo');
+            sessionStorage.removeItem('adminLoggedIn');
+            sessionStorage.removeItem('adminToken');
+            sessionStorage.removeItem('adminInfo');
+            router.push('/admin/login');
+          }
+        } catch (error) {
+          // Network error, clear all storage and redirect
+          localStorage.removeItem('adminLoggedIn');
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('adminInfo');
+          sessionStorage.removeItem('adminLoggedIn');
+          sessionStorage.removeItem('adminToken');
+          sessionStorage.removeItem('adminInfo');
+          router.push('/admin/login');
+        }
       } else {
         router.push('/admin/login');
       }

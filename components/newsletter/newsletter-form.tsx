@@ -119,6 +119,7 @@ export function NewsletterForm({
           </div>
         </div>
 
+
         {/* Message display */}
         {showSuccessMessage && message && (
           <div className={`p-4 rounded-xl text-center font-medium ${
@@ -129,6 +130,7 @@ export function NewsletterForm({
             {message}
           </div>
         )}
+
       </form>
     </div>
   );

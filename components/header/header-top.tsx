@@ -20,7 +20,7 @@ export function HeaderTop() {
               </li>
               <li className="flex items-center gap-1 hover:text-gray-800 transition-colors">
                 <MailIcon className="w-3 h-3" />
-                <span>your-email@example.com</span>
+                <span>grkyklos-@hotmail.gr</span>
               </li>
             </ul>
           </div>

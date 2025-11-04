@@ -1,7 +1,7 @@
 {
-  "name": "ΚΥΚΛΟΣ Φροντιστήριο Άρτα | Γυμνάσιο Λύκειο ΕΠΑΛ | 95% Επιτυχία",
-  "short_name": "ΚΥΚΛΟΣ Άρτα",
-  "description": "Κορυφαίο φροντιστήριο στην Άρτα! Μαθηματικά, Φυσική, Χημεία, Βιολογία, Ελληνική Γλώσσα, Λογοτεχνία, Αρχαία, Ιστορία, Λατινικά, ΑΟΘ, Πληροφορική. Γυμνάσιο, Λύκειο, ΕΠΑΛ. 25+ χρόνια εμπειρίας, 95% επιτυχία στις Πανελλαδικές εξετάσεις",
+  "name": "ΚΥΚΛΟΣ Εκπαίδευση - Φροντιστήριο Ελληνικής Γλώσσας",
+  "short_name": "ΚΥΚΛΟΣ",
+  "description": "Εξειδικευμένο φροντιστήριο Ελληνικής Γλώσσας & Λογοτεχνίας",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1e40af",
@@ -13,16 +13,22 @@
   "categories": ["education", "lifestyle"],
   "icons": [
     {
-      "src": "/logo.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/logo.png", 
+      "src": "/icon-512.png", 
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ],
   "screenshots": [
@@ -47,7 +53,7 @@
       "url": "/#courses",
       "icons": [
         {
-          "src": "/logo.png",
+          "src": "/icon-192.png",
           "sizes": "192x192"
         }
       ]
@@ -59,7 +65,7 @@
       "url": "/#contact",
       "icons": [
         {
-          "src": "/logo.png",
+          "src": "/icon-192.png",
           "sizes": "192x192"
         }
       ]

@@ -1,10 +1,11 @@
+'use client';
+
+import { useSearchParams } from 'next/navigation';
 import StudentLoginForm from '@/components/auth/student-login-form';
 
-export const metadata = {
-  title: 'Student Login - ΚΥΚΛΟΣ Φροντιστήριο',
-  description: 'Login to your student account using your unique student key',
-};
-
 export default function StudentLoginPage() {
-  return <StudentLoginForm />;
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/student/dashboard';
+
+  return <StudentLoginForm redirectTo={redirectTo} />;
 }

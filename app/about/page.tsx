@@ -4,6 +4,10 @@ import { AboutHighlight } from "@/components/about/about-highlight";
 import { AboutFeatures } from "@/components/about/about-features";
 import { AboutHistory } from "@/components/about/about-history";
 import { AboutFacilities } from "@/components/about/about-facilities";
+import { AboutMissionVision } from "@/components/about/about-mission-vision";
+import { AboutStaff } from "@/components/about/about-staff";
+import { AboutLeadership } from "@/components/about/about-leadership";
+import { AboutValues } from "@/components/about/about-values";
 import { AboutSection } from "@/components/about-section";
 import { Metadata } from "next";
 
@@ -37,9 +41,13 @@ export default function AboutPage() {
         backgroundImage="/building/0-02-05-478c0937fdff63e4ab45201a399a1b1c3dad0c2a14c4cf8b65738dd77edfc916_acfb2c2f26f11734.jpg" 
       />
       <AboutSection />
+      <AboutMissionVision />
       <AboutGoals />
       <AboutHighlight />
       <AboutFeatures />
+      <AboutStaff />
+      <AboutLeadership />
+      <AboutValues />
       <AboutHistory />
       <AboutFacilities />
     </main>

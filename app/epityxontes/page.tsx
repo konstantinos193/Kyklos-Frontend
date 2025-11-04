@@ -13,7 +13,7 @@ export default function Page() {
       <section className="relative isolate">
         <div className="relative h-48 md:h-56 w-full overflow-hidden">
           {/* Smart generated banner: gradient + subtle grid pattern */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#0f172a] via-[#1e293b] to-[#0ea5e9]" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-[#0f172a] via-[#1f2937] to-[#334155]" />
           <div
             className="absolute inset-0 opacity-15"
             style={{
@@ -47,15 +47,15 @@ export default function Page() {
                   <h3 className="text-lg font-semibold text-gray-900 leading-snug">
                     {item.title}
                   </h3>
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600 ring-1 ring-inset ring-blue-100 transition-colors group-hover:bg-blue-100">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#CE3B49]/10 text-[#CE3B49] ring-1 ring-inset ring-[#CE3B49]/20 transition-colors group-hover:bg-[#CE3B49]/20">
                     <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14" />
                       <path d="m12 5 7 7-7 7" />
                     </svg>
                   </span>
                 </div>
-                <div className="mt-4 text-sm text-blue-600 group-hover:underline">Περισσότερα</div>
-                <div className="pointer-events-none absolute inset-0 -z-10 rounded-xl bg-gradient-to-tr from-blue-50/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className="mt-4 text-sm text-[#CE3B49] group-hover:underline">Περισσότερα</div>
+                <div className="pointer-events-none absolute inset-0 -z-10 rounded-xl bg-gradient-to-tr from-[#CE3B49]/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
               </Link>
             ))}
           </div>

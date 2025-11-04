@@ -1,18 +1,62 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Shield, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, Shield } from 'lucide-react';
+import { getApiUrl } from '@/lib/api-url';
 
 export default function AdminLogin() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
   const [error, setError] = useState('');
   const router = useRouter();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkExistingAuth = async () => {
+      try {
+        // Check both localStorage and sessionStorage for token
+        const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+        const adminInfo = localStorage.getItem('adminInfo') || sessionStorage.getItem('adminInfo');
+        
+        if (token && adminInfo) {
+          // Verify token with backend
+          const response = await fetch(`${getApiUrl()}/api/admin/auth/verify`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+          
+          if (response.ok) {
+            // Token is valid, redirect to admin panel
+            router.push('/admin');
+            return;
+          } else {
+            // Token is invalid, clear storage
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminInfo');
+            sessionStorage.removeItem('adminToken');
+            sessionStorage.removeItem('adminInfo');
+          }
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        // Clear potentially corrupted data
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminInfo');
+        sessionStorage.removeItem('adminToken');
+        sessionStorage.removeItem('adminInfo');
+      } finally {
+        setIsChecking(false);
+      }
+    };
+
+    checkExistingAuth();
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,159 +64,194 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      // Simulate login API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // For demo purposes, accept any email/password
-      if (formData.email && formData.password) {
-        // Store admin session (in real app, use proper auth)
-        localStorage.setItem('adminLoggedIn', 'true');
+      const response = await fetch(`${getApiUrl()}/api/admin/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Show the actual error message from backend
+        setError(data.message || `Login failed: ${response.statusText}`);
+        return;
+      }
+
+      if (data.success) {
+        // Handle both old and new response structures
+        const adminData = data.admin || data.data?.admin;
+        
+        if (!adminData) {
+          setError('Invalid response from server');
+          return;
+        }
+
+        // Store token based on remember me preference
+        const adminInfo = {
+          email: adminData.email,
+          name: adminData.name,
+          role: adminData.role,
+          loginTime: new Date().toISOString()
+        };
+
+        if (rememberMe) {
+          // Store in localStorage for persistent login (survives browser restart)
+          localStorage.setItem('adminToken', data.token);
+          localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+          localStorage.setItem('adminLoggedIn', 'true');
+        } else {
+          // Store in sessionStorage for session-only login (cleared on browser close)
+          sessionStorage.setItem('adminToken', data.token);
+          sessionStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+          sessionStorage.setItem('adminLoggedIn', 'true');
+        }
+        
+        // Always store in sessionStorage as well for API client compatibility
+        sessionStorage.setItem('adminToken', data.token);
+        sessionStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+        
+        // Redirect to admin panel
         router.push('/admin');
       } else {
-        setError('Please enter both email and password');
+        setError(data.message || 'Login failed');
       }
-    } catch (err) {
-      setError('Login failed. Please try again.');
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
+  // Show loading state while checking existing auth
+  if (isChecking) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E7B109] mx-auto mb-4"></div>
+          <p className="text-gray-600">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        {/* Login Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-[#E7B109] to-[#D97706] flex items-center justify-center">
-              <Shield className="w-8 h-8 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Login</h1>
-            <p className="text-gray-600">ΚΥΚΛΟΣ Φροντιστήριο Management Panel</p>
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#E7B109] rounded-full mb-4">
+            <Shield className="w-8 h-8 text-white" />
           </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Panel</h1>
+          <p className="text-gray-600">Συνδεθείτε για να διαχειριστείτε το σύστημα</p>
+        </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-              <p className="text-red-800 text-sm">{error}</p>
-            </div>
-          )}
-
-          {/* Login Form */}
+        {/* Login Form */}
+        <div className="bg-white rounded-2xl shadow-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Mail className="inline w-4 h-4 mr-2" />
+                Email
               </label>
               <input
                 type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent transition-colors"
-                placeholder="admin@kyklosedu.gr"
+                placeholder="admin@example.com"
                 required
-                disabled={isLoading}
               />
             </div>
 
+            {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Lock className="inline w-4 h-4 mr-2" />
+                Κωδικός
               </label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent transition-colors"
                   placeholder="••••••••"
                   required
-                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  disabled={isLoading}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
 
+            {/* Remember Me */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center">
+              <label className="flex items-center">
                 <input
-                  id="remember-me"
-                  name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-[#E7B109] focus:ring-[#E7B109] border-gray-300 rounded"
-                  disabled={isLoading}
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 text-[#E7B109] bg-gray-100 border-gray-300 rounded focus:ring-[#E7B109] focus:ring-2"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                  Remember me
-                </label>
+                <span className="ml-2 text-sm text-gray-700">Θυμήσου με</span>
+              </label>
+              <div className="text-xs text-gray-500">
+                {rememberMe ? 'Συνδεδεμένος μόνιμα' : 'Σύνδεση μόνο για αυτή τη συνεδρία'}
               </div>
-              <button
-                type="button"
-                className="text-sm text-[#E7B109] hover:text-[#D97706] font-medium transition-colors"
-                disabled={isLoading}
-              >
-                Forgot password?
-              </button>
             </div>
 
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
+
+            {/* Submit Button */}
             <button
               type="submit"
-              disabled={isLoading || !formData.email || !formData.password}
-              className="w-full bg-gradient-to-r from-[#E7B109] to-[#D97706] hover:from-[#D97706] hover:to-[#B45309] disabled:from-gray-300 disabled:to-gray-400 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 disabled:hover:scale-100 shadow-lg hover:shadow-xl disabled:shadow-none flex items-center justify-center gap-2"
+              disabled={isLoading}
+              className="w-full bg-[#E7B109] text-white py-3 px-4 rounded-lg hover:bg-[#D97706] disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
               {isLoading ? (
-                <>
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Signing in...
-                </>
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Σύνδεση...
+                </div>
               ) : (
-                <>
-                  <Shield className="w-5 h-5" />
-                  Sign In
-                </>
+                'Σύνδεση'
               )}
             </button>
           </form>
 
           {/* Demo Credentials */}
-          <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <h3 className="text-sm font-medium text-blue-900 mb-2">Demo Credentials</h3>
-            <div className="text-xs text-blue-800 space-y-1">
-              <p><strong>Email:</strong> admin@kyklosedu.gr</p>
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+            <h3 className="text-sm font-medium text-gray-700 mb-2">Demo Credentials:</h3>
+            <div className="text-xs text-gray-600 space-y-1">
+              <p><strong>Email:</strong> grkyklos-@hotmail.gr</p>
               <p><strong>Password:</strong> admin123</p>
             </div>
-          </div>
-
-          {/* Footer */}
-          <div className="mt-8 pt-6 border-t border-gray-200 text-center">
-            <p className="text-sm text-gray-500">
-              © 2024 ΚΥΚΛΟΣ Φροντιστήριο. All rights reserved.
+            <p className="text-xs text-gray-500 mt-2">
+              Note: Make sure the admin user exists in your database. If not, run the seeder script.
             </p>
           </div>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center mt-8">
+          <p className="text-sm text-gray-500">
+            © 2024 ΚΥΚΛΟΣ Φροντιστήριο. All rights reserved.
+          </p>
         </div>
       </div>
     </div>

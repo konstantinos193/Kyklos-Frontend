@@ -8,18 +8,18 @@ export const footerData: FooterData = {
     image: "/logo.png"
   },
   quickLinks: [
-    { label: "Αρχική", href: "#home" },
-    { label: "Προγράμματα", href: "#courses" },
-    { label: "Σχετικά", href: "#about" },
-    { label: "Στατιστικά", href: "#statistics" },
-    { label: "Μαρτυρίες", href: "#testimonials" },
-    { label: "Γκαλερί", href: "#gallery" },
-    { label: "Blog", href: "#blog" },
-    { label: "Επικοινωνία", href: "#contact" }
+    { label: "Ποιοί Είμαστε", href: "/about" },
+    { label: "Πρόγραμμα Σπουδών", href: "/curriculum" },
+    { label: "Επικαιρότητα", href: "/current-affairs" },
+    { label: "Επιτυχόντες", href: "/epityxontes" },
+    { label: "Θέματα Πανελληνίων", href: "/panhellenic" },
+    { label: "Νέα - Εκδηλώσεις", href: "/news" },
+    { label: "Blog", href: "/blog" },
+    { label: "Επικοινωνία", href: "/contact" }
   ],
   contact: {
     phone: "2681026671",
-    email: "Email Address",
+    email: "grkyklos-@hotmail.gr",
     address: {
       street: "Βασιλέως Κωνσταντίνου 42",
       city: "Αρτα",

@@ -36,8 +36,8 @@ function StatCard({ title, value, change, changeType, icon: Icon, color }: StatC
   );
 }
 
-export default function StatsOverview() {
-  const [stats, setStats] = useState({
+function StatsOverview({ stats }: { stats?: any }) {
+  const [statsData, setStatsData] = useState({
     totalSubscribers: 0,
     activePosts: 0,
     newSubscribers: 0,
@@ -65,7 +65,7 @@ export default function StatsOverview() {
         const totalViews = blogData.data?.reduce((sum: number, post: any) => sum + (post.views || 0), 0) || 0;
         const totalLikes = blogData.data?.reduce((sum: number, post: any) => sum + (post.likes || 0), 0) || 0;
         
-        setStats({
+        setStatsData({
           totalSubscribers: newsletterStats.data?.active || 0,
           activePosts: blogData.data?.length || 0,
           newSubscribers: newsletterStats.data?.thisMonth || 0,
@@ -78,7 +78,7 @@ export default function StatsOverview() {
       } catch (error) {
         console.error('Error fetching stats:', error);
         // Set fallback data
-        setStats({
+        setStatsData({
           totalSubscribers: 0,
           activePosts: 0,
           newSubscribers: 0,
@@ -130,31 +130,31 @@ export default function StatsOverview() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <StatCard
           title="Εγγεγραμμένοι στο Newsletter"
-          value={stats.totalSubscribers.toLocaleString()}
-          change={`+${stats.newSubscribers} νέοι αυτόν τον μήνα`}
-          changeType={stats.newSubscribers > 0 ? "positive" : "neutral"}
+          value={((stats || statsData).totalSubscribers || 0).toLocaleString()}
+          change={`+${(stats || statsData).newSubscribers || 0} νέοι αυτόν τον μήνα`}
+          changeType={((stats || statsData).newSubscribers || 0) > 0 ? "positive" : "neutral"}
           icon={Users}
           color="#3B82F6"
         />
         <StatCard
           title="Δημοσιευμένα Άρθρα"
-          value={stats.activePosts}
-          change={`${stats.activePosts > 0 ? 'Ενεργά' : 'Δεν υπάρχουν άρθρα'}`}
-          changeType={stats.activePosts > 0 ? "positive" : "neutral"}
+          value={(stats || statsData).activePosts || 0}
+          change={`${((stats || statsData).activePosts || 0) > 0 ? 'Ενεργά' : 'Δεν υπάρχουν άρθρα'}`}
+          changeType={((stats || statsData).activePosts || 0) > 0 ? "positive" : "neutral"}
           icon={BookOpen}
           color="#10B981"
         />
         <StatCard
           title="Νέοι Εγγεγραμμένοι"
-          value={stats.newSubscribers}
+          value={(stats || statsData).newSubscribers || 0}
           change="αυτόν τον μήνα"
-          changeType={stats.newSubscribers > 0 ? "positive" : "neutral"}
+          changeType={((stats || statsData).newSubscribers || 0) > 0 ? "positive" : "neutral"}
           icon={Mail}
           color="#F59E0B"
         />
         <StatCard
           title="Συνολικές Προβολές"
-          value={stats.totalViews.toLocaleString()}
+          value={((stats || statsData).totalViews || 0).toLocaleString()}
           change="όλων των άρθρων"
           changeType="positive"
           icon={Eye}
@@ -162,7 +162,7 @@ export default function StatsOverview() {
         />
         <StatCard
           title="Συνολικές Αρέσεις"
-          value={stats.totalLikes.toLocaleString()}
+          value={((stats || statsData).totalLikes || 0).toLocaleString()}
           change="όλων των άρθρων"
           changeType="positive"
           icon={Heart}
@@ -170,7 +170,7 @@ export default function StatsOverview() {
         />
         <StatCard
           title="Μέσος Όρος Προβολών"
-          value={stats.activePosts > 0 ? Math.round(stats.totalViews / stats.activePosts) : 0}
+          value={((stats || statsData).activePosts || 0) > 0 ? Math.round(((stats || statsData).totalViews || 0) / ((stats || statsData).activePosts || 1)) : 0}
           change="ανά άρθρο"
           changeType="positive"
           icon={TrendingUp}
@@ -199,3 +199,5 @@ export default function StatsOverview() {
     </div>
   );
 }
+
+export default StatsOverview;

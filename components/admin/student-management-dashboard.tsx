@@ -1,547 +1,1515 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useState, useEffect } from 'react';
+import { adminAPI } from '@/lib/api';
 import { 
+  Users, 
   Search, 
   Filter, 
   Plus, 
   Edit, 
   Trash2, 
   Eye, 
-  ChevronLeft, 
-  ChevronRight,
-  Users,
-  GraduationCap,
-  UserCheck,
-  UserX,
+  Mail, 
+  Phone,
   Calendar,
-  Mail,
-  Phone
+  GraduationCap,
+  BookOpen,
+  TrendingUp,
+  AlertCircle,
+  CheckCircle
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { api } from '@/lib/api';
-import StudentRegistrationForm from './student-registration-form';
 
 interface Student {
-  _id: string;
-  uniqueKey: string;
+  id: string;
+  studentId: string;
+  name: string;
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
   grade: string;
-  school: string;
-  status: 'active' | 'inactive' | 'graduated' | 'suspended';
-  registrationDate: string;
   subjects: string[];
-  parentName: string;
-  parentPhone: string;
-  parentEmail?: string;
-  notes?: string;
+  enrollmentDate: string;
+  lastActivity: string;
+  status: 'active' | 'inactive' | 'suspended';
+  progress: number;
+  totalHours: number;
+  nextClass: string;
+  accessLevel: 'basic' | 'premium' | 'vip';
+  examAccess: string[];
+  createdBy: string;
+  notes: string;
 }
 
 interface StudentStats {
-  totalStudents: number;
-  activeStudents: number;
-  graduatedStudents: number;
-  recentRegistrations: number;
-  studentsByGrade: Array<{ _id: string; count: number }>;
-  studentsByStatus: Array<{ _id: string; count: number }>;
-}
-
-interface Pagination {
-  currentPage: number;
-  totalPages: number;
-  totalStudents: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
+  total: number;
+  active: number;
+  inactive: number;
+  newThisMonth: number;
+  averageProgress: number;
 }
 
 export default function StudentManagementDashboard() {
-  const { toast } = useToast();
   const [students, setStudents] = useState<Student[]>([]);
-  const [stats, setStats] = useState<StudentStats | null>(null);
-  const [pagination, setPagination] = useState<Pagination | null>(null);
+  const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [filterGrade, setFilterGrade] = useState<string>('all');
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
-  
-  // Filters
-  const [filters, setFilters] = useState({
-    search: '',
-    grade: 'all',
-    status: 'all',
-    page: 1,
-    limit: 20,
-    sortBy: 'registrationDate',
-    sortOrder: 'desc'
+  const [showModal, setShowModal] = useState(false);
+  const [showKeyModal, setShowKeyModal] = useState(false);
+  const [generatedKeys, setGeneratedKeys] = useState<string[]>([]);
+  const [generatingKeys, setGeneratingKeys] = useState(false);
+  const [showAddStudentModal, setShowAddStudentModal] = useState(false);
+  const [newStudent, setNewStudent] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    grade: '',
+    school: '',
+    parentName: '',
+    parentPhone: '',
+    parentEmail: '',
+    subjects: [] as string[],
+    notes: ''
+  });
+  const [addingStudent, setAddingStudent] = useState(false);
+  const [showSubjectAccessModal, setShowSubjectAccessModal] = useState(false);
+  const [selectedStudentForAccess, setSelectedStudentForAccess] = useState<Student | null>(null);
+  const [availableSubjects, setAvailableSubjects] = useState<string[]>([]);
+  const [studentSubjectAccess, setStudentSubjectAccess] = useState<string[]>([]);
+  const [updatingAccess, setUpdatingAccess] = useState(false);
+  const [showBulkAccessModal, setShowBulkAccessModal] = useState(false);
+  const [selectedStudentsForBulk, setSelectedStudentsForBulk] = useState<string[]>([]);
+  const [bulkSubjectAccess, setBulkSubjectAccess] = useState<string[]>([]);
+  const [updatingBulkAccess, setUpdatingBulkAccess] = useState(false);
+  const [sortBy, setSortBy] = useState<'name' | 'email' | 'enrollmentDate' | 'status'>('name');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+
+  const [stats, setStats] = useState<StudentStats>({
+    total: 0,
+    active: 0,
+    inactive: 0,
+    newThisMonth: 0,
+    averageProgress: 0
   });
 
-  // Load students and stats
+  // Load students from API
   useEffect(() => {
     loadStudents();
-    loadStats();
-  }, [filters]);
+    loadAvailableSubjects();
+  }, []);
+
+  const loadAvailableSubjects = async () => {
+    try {
+      // Match the subjects from curriculum page
+      const subjects = [
+        'Μαθηματικά',
+        'Φυσική',
+        'Χημεία',
+        'Βιολογία',
+        'Άλγεβρα',
+        'Γεωμετρία',
+        'Αρχαία',
+        'Έκθεση - Λογοτεχνία',
+        'Ιστορία',
+        'Λατινικά',
+        'ΑΟΘ / Οικονομικά',
+        'Πληροφορική'
+      ];
+      setAvailableSubjects(subjects);
+    } catch (error) {
+      console.error('Error loading subjects:', error);
+    }
+  };
 
   const loadStudents = async () => {
-    setIsLoading(true);
     try {
-      const effectiveFilters: any = { ...filters };
-      if (effectiveFilters.grade === 'all') delete effectiveFilters.grade;
-      if (effectiveFilters.status === 'all') delete effectiveFilters.status;
+      setIsLoading(true);
+      
+      const response = await adminAPI.getStudents();
 
-      const { data } = await api.get('/api/admin/students', { params: effectiveFilters });
+      if (response.success) {
+        // Transform API data to match component interface
+        const students: Student[] = response.data.students.map((student: any) => ({
+          id: student._id,
+          studentId: student.uniqueKey,
+          name: `${student.firstName} ${student.lastName}`,
+          firstName: student.firstName,
+          lastName: student.lastName,
+          email: student.email,
+          phone: student.phone,
+          grade: student.grade,
+          subjects: student.subjects || [],
+          enrollmentDate: new Date(student.registrationDate).toLocaleDateString('el-GR'),
+          lastActivity: student.lastLogin ? new Date(student.lastLogin).toLocaleDateString('el-GR') : 'Ποτέ',
+          status: student.status || 'active',
+          progress: 0, // Not available in current API
+          totalHours: 0, // Not available in current API
+          nextClass: 'Δεν έχει προγραμματιστεί', // Not available in current API
+          accessLevel: 'basic', // Not available in current API
+          examAccess: [], // Not available in current API
+          createdBy: 'admin', // Not available in current API
+          notes: student.notes || ''
+        }));
 
-      if (data.success) {
-        setStudents(data.data.students);
-        setPagination(data.data.pagination);
+        setStudents(students);
+        setFilteredStudents(students);
+        
+        // Calculate stats
+        const activeStudents = students.filter(s => s.status === 'active').length;
+        const inactiveStudents = students.filter(s => s.status === 'inactive').length;
+        const newThisMonth = students.filter(s => {
+          const enrollmentDate = new Date(s.enrollmentDate);
+          const now = new Date();
+          const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          return enrollmentDate >= thirtyDaysAgo;
+        }).length;
+
+        setStats({
+          total: students.length,
+          active: activeStudents,
+          inactive: inactiveStudents,
+          newThisMonth: newThisMonth,
+          averageProgress: 0 // Not available in current API
+        });
       } else {
-        toast({
-          title: "Σφάλμα",
-          description: data.message || "Αποτυχία φόρτωσης μαθητών",
-          variant: "destructive"
+        console.error('Error loading students:', response.message);
+        // Set empty data on error
+        setStudents([]);
+        setFilteredStudents([]);
+        setStats({
+          total: 0,
+          active: 0,
+          inactive: 0,
+          newThisMonth: 0,
+          averageProgress: 0
         });
       }
     } catch (error) {
       console.error('Error loading students:', error);
-      toast({
-        title: "Σφάλμα",
-        description: "Αποτυχία φόρτωσης μαθητών. Προσπάθησε ξανά.",
-        variant: "destructive"
+      // Set empty data on error
+      setStudents([]);
+      setFilteredStudents([]);
+      setStats({
+        total: 0,
+        active: 0,
+        inactive: 0,
+        newThisMonth: 0,
+        averageProgress: 0
       });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const loadStats = async () => {
+  const handleGenerateStudentIds = async () => {
     try {
-      const { data } = await api.get('/api/admin/students/stats/overview');
+      setGeneratingKeys(true);
+      const response = await adminAPI.generateStudentKeys(5);
 
-      if (data.success) {
-        setStats(data.data);
+      if (response.success) {
+        setGeneratedKeys(response.data.previewKeys);
+        setShowKeyModal(true);
+      } else {
+        console.error('Error generating student IDs:', response.message);
+        alert('Σφάλμα κατά τη δημιουργία κωδικών μαθητών: ' + response.message);
       }
     } catch (error) {
-      console.error('Error loading stats:', error);
+      console.error('Error generating student IDs:', error);
+      alert('Σφάλμα κατά τη σύνδεση με τον διακομιστή');
+    } finally {
+      setGeneratingKeys(false);
     }
   };
 
-  const handleFilterChange = (key: string, value: string) => {
-    setFilters(prev => ({
-      ...prev,
-      [key]: value,
-      page: 1 // Reset to first page when filtering
-    }));
+  const copyKeyToClipboard = async (key: string) => {
+    try {
+      await navigator.clipboard.writeText(key);
+      alert('Κωδικός αντιγράφηκε στο clipboard!');
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = key;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Κωδικός αντιγράφηκε στο clipboard!');
+    }
   };
 
-  const handlePageChange = (newPage: number) => {
-    setFilters(prev => ({
-      ...prev,
-      page: newPage
-    }));
+  const copyAllKeysToClipboard = async () => {
+    try {
+      const allKeys = generatedKeys.join('\n');
+      await navigator.clipboard.writeText(allKeys);
+      alert('Όλοι οι κωδικοί αντιγράφηκαν στο clipboard!');
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+      const textArea = document.createElement('textarea');
+      textArea.value = generatedKeys.join('\n');
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Όλοι οι κωδικοί αντιγράφηκαν στο clipboard!');
+    }
   };
 
-  const handleDeleteStudent = async (studentId: string) => {
-    if (!confirm('Σίγουρα θέλεις να διαγράψεις αυτόν τον μαθητή; Η ενέργεια δεν αναιρείται.')) {
+  const handleAddStudent = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!newStudent.firstName || !newStudent.lastName || !newStudent.email || !newStudent.phone || !newStudent.grade) {
+      alert('Παρακαλώ συμπληρώστε τα υποχρεωτικά πεδία');
+      return;
+    }
+    
+    // Validate phone numbers have at least some digits
+    const phoneDigits = (newStudent.phone || '').replace(/\D/g, '');
+    const parentPhoneDigits = (newStudent.parentPhone || '').replace(/\D/g, '');
+    
+    if (!phoneDigits || phoneDigits.length === 0) {
+      alert('Παρακαλώ εισαγάγετε έγκυρο τηλέφωνο (10 ψηφία)');
+      return;
+    }
+    
+    if (!parentPhoneDigits || parentPhoneDigits.length === 0) {
+      alert('Παρακαλώ εισαγάγετε έγκυρο τηλέφωνο γονέα (10 ψηφία)');
+      return;
+    }
+
+    // Normalize phone numbers - Greek tutoring center, always extract 10 digits
+    const normalizePhone = (phone: string) => {
+      if (!phone || phone.trim() === '') {
+        return '';
+      }
+      
+      // Extract only digits (removes +30, 0030, spaces, dashes, letters, etc.)
+      const digitsOnly = phone.replace(/\D/g, '');
+      
+      // If no digits found, return empty string (will fail validation)
+      if (digitsOnly.length === 0) {
+        return '';
+      }
+      
+      // For Greek numbers, extract exactly 10 digits
+      // If starts with 30 (country code), remove it
+      if (digitsOnly.length >= 12 && digitsOnly.startsWith('30')) {
+        return digitsOnly.slice(2, 12); // Remove '30', take next 10 digits
+      }
+      // If more than 10 digits, take last 10 (handles cases like 485656115156)
+      else if (digitsOnly.length > 10) {
+        return digitsOnly.slice(-10); // Take last 10 digits
+      }
+      // If exactly 10 digits, perfect!
+      else if (digitsOnly.length === 10) {
+        return digitsOnly;
+      }
+      // If less than 10, return the digits (will fail backend validation with clear message)
+      else {
+        return digitsOnly;
+      }
+    };
+
+    // Normalize phone numbers before sending
+    const normalizedPhone = normalizePhone(newStudent.phone || '');
+    const normalizedParentPhone = normalizePhone(newStudent.parentPhone || '');
+    
+    const studentData = {
+      ...newStudent,
+      phone: normalizedPhone,
+      parentPhone: normalizedParentPhone,
+      // Remove parentEmail if empty
+      parentEmail: newStudent.parentEmail?.trim() || undefined
+    };
+
+    // Remove debug logging in production
+    // console.log('Sending student data:', JSON.stringify(studentData, null, 2));
+
+    try {
+      setAddingStudent(true);
+      const response = await adminAPI.createStudent(studentData);
+      
+      if (response.success) {
+        alert('Μαθητής προστέθηκε επιτυχώς!');
+        setShowAddStudentModal(false);
+        setNewStudent({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          grade: '',
+          school: '',
+          parentName: '',
+          parentPhone: '',
+          parentEmail: '',
+          subjects: [],
+          notes: ''
+        });
+        loadStudents(); // Reload the list
+      } else {
+        // Show detailed error messages from backend
+        const errorMsg = response.errors 
+          ? response.errors.map((err: any) => `${err.param || 'Field'}: ${err.msg || err.message}`).join('\n')
+          : response.message || 'Σφάλμα κατά την προσθήκη μαθητή';
+        alert('Σφάλμα κατά την προσθήκη μαθητή:\n' + errorMsg);
+      }
+    } catch (error: any) {
+      // Show backend validation errors if available
+      if (error.response?.data) {
+        const errorData = error.response.data;
+        let errorMsg = '';
+        
+        if (errorData.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+          // Format validation errors
+          errorMsg = errorData.errors.map((err: any) => {
+            // Map field names to Greek
+            const fieldNames: Record<string, string> = {
+              'phone': 'Τηλέφωνο',
+              'parentPhone': 'Τηλέφωνο Γονέα',
+              'email': 'Email',
+              'parentEmail': 'Email Γονέα',
+              'firstName': 'Όνομα',
+              'lastName': 'Επώνυμο',
+              'grade': 'Τάξη',
+              'school': 'Σχολείο',
+              'parentName': 'Όνομα Γονέα'
+            };
+            const fieldName = fieldNames[err.path || err.param || err.field] || err.path || err.param || err.field || 'Πεδίο';
+            const message = err.msg || err.message || 'Σφάλμα επικύρωσης';
+            return `${fieldName}: ${message}`;
+          }).join('\n');
+        } else {
+          errorMsg = errorData.message || 'Σφάλμα κατά την προσθήκη μαθητή';
+        }
+        
+        alert('Σφάλμα κατά την προσθήκη μαθητή:\n\n' + errorMsg);
+      } else {
+        alert('Σφάλμα κατά την προσθήκη μαθητή: ' + (error.message || 'Δεν ήταν δυνατή η σύνδεση με τον διακομιστή'));
+      }
+    } finally {
+      setAddingStudent(false);
+    }
+  };
+
+  const handleOpenSubjectAccess = (student: Student) => {
+    setSelectedStudentForAccess(student);
+    setStudentSubjectAccess(student.subjects || []);
+    setShowSubjectAccessModal(true);
+  };
+
+  const handleUpdateSubjectAccess = async () => {
+    if (!selectedStudentForAccess) return;
+
+    try {
+      setUpdatingAccess(true);
+      
+      // Update student's subject access
+      const response = await adminAPI.updateStudent(selectedStudentForAccess.id, {
+        subjects: studentSubjectAccess
+      });
+
+      if (response.success) {
+        alert('Πρόσβαση στα μαθήματα ενημερώθηκε επιτυχώς!');
+        setShowSubjectAccessModal(false);
+        loadStudents(); // Reload the list
+      } else {
+        alert('Σφάλμα κατά την ενημέρωση πρόσβασης: ' + response.message);
+      }
+    } catch (error) {
+      console.error('Error updating subject access:', error);
+      alert('Σφάλμα κατά την ενημέρωση πρόσβασης');
+    } finally {
+      setUpdatingAccess(false);
+    }
+  };
+
+  const toggleSubjectAccess = (subject: string) => {
+    setStudentSubjectAccess(prev => {
+      if (prev.includes(subject)) {
+        return prev.filter(s => s !== subject);
+      } else {
+        return [...prev, subject];
+      }
+    });
+  };
+
+  const selectAllSubjects = () => {
+    setStudentSubjectAccess([...availableSubjects]);
+  };
+
+  const clearAllSubjects = () => {
+    setStudentSubjectAccess([]);
+  };
+
+  const handleOpenBulkAccess = () => {
+    setSelectedStudentsForBulk([]);
+    setBulkSubjectAccess([]);
+    setShowBulkAccessModal(true);
+  };
+
+  const toggleStudentSelection = (studentId: string) => {
+    setSelectedStudentsForBulk(prev => {
+      if (prev.includes(studentId)) {
+        return prev.filter(id => id !== studentId);
+      } else {
+        return [...prev, studentId];
+      }
+    });
+  };
+
+  const selectAllStudents = () => {
+    setSelectedStudentsForBulk(students.map(s => s.id));
+  };
+
+  const clearStudentSelection = () => {
+    setSelectedStudentsForBulk([]);
+  };
+
+  const toggleBulkSubjectAccess = (subject: string) => {
+    setBulkSubjectAccess(prev => {
+      if (prev.includes(subject)) {
+        return prev.filter(s => s !== subject);
+      } else {
+        return [...prev, subject];
+      }
+    });
+  };
+
+  const selectAllBulkSubjects = () => {
+    setBulkSubjectAccess([...availableSubjects]);
+  };
+
+  const clearAllBulkSubjects = () => {
+    setBulkSubjectAccess([]);
+  };
+
+  const handleUpdateBulkAccess = async () => {
+    if (selectedStudentsForBulk.length === 0) {
+      alert('Παρακαλώ επιλέξτε τουλάχιστον έναν μαθητή');
+      return;
+    }
+
+    if (bulkSubjectAccess.length === 0) {
+      alert('Παρακαλώ επιλέξτε τουλάχιστον ένα μάθημα');
       return;
     }
 
     try {
-      const { data } = await api.delete(`/api/admin/students/${studentId}`);
+      setUpdatingBulkAccess(true);
+      
+      // Update all selected students' subject access
+      const updatePromises = selectedStudentsForBulk.map(studentId => 
+        adminAPI.updateStudent(studentId, {
+          subjects: bulkSubjectAccess
+        })
+      );
 
-      if (data.success) {
-        toast({
-        title: "Επιτυχία",
-        description: "Ο μαθητής διαγράφηκε επιτυχώς"
-        });
-        loadStudents();
-        loadStats();
-      } else {
-        toast({
-        title: "Σφάλμα",
-        description: data.message || "Αποτυχία διαγραφής μαθητή",
-          variant: "destructive"
-        });
-      }
+      const results = await Promise.all(updatePromises);
+      const successCount = results.filter(r => r.success).length;
+
+      alert(`Ενημερώθηκαν ${successCount} από ${selectedStudentsForBulk.length} μαθητές επιτυχώς!`);
+      setShowBulkAccessModal(false);
+      loadStudents(); // Reload the list
     } catch (error) {
-      console.error('Error deleting student:', error);
-      toast({
-      title: "Σφάλμα",
-      description: "Αποτυχία διαγραφής μαθητή. Προσπάθησε ξανά.",
-        variant: "destructive"
-      });
+      console.error('Error updating bulk access:', error);
+      alert('Σφάλμα κατά την ενημέρωση μαζικής πρόσβασης');
+    } finally {
+      setUpdatingBulkAccess(false);
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const statusConfig = {
-      active: { variant: 'default' as const, label: 'Active', icon: UserCheck },
-      inactive: { variant: 'secondary' as const, label: 'Inactive', icon: UserX },
-      graduated: { variant: 'outline' as const, label: 'Graduated', icon: GraduationCap },
-      suspended: { variant: 'destructive' as const, label: 'Suspended', icon: UserX }
-    };
+  // Filter and search functionality
+  useEffect(() => {
+    let filtered = students;
 
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.inactive;
-    const Icon = config.icon;
+    if (searchTerm) {
+      filtered = filtered.filter(student =>
+        student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.phone.includes(searchTerm)
+      );
+    }
 
+    if (filterStatus !== 'all') {
+      filtered = filtered.filter(student => student.status === filterStatus);
+    }
+
+    if (filterGrade !== 'all') {
+      filtered = filtered.filter(student => student.grade === filterGrade);
+    }
+
+    setFilteredStudents(filtered);
+  }, [students, searchTerm, filterStatus, filterGrade]);
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'active':
+        return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case 'inactive':
+        return <AlertCircle className="w-4 h-4 text-yellow-500" />;
+      case 'suspended':
+        return <AlertCircle className="w-4 h-4 text-red-500" />;
+      default:
+        return <AlertCircle className="w-4 h-4 text-gray-500" />;
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'active':
+        return 'Ενεργός';
+      case 'inactive':
+        return 'Ανενεργός';
+      case 'suspended':
+        return 'Ανασταλμένος';
+      default:
+        return 'Άγνωστο';
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active':
+        return 'text-green-600 bg-green-50';
+      case 'inactive':
+        return 'text-yellow-600 bg-yellow-50';
+      case 'suspended':
+        return 'text-red-600 bg-red-50';
+      default:
+        return 'text-gray-600 bg-gray-50';
+    }
+  };
+
+  if (isLoading) {
     return (
-      <Badge variant={config.variant} className="flex items-center gap-1">
-        <Icon className="h-3 w-3" />
-        {config.label}
-      </Badge>
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E7B109] mx-auto mb-4"></div>
+          <p className="text-gray-600">Φόρτωση δεδομένων μαθητών...</p>
+        </div>
+      </div>
     );
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('el-GR', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
+  }
 
   return (
     <div className="space-y-6">
-      {/* Stats Overview */}
-      {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Σύνολο Μαθητών</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalStudents}</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Ενεργοί Μαθητές</CardTitle>
-              <UserCheck className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">{stats.activeStudents}</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Απόφοιτοι</CardTitle>
-              <GraduationCap className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-blue-600">{stats.graduatedStudents}</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Πρόσφατοι (30 ημέρες)</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-orange-600">{stats.recentRegistrations}</div>
-            </CardContent>
-          </Card>
+      {/* Simple Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Μαθητές</h2>
+          <p className="text-gray-600">Διαχείριση μαθητών και πρόσβασης σε εξετάσεις</p>
         </div>
-      )}
+        <div className="flex gap-3">
+          <button 
+            onClick={() => setShowAddStudentModal(true)}
+            className="bg-[#E7B109] text-white px-4 py-2 rounded-lg hover:bg-[#D97706] transition-colors"
+          >
+            + Προσθήκη Μαθητή
+          </button>
+          <button 
+            onClick={handleGenerateStudentIds}
+            disabled={generatingKeys}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+          >
+            {generatingKeys ? 'Δημιουργία...' : 'Δημιουργία Κωδικών'}
+          </button>
+        </div>
+      </div>
 
-      {/* Filters and Actions */}
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <CardTitle>Διαχείριση Μαθητών</CardTitle>
-              <CardDescription>Διαχείριση εγγραφών και στοιχείων μαθητών</CardDescription>
-            </div>
-            <Dialog open={isRegistrationOpen} onOpenChange={setIsRegistrationOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Εγγραφή Νέου Μαθητή
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:!max-w-[95vw] !max-w-[95vw] !w-[95vw] max-h-[95vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>Εγγραφή Νέου Μαθητή</DialogTitle>
-                  <DialogDescription>
-                    Καταχώριση νέου μαθητή με μοναδικό κωδικό που δημιουργείται αυτόματα.
-                  </DialogDescription>
-                </DialogHeader>
-                <StudentRegistrationForm onSuccess={() => {
-                  setIsRegistrationOpen(false);
-                  loadStudents();
-                  loadStats();
-                }} />
-              </DialogContent>
-            </Dialog>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="flex-1">
-              <Label htmlFor="search">Αναζήτηση</Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="search"
-                  placeholder="Αναζήτηση με όνομα, email ή κωδικό..."
-                  value={filters.search}
-                  onChange={(e) => handleFilterChange('search', e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            
-            <div className="sm:w-48">
-              <Label htmlFor="grade">Τάξη</Label>
-              <Select value={filters.grade} onValueChange={(value) => handleFilterChange('grade', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Όλες οι τάξεις" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Όλες οι τάξεις</SelectItem>
-                  <SelectItem value="Γ Λυκείου">Γ Λυκείου</SelectItem>
-                  <SelectItem value="Β Λυκείου">Β Λυκείου</SelectItem>
-                  <SelectItem value="Α Λυκείου">Α Λυκείου</SelectItem>
-                  <SelectItem value="Γ Γυμνασίου">Γ Γυμνασίου</SelectItem>
-                  <SelectItem value="Β Γυμνασίου">Β Γυμνασίου</SelectItem>
-                  <SelectItem value="Α Γυμνασίου">Α Γυμνασίου</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="sm:w-48">
-              <Label htmlFor="status">Κατάσταση</Label>
-              <Select value={filters.status} onValueChange={(value) => handleFilterChange('status', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Όλες οι καταστάσεις" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Όλες οι καταστάσεις</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
-                  <SelectItem value="graduated">Graduated</SelectItem>
-                  <SelectItem value="suspended">Suspended</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+      {/* Simple Stats */}
+      <div className="grid grid-cols-3 gap-4">
+        <div className="bg-white p-4 rounded-lg border">
+          <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
+          <div className="text-sm text-gray-600">Συνολικοί Μαθητές</div>
+        </div>
+        <div className="bg-white p-4 rounded-lg border">
+          <div className="text-2xl font-bold text-green-600">{stats.active}</div>
+          <div className="text-sm text-gray-600">Ενεργοί</div>
+        </div>
+        <div className="bg-white p-4 rounded-lg border">
+          <div className="text-2xl font-bold text-blue-600">{stats.newThisMonth}</div>
+          <div className="text-sm text-gray-600">Νέοι</div>
+        </div>
+      </div>
 
-          {/* Students Table */}
-          <div className="border rounded-lg">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Κωδικός Μαθητή</TableHead>
-                  <TableHead>Ονοματεπώνυμο</TableHead>
-                  <TableHead>Τάξη</TableHead>
-                  <TableHead>Σχολείο</TableHead>
-                  <TableHead>Κατάσταση</TableHead>
-                  <TableHead>Ημερομηνία Εγγραφής</TableHead>
-                  <TableHead>Ενέργειες</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8">
-                      <div className="flex items-center justify-center">
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-                        <span className="ml-2">Φόρτωση μαθητών...</span>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ) : students.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-                      Δεν βρέθηκαν μαθητές
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  students.map((student) => (
-                    <TableRow key={student._id}>
-                      <TableCell className="font-mono text-sm">
-                        {student.uniqueKey}
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{student.firstName} {student.lastName}</div>
-                          <div className="text-sm text-muted-foreground">{student.email}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{student.grade}</TableCell>
-                      <TableCell className="max-w-[200px] truncate">{student.school}</TableCell>
-                      <TableCell>{getStatusBadge(student.status)}</TableCell>
-                      <TableCell>{formatDate(student.registrationDate)}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setSelectedStudent(student)}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {/* TODO: Edit student */}}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleDeleteStudent(student._id)}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+      {/* Simple Search */}
+      <div className="bg-white p-4 rounded-lg border">
+        <div className="flex gap-4">
+          <input
+            type="text"
+            placeholder="Αναζήτηση μαθητών..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+          />
+          <select
+            value={filterGrade}
+            onChange={(e) => setFilterGrade(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+          >
+            <option value="all">Όλες οι τάξεις</option>
+            <option value="Α' Λυκείου">Α' Λυκείου</option>
+            <option value="Β' Λυκείου">Β' Λυκείου</option>
+            <option value="Γ' Λυκείου">Γ' Λυκείου</option>
+          </select>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+          >
+            <option value="all">Όλες οι καταστάσεις</option>
+            <option value="active">Ενεργός</option>
+            <option value="inactive">Ανενεργός</option>
+          </select>
+        </div>
+      </div>
 
-          {/* Pagination */}
-          {pagination && pagination.totalPages > 1 && (
-            <div className="flex items-center justify-between mt-4">
-              <div className="text-sm text-muted-foreground">
-                Εμφάνιση {((pagination.currentPage - 1) * filters.limit) + 1} έως{' '}
-                {Math.min(pagination.currentPage * filters.limit, pagination.totalStudents)} από{' '}
-                {pagination.totalStudents} μαθητές
-              </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(pagination.currentPage - 1)}
-                  disabled={!pagination.hasPrevPage}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  Προηγούμενη
-                </Button>
-                <span className="text-sm">
-                  Σελίδα {pagination.currentPage} από {pagination.totalPages}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(pagination.currentPage + 1)}
-                  disabled={!pagination.hasNextPage}
-                >
-                  Επόμενη
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {/* Students Table */}
+      <div className="bg-white rounded-lg border overflow-hidden">
+        <div className="px-4 py-3 border-b bg-gray-50">
+          <div className="flex items-center justify-between">
+            <h3 className="font-medium text-gray-900">Μαθητές ({filteredStudents.length})</h3>
+            <button 
+              onClick={handleOpenBulkAccess}
+              className="text-sm text-blue-600 hover:text-blue-800"
+            >
+              Μαζική Πρόσβαση
+            </button>
+          </div>
+        </div>
+        
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Κωδικός</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Όνομα</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Τάξη</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Μαθήματα</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Κατάσταση</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Ενέργειες</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredStudents.map((student) => (
+                <tr key={student.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div className="text-sm font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded">
+                      {student.studentId}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">{student.name}</div>
+                      <div className="text-sm text-gray-500">{student.email}</div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">{student.grade}</div>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div className="flex flex-wrap gap-1">
+                      {(student.subjects || []).slice(0, 2).map((subject, index) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                        >
+                          {subject}
+                        </span>
+                      ))}
+                      {(student.subjects || []).length > 2 && (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                          +{(student.subjects || []).length - 2}
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(student.status)}`}>
+                      {getStatusText(student.status)}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => handleOpenSubjectAccess(student)}
+                        className="text-blue-600 hover:text-blue-800 text-sm"
+                        title="Διαχείριση Μαθημάτων"
+                      >
+                        Μαθήματα
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedStudent(student);
+                          setShowModal(true);
+                        }}
+                        className="text-gray-600 hover:text-gray-800 text-sm"
+                        title="Λεπτομέρειες"
+                      >
+                        Προβολή
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {filteredStudents.length === 0 && (
+          <div className="text-center py-8">
+            <div className="text-gray-500 mb-4">Δεν βρέθηκαν μαθητές</div>
+            <button 
+              onClick={() => setShowAddStudentModal(true)}
+              className="bg-[#E7B109] text-white px-4 py-2 rounded-lg hover:bg-[#D97706] transition-colors"
+            >
+              Προσθήκη Πρώτου Μαθητή
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Student Details Modal */}
-      {selectedStudent && (
-        <Dialog open={!!selectedStudent} onOpenChange={() => setSelectedStudent(null)}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Student Details</DialogTitle>
-              <DialogDescription>
-                Complete information for {selectedStudent.firstName} {selectedStudent.lastName}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm font-medium">Student Key</Label>
-                  <div className="font-mono text-sm bg-gray-100 p-2 rounded">
-                    {selectedStudent.uniqueKey}
-                  </div>
-                </div>
-                <div>
-                  <Label className="text-sm font-medium">Status</Label>
-                  <div className="mt-1">
-                    {getStatusBadge(selectedStudent.status)}
-                  </div>
-                </div>
+      {showModal && selectedStudent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">Στοιχεία Μαθητή</h3>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <span className="sr-only">Κλείσιμο</span>
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm font-medium">Email</Label>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail className="h-4 w-4" />
-                    {selectedStudent.email}
+
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Κωδικός Μαθητή</h4>
+                    <p className="text-lg font-mono font-medium text-gray-900 bg-gray-100 px-3 py-2 rounded">
+                      {selectedStudent.studentId}
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Ονοματεπώνυμο</h4>
+                    <p className="text-lg text-gray-900">{selectedStudent.name}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Email</h4>
+                    <p className="text-lg text-gray-900">{selectedStudent.email}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Τηλέφωνο</h4>
+                    <p className="text-lg text-gray-900">{selectedStudent.phone}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Τάξη</h4>
+                    <p className="text-lg text-gray-900">{selectedStudent.grade}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Επίπεδο Πρόσβασης</h4>
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                      selectedStudent.accessLevel === 'basic' ? 'text-blue-600 bg-blue-100' :
+                      selectedStudent.accessLevel === 'premium' ? 'text-purple-600 bg-purple-100' :
+                      'text-yellow-600 bg-yellow-100'
+                    }`}>
+                      {selectedStudent.accessLevel === 'basic' ? 'Βασικό' :
+                       selectedStudent.accessLevel === 'premium' ? 'Premium' : 'VIP'}
+                    </span>
                   </div>
                 </div>
+
                 <div>
-                  <Label className="text-sm font-medium">Phone</Label>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Phone className="h-4 w-4" />
-                    {selectedStudent.phone}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm font-medium">Grade</Label>
-                  <div className="text-sm">{selectedStudent.grade}</div>
-                </div>
-                <div>
-                  <Label className="text-sm font-medium">School</Label>
-                  <div className="text-sm">{selectedStudent.school}</div>
-                </div>
-              </div>
-              
-              {selectedStudent.subjects.length > 0 && (
-                <div>
-                  <Label className="text-sm font-medium">Subjects</Label>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {selectedStudent.subjects.map((subject) => (
-                      <Badge key={subject} variant="secondary" className="text-xs">
+                  <h4 className="text-sm font-medium text-gray-500 mb-2">Μαθήματα</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedStudent.subjects.map((subject, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                      >
                         {subject}
-                      </Badge>
+                      </span>
                     ))}
                   </div>
                 </div>
-              )}
-              
-              <div>
-                <Label className="text-sm font-medium">Parent Information</Label>
-                <div className="text-sm space-y-1">
-                  <div>Name: {selectedStudent.parentName}</div>
-                  <div>Phone: {selectedStudent.parentPhone}</div>
-                  {selectedStudent.parentEmail && (
-                    <div>Email: {selectedStudent.parentEmail}</div>
-                  )}
-                </div>
-              </div>
-              
-              {selectedStudent.notes && (
-                <div>
-                  <Label className="text-sm font-medium">Notes</Label>
-                  <div className="text-sm bg-gray-50 p-2 rounded">
-                    {selectedStudent.notes}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Πρόοδος</h4>
+                    <div className="flex items-center">
+                      <div className="w-24 bg-gray-200 rounded-full h-2 mr-3">
+                        <div
+                          className="bg-[#E7B109] h-2 rounded-full"
+                          style={{ width: `${selectedStudent.progress}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-lg font-medium text-gray-900">{selectedStudent.progress}%</span>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Συνολικές Ώρες</h4>
+                    <p className="text-lg text-gray-900">{selectedStudent.totalHours} ώρες</p>
                   </div>
                 </div>
-              )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Ημερομηνία Εγγραφής</h4>
+                    <p className="text-lg text-gray-900">
+                      {new Date(selectedStudent.enrollmentDate).toLocaleDateString('el-GR')}
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Τελευταία Δραστηριότητα</h4>
+                    <p className="text-lg text-gray-900">
+                      {new Date(selectedStudent.lastActivity).toLocaleDateString('el-GR')}
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500 mb-2">Επόμενο Μάθημα</h4>
+                  <p className="text-lg text-gray-900">{selectedStudent.nextClass}</p>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500 mb-2">Πρόσβαση σε Υλικά Εξετάσεων</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedStudent.examAccess.map((access, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800"
+                      >
+                        {access}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500 mb-2">Σημειώσεις</h4>
+                  <p className="text-lg text-gray-900 bg-gray-50 p-3 rounded-lg">
+                    {selectedStudent.notes || 'Δεν υπάρχουν σημειώσεις'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 mt-8">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Κλείσιμο
+                </button>
+                <button className="px-4 py-2 bg-[#E7B109] text-white rounded-lg hover:bg-[#D97706] transition-colors">
+                  Επεξεργασία
+                </button>
+              </div>
             </div>
-          </DialogContent>
-        </Dialog>
+          </div>
+        </div>
+      )}
+
+      {/* Key Generation Modal */}
+      {showKeyModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">Δημιουργημένοι Κωδικοί Μαθητών</h3>
+                <button
+                  onClick={() => setShowKeyModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <span className="sr-only">Κλείσιμο</span>
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span className="text-sm font-medium text-blue-800">Οδηγίες Χρήσης</span>
+                  </div>
+                  <p className="text-sm text-blue-700">
+                    Αυτοί οι κωδικοί μπορούν να χρησιμοποιηθούν για την εγγραφή νέων μαθητών. 
+                    Κάθε κωδικός είναι μοναδικός και μπορεί να χρησιμοποιηθεί μόνο μία φορά.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  {generatedKeys.map((key, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-medium text-gray-500">#{index + 1}</span>
+                        <code className="font-mono text-lg font-bold text-gray-900 bg-white px-3 py-1 rounded border">
+                          {key}
+                        </code>
+                      </div>
+                      <button
+                        onClick={() => copyKeyToClipboard(key)}
+                        className="flex items-center gap-1 px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Αντιγραφή
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex gap-3 pt-4 border-t">
+                  <button
+                    onClick={copyAllKeysToClipboard}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    Αντιγραφή Όλων
+                  </button>
+                  <button
+                    onClick={() => setShowKeyModal(false)}
+                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    Κλείσιμο
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Student Modal */}
+      {showAddStudentModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">Προσθήκη Νέου Μαθητή</h3>
+                <button
+                  onClick={() => setShowAddStudentModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <span className="sr-only">Κλείσιμο</span>
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <form onSubmit={handleAddStudent} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Όνομα *</label>
+                    <input
+                      type="text"
+                      value={newStudent.firstName}
+                      onChange={(e) => setNewStudent({...newStudent, firstName: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Επώνυμο *</label>
+                    <input
+                      type="text"
+                      value={newStudent.lastName}
+                      onChange={(e) => setNewStudent({...newStudent, lastName: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                    <input
+                      type="email"
+                      value={newStudent.email}
+                      onChange={(e) => setNewStudent({...newStudent, email: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Τηλέφωνο *</label>
+                    <input
+                      type="tel"
+                      value={newStudent.phone}
+                      onChange={(e) => {
+                        // Only allow digits, spaces, +, and dashes - filter out letters
+                        const value = e.target.value.replace(/[^\d\s+\-]/g, '');
+                        setNewStudent({...newStudent, phone: value});
+                      }}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+                      placeholder="π.χ. 6946795363"
+                      maxLength={15}
+                      required
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Απλά πληκτρολογήστε τον αριθμό (10 ψηφία)</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Τάξη *</label>
+                    <select
+                      value={newStudent.grade}
+                      onChange={(e) => setNewStudent({...newStudent, grade: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+                      required
+                    >
+                      <option value="">Επιλέξτε τάξη</option>
+                      <option value="Α Λυκείου">Α' Λυκείου</option>
+                      <option value="Β Λυκείου">Β' Λυκείου</option>
+                      <option value="Γ Λυκείου">Γ' Λυκείου</option>
+                      <option value="Α Γυμνασίου">Α' Γυμνασίου</option>
+                      <option value="Β Γυμνασίου">Β' Γυμνασίου</option>
+                      <option value="Γ Γυμνασίου">Γ' Γυμνασίου</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Σχολείο *</label>
+                    <input
+                      type="text"
+                      value={newStudent.school}
+                      onChange={(e) => setNewStudent({...newStudent, school: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Όνομα Γονέα *</label>
+                    <input
+                      type="text"
+                      value={newStudent.parentName}
+                      onChange={(e) => setNewStudent({...newStudent, parentName: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Τηλέφωνο Γονέα *</label>
+                    <input
+                      type="tel"
+                      value={newStudent.parentPhone}
+                      onChange={(e) => {
+                        // Only allow digits, spaces, +, and dashes
+                        const value = e.target.value.replace(/[^\d\s+\-]/g, '');
+                        setNewStudent({...newStudent, parentPhone: value});
+                      }}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+                      placeholder="π.χ. 6946795363"
+                      maxLength={15}
+                      required
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Απλά πληκτρολογήστε τον αριθμό (10 ψηφία)</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Email Γονέα (προαιρετικό)</label>
+                    <input
+                      type="email"
+                      value={newStudent.parentEmail || ''}
+                      onChange={(e) => setNewStudent({...newStudent, parentEmail: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+                      placeholder="parent@example.com"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Μαθήματα (προαιρετικό)</label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {[
+                      'Μαθηματικά',
+                      'Φυσική',
+                      'Χημεία',
+                      'Βιολογία',
+                      'Άλγεβρα',
+                      'Γεωμετρία',
+                      'Αρχαία',
+                      'Έκθεση - Λογοτεχνία',
+                      'Ιστορία',
+                      'Λατινικά',
+                      'ΑΟΘ / Οικονομικά',
+                      'Πληροφορική'
+                    ].map((subject) => (
+                      <label key={subject} className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={newStudent.subjects.includes(subject)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setNewStudent({
+                                ...newStudent,
+                                subjects: [...newStudent.subjects, subject]
+                              });
+                            } else {
+                              setNewStudent({
+                                ...newStudent,
+                                subjects: newStudent.subjects.filter(s => s !== subject)
+                              });
+                            }
+                          }}
+                          className="w-4 h-4 text-[#E7B109] border-gray-300 rounded focus:ring-[#E7B109]"
+                        />
+                        <span className="text-sm text-gray-700">{subject}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Σημειώσεις</label>
+                  <textarea
+                    value={newStudent.notes}
+                    onChange={(e) => setNewStudent({...newStudent, notes: e.target.value})}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent h-20"
+                    placeholder="Προαιρετικές σημειώσεις..."
+                  />
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4 border-t">
+                  <button
+                    type="button"
+                    onClick={() => setShowAddStudentModal(false)}
+                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    Ακύρωση
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={addingStudent}
+                    className="px-6 py-2 bg-[#E7B109] text-white rounded-lg hover:bg-[#D97706] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {addingStudent ? 'Προσθήκη...' : 'Προσθήκη Μαθητή'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Subject Access Management Modal */}
+      {showSubjectAccessModal && selectedStudentForAccess && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Διαχείριση Πρόσβασης Μαθημάτων</h3>
+                  <p className="text-sm text-gray-600">
+                    Μαθητής: <span className="font-medium">{selectedStudentForAccess.name}</span>
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowSubjectAccessModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <span className="sr-only">Κλείσιμο</span>
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                {/* Quick Actions */}
+                <div className="flex gap-3">
+                  <button
+                    onClick={selectAllSubjects}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    Επιλογή Όλων
+                  </button>
+                  <button
+                    onClick={clearAllSubjects}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Αφαίρεση Όλων
+                  </button>
+                  <div className="flex-1"></div>
+                  <div className="text-sm text-gray-600 flex items-center">
+                    Επιλεγμένα: <span className="font-medium ml-1">{studentSubjectAccess.length}</span> / {availableSubjects.length}
+                  </div>
+                </div>
+
+                {/* Subjects Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {availableSubjects.map((subject) => (
+                    <div
+                      key={subject}
+                      className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                        studentSubjectAccess.includes(subject)
+                          ? 'border-blue-500 bg-blue-50 text-blue-900'
+                          : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                      }`}
+                      onClick={() => toggleSubjectAccess(subject)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">{subject}</span>
+                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                          studentSubjectAccess.includes(subject)
+                            ? 'border-blue-500 bg-blue-500'
+                            : 'border-gray-300'
+                        }`}>
+                          {studentSubjectAccess.includes(subject) && (
+                            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Current Access Summary */}
+                {studentSubjectAccess.length > 0 && (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h4 className="font-medium text-green-800 mb-2">Τρέχουσα Πρόσβαση:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {studentSubjectAccess.map((subject) => (
+                        <span
+                          key={subject}
+                          className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
+                        >
+                          {subject}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex justify-end gap-3 pt-4 border-t">
+                  <button
+                    onClick={() => setShowSubjectAccessModal(false)}
+                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    Ακύρωση
+                  </button>
+                  <button
+                    onClick={handleUpdateSubjectAccess}
+                    disabled={updatingAccess}
+                    className="px-6 py-2 bg-[#E7B109] text-white rounded-lg hover:bg-[#D97706] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {updatingAccess ? 'Ενημέρωση...' : 'Ενημέρωση Πρόσβασης'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Access Management Modal */}
+      {showBulkAccessModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Μαζική Διαχείριση Πρόσβασης Μαθημάτων</h3>
+                  <p className="text-sm text-gray-600">
+                    Επιλέξτε μαθητές και μαθήματα για μαζική ενημέρωση πρόσβασης
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowBulkAccessModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <span className="sr-only">Κλείσιμο</span>
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Students Selection */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-lg font-semibold text-gray-900">Επιλογή Μαθητών</h4>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={selectAllStudents}
+                        className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                      >
+                        Όλοι
+                      </button>
+                      <button
+                        onClick={clearStudentSelection}
+                        className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                      >
+                        Καθαρισμός
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="max-h-64 overflow-y-auto border border-gray-200 rounded-lg">
+                    {filteredStudents.map((student) => (
+                      <div
+                        key={student.id}
+                        className={`p-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${
+                          selectedStudentsForBulk.includes(student.id)
+                            ? 'bg-blue-50 border-blue-200'
+                            : ''
+                        }`}
+                        onClick={() => toggleStudentSelection(student.id)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-gray-900">{student.name}</p>
+                            <p className="text-sm text-gray-500">{student.grade} - {student.email}</p>
+                          </div>
+                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                            selectedStudentsForBulk.includes(student.id)
+                              ? 'border-blue-500 bg-blue-500'
+                              : 'border-gray-300'
+                          }`}>
+                            {selectedStudentsForBulk.includes(student.id) && (
+                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="text-sm text-gray-600">
+                    Επιλεγμένοι: <span className="font-medium">{selectedStudentsForBulk.length}</span> / {filteredStudents.length}
+                  </div>
+                </div>
+
+                {/* Subjects Selection */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-lg font-semibold text-gray-900">Επιλογή Μαθημάτων</h4>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={selectAllBulkSubjects}
+                        className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                      >
+                        Όλα
+                      </button>
+                      <button
+                        onClick={clearAllBulkSubjects}
+                        className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                      >
+                        Καθαρισμός
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="max-h-64 overflow-y-auto border border-gray-200 rounded-lg">
+                    <div className="grid grid-cols-1 gap-2 p-3">
+                      {availableSubjects.map((subject) => (
+                        <div
+                          key={subject}
+                          className={`p-3 border-2 rounded-lg cursor-pointer transition-all ${
+                            bulkSubjectAccess.includes(subject)
+                              ? 'border-blue-500 bg-blue-50 text-blue-900'
+                              : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                          }`}
+                          onClick={() => toggleBulkSubjectAccess(subject)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium">{subject}</span>
+                            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                              bulkSubjectAccess.includes(subject)
+                                ? 'border-blue-500 bg-blue-500'
+                                : 'border-gray-300'
+                            }`}>
+                              {bulkSubjectAccess.includes(subject) && (
+                                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="text-sm text-gray-600">
+                    Επιλεγμένα: <span className="font-medium">{bulkSubjectAccess.length}</span> / {availableSubjects.length}
+                  </div>
+                </div>
+              </div>
+
+              {/* Summary */}
+              {(selectedStudentsForBulk.length > 0 || bulkSubjectAccess.length > 0) && (
+                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <h4 className="font-medium text-blue-800 mb-2">Σύνοψη Ενημέρωσης:</h4>
+                  <p className="text-sm text-blue-700">
+                    Θα ενημερωθούν <span className="font-medium">{selectedStudentsForBulk.length}</span> μαθητές 
+                    με πρόσβαση σε <span className="font-medium">{bulkSubjectAccess.length}</span> μαθήματα
+                  </p>
+                  {bulkSubjectAccess.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-sm text-blue-700 mb-1">Μαθήματα:</p>
+                      <div className="flex flex-wrap gap-1">
+                        {bulkSubjectAccess.map((subject) => (
+                          <span
+                            key={subject}
+                            className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium"
+                          >
+                            {subject}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-3 pt-6 border-t mt-6">
+                <button
+                  onClick={() => setShowBulkAccessModal(false)}
+                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Ακύρωση
+                </button>
+                <button
+                  onClick={handleUpdateBulkAccess}
+                  disabled={updatingBulkAccess || selectedStudentsForBulk.length === 0 || bulkSubjectAccess.length === 0}
+                  className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {updatingBulkAccess ? 'Ενημέρωση...' : 'Ενημέρωση Μαζικής Πρόσβασης'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

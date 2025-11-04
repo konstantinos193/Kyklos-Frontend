@@ -7,6 +7,7 @@ import StatsOverview from '@/components/admin/stats-overview';
 import SettingsPanel from '@/components/admin/settings-panel';
 import { ServerStatus } from '@/components/admin/server-status';
 import StudentManagementDashboard from '@/components/admin/student-management-dashboard';
+import TeacherPermissionsDashboard from '@/components/admin/teacher-permissions-dashboard';
 import { 
   Mail, 
   FileText, 
@@ -17,43 +18,149 @@ import {
   TrendingUp,
   Shield,
   Bell,
-  Database
+  Database,
+  LogOut,
+  UserCheck
 } from 'lucide-react';
 import { adminAPI } from '@/lib/api';
+import { getApiUrl } from '@/lib/api-url';
 
-type TabType = 'overview' | 'students' | 'emails' | 'blog' | 'stats' | 'settings';
+type TabType = 'overview' | 'students' | 'teachers' | 'emails' | 'blog' | 'stats' | 'settings';
 
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [adminInfo, setAdminInfo] = useState<any>(null);
   const [adminStats, setAdminStats] = useState({
     totalUsers: 0,
     totalBlogs: 0,
     totalEmails: 0,
-    totalViews: 0
+    totalViews: 0,
+    // Stats for StatsOverview component
+    totalSubscribers: 0,
+    activePosts: 0,
+    newSubscribers: 0,
+    totalLikes: 0,
+    totalComments: 0
   });
 
+  // Check authentication on component mount
   useEffect(() => {
-    const loadAdminData = async () => {
-      try {
-        setIsLoading(true);
-        const res = await adminAPI.getStats();
-        if (res?.success && res.data) {
-          setAdminStats({
-            totalUsers: res.data.totalUsers,
-            totalBlogs: res.data.totalBlogs,
-            totalEmails: res.data.totalSubscribers,
-            totalViews: res.data.totalViews,
-          });
-        } else {
-          setAdminStats({ totalUsers: 0, totalBlogs: 0, totalEmails: 0, totalViews: 0 });
+    const checkAuth = () => {
+      const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+      const storedAdminInfo = localStorage.getItem('adminInfo') || sessionStorage.getItem('adminInfo');
+      
+      if (token && storedAdminInfo) {
+        try {
+          const adminData = JSON.parse(storedAdminInfo);
+          setAdminInfo(adminData);
+          setIsAuthenticated(true);
+          loadAdminData();
+        } catch (error) {
+          console.error('Error parsing admin info:', error);
+          // Clear invalid data
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('adminInfo');
+          sessionStorage.removeItem('adminToken');
+          sessionStorage.removeItem('adminInfo');
+          window.location.href = '/admin/login';
         }
-      } catch (e) {
-        setAdminStats({ totalUsers: 0, totalBlogs: 0, totalEmails: 0, totalViews: 0 });
-      } finally {
-        setIsLoading(false);
+      } else {
+        // No token found, redirect to login
+        window.location.href = '/admin/login';
       }
     };
+
+    checkAuth();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+      if (token) {
+        await fetch(`${getApiUrl()}/api/admin/auth/logout`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      // Clear all tokens and admin info
+      localStorage.removeItem('adminLoggedIn');
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminInfo');
+      sessionStorage.removeItem('adminToken');
+      sessionStorage.removeItem('adminInfo');
+      window.location.href = '/admin/login';
+    }
+  };
+
+  const loadAdminData = async () => {
+    try {
+      setIsLoading(true);
+      const res = await adminAPI.getStats();
+      if (res?.success && res.data) {
+        setAdminStats({
+          totalUsers: res.data.totalUsers,
+          totalBlogs: res.data.totalBlogs,
+          totalEmails: res.data.totalSubscribers,
+          totalViews: res.data.totalViews,
+          // Map data for StatsOverview component
+          totalSubscribers: res.data.totalSubscribers || 0,
+          activePosts: res.data.totalBlogs || 0,
+          newSubscribers: 0, // This would need to be calculated from newsletter data
+          totalLikes: 0, // This would need to be calculated from blog data
+          totalComments: 0 // Comments not implemented yet
+        });
+      } else {
+        setAdminStats({ 
+          totalUsers: 0, 
+          totalBlogs: 0, 
+          totalEmails: 0, 
+          totalViews: 0,
+          totalSubscribers: 0,
+          activePosts: 0,
+          newSubscribers: 0,
+          totalLikes: 0,
+          totalComments: 0
+        });
+      }
+    } catch (e) {
+      console.error('Error loading admin data:', e);
+      // Check if it's an authentication error
+      if (e.response?.status === 401) {
+        // Only logout if it's a real auth error, not a network issue
+        if (e.code !== 'ECONNABORTED' && e.message !== 'Request aborted') {
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('adminInfo');
+          sessionStorage.removeItem('adminToken');
+          sessionStorage.removeItem('adminInfo');
+          window.location.href = '/admin/login';
+          return;
+        }
+      }
+      // Don't logout on API errors, just show empty stats
+      setAdminStats({ 
+        totalUsers: 0, 
+        totalBlogs: 0, 
+        totalEmails: 0, 
+        totalViews: 0,
+        totalSubscribers: 0,
+        activePosts: 0,
+        newSubscribers: 0,
+        totalLikes: 0,
+        totalComments: 0
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
 
     loadAdminData();
   }, []);
@@ -61,6 +168,7 @@ export default function AdminPanel() {
   const tabs = [
     { id: 'overview', label: 'Επισκόπηση', icon: BarChart3 },
     { id: 'students', label: 'Διαχείριση Μαθητών', icon: Users },
+    { id: 'teachers', label: 'Δικαιώματα Καθηγητών', icon: UserCheck },
     { id: 'emails', label: 'Διαχείριση Email', icon: Mail },
     { id: 'blog', label: 'Διαχείριση Blog', icon: FileText },
     { id: 'stats', label: 'Αναλυτικά', icon: TrendingUp },
@@ -96,6 +204,13 @@ export default function AdminPanel() {
               <button className="flex items-center gap-2 px-4 py-2 bg-[#E7B109] text-white rounded-lg hover:bg-[#D97706] transition-colors">
                 <Bell className="w-4 h-4" />
                 Ειδοποιήσεις
+              </button>
+              <button 
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                Αποσύνδεση
               </button>
             </div>
           </div>
@@ -171,6 +286,7 @@ export default function AdminPanel() {
           <div className="flex-1">
             {activeTab === 'overview' && <StatsOverview stats={adminStats} />}
             {activeTab === 'students' && <StudentManagementDashboard />}
+            {activeTab === 'teachers' && <TeacherPermissionsDashboard />}
             {activeTab === 'emails' && <EmailDashboard />}
             {activeTab === 'blog' && <BlogManagement />}
             {activeTab === 'stats' && <StatsOverview stats={adminStats} />}

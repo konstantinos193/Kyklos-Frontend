@@ -132,7 +132,6 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/logo.png", sizes: "any" },
       { url: "/logo.png", sizes: "16x16", type: "image/png" },
       { url: "/logo.png", sizes: "32x32", type: "image/png" },
       { url: "/logo.png", sizes: "192x192", type: "image/png" },
@@ -148,6 +147,7 @@ export const metadata: Metadata = {
         color: "#1e40af",
       },
     ],
+    shortcut: "/logo.png",
   },
   manifest: "/manifest.json",
   category: "education",

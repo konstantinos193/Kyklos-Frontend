@@ -30,7 +30,7 @@ interface NewsletterData {
   };
 }
 
-export default function EmailDashboard() {
+export function EmailDashboard() {
   const [stats, setStats] = useState<SubscriberStats | null>(null);
   const [subscribers, setSubscribers] = useState<NewsletterData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -54,15 +54,15 @@ export default function EmailDashboard() {
       setLoading(true);
       
       // Fetch stats
-      const statsResponse = await api.get('/newsletter/stats');
+      const statsResponse = await api.get('/api/newsletter/stats');
       setStats(statsResponse.data.data);
 
       // Fetch subscribers
-      const subscribersResponse = await api.get(`/newsletter/subscribers?page=${currentPage}&limit=20`);
+      const subscribersResponse = await api.get(`/api/newsletter/subscribers?page=${currentPage}&limit=20`);
       setSubscribers(subscribersResponse.data.data);
 
       // Check email service status
-      const emailResponse = await api.get('/newsletter/verify');
+      const emailResponse = await api.get('/api/newsletter/verify');
       setEmailServiceReady(emailResponse.data.emailServiceReady);
 
     } catch (error) {
@@ -83,7 +83,7 @@ export default function EmailDashboard() {
     setSendingNewsletter(true);
 
     try {
-      const response = await api.post('/newsletter/send', newsletterForm);
+      const response = await api.post('/api/newsletter/send', newsletterForm);
       
       if (response.data.success) {
         alert(`Newsletter στάλθηκε επιτυχώς! Αποστολή: ${response.data.results.sent}, Αποτυχία: ${response.data.results.failed}`);
@@ -100,7 +100,7 @@ export default function EmailDashboard() {
 
   const exportSubscribers = async (format: 'json' | 'csv') => {
     try {
-      const response = await api.get(`/newsletter/export?format=${format}`);
+      const response = await api.get(`/api/newsletter/export?format=${format}`);
       
       if (format === 'csv') {
         const blob = new Blob([response.data], { type: 'text/csv' });
@@ -343,3 +343,5 @@ export default function EmailDashboard() {
     </div>
   );
 }
+
+export default EmailDashboard;

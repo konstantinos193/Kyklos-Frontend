@@ -39,7 +39,7 @@ export function UserMenu({ isScrolled }: UserMenuProps) {
         <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-lg shadow-xl border border-slate-200 py-3 z-50">
           <div className="px-4 py-3 border-b border-slate-200">
             <p className="text-sm font-medium text-slate-900">Welcome back</p>
-            <p className="text-xs text-slate-500">admin@techflow.com</p>
+            <p className="text-xs text-slate-500">grkyklos-@hotmail.gr</p>
           </div>
           
           <div className="py-2">
