@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getApiUrl } from '@/lib/api-url';
+import { Toaster } from '@/components/ui/toaster';
 
 export default function AdminLayout({
   children,
@@ -82,6 +83,7 @@ export default function AdminLayout({
   return (
     <div className="min-h-screen bg-gray-50">
       {children}
+      <Toaster />
     </div>
   );
 }

@@ -21,6 +21,21 @@ apiClient.interceptors.request.use(
       config.headers['Cache-Control'] = 'public, max-age=300'; // 5 minutes
     }
     
+    // Add authentication token if available
+    if (typeof window !== 'undefined') {
+      const adminToken = localStorage.getItem('adminToken');
+      const studentToken = localStorage.getItem('studentToken');
+      
+      // For admin routes, use admin token
+      if (config.url?.startsWith('/api/admin') && adminToken) {
+        config.headers['Authorization'] = `Bearer ${adminToken}`;
+      }
+      // For student routes, use student token
+      else if ((config.url?.startsWith('/api/auth') || config.url?.startsWith('/api/exam-materials')) && studentToken) {
+        config.headers['Authorization'] = `Bearer ${studentToken}`;
+      }
+    }
+    
     // Add request timestamp for debugging
     config.metadata = { startTime: Date.now() };
     
@@ -144,6 +159,36 @@ export const adminAPI = {
   
   deleteUser: async (id: string) => {
     const response = await apiClient.delete(`/api/admin/users/${id}`);
+    return response.data;
+  },
+
+  // Student management
+  getStudents: async (params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    grade?: string;
+    status?: string;
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
+  } = {}) => {
+    const response = await apiClient.get('/api/admin/students', { params });
+    return response.data;
+  },
+
+  // Exam access management
+  grantExamAccess: async (studentId: string, hasAccess: boolean) => {
+    const response = await apiClient.put(`/api/admin/students/${studentId}/exam-access`, {
+      hasAccessToThemata: hasAccess
+    });
+    return response.data;
+  },
+
+  bulkGrantExamAccess: async (studentIds: string[], hasAccess: boolean) => {
+    const response = await apiClient.put('/api/admin/students/bulk/exam-access', {
+      studentIds,
+      hasAccessToThemata: hasAccess
+    });
     return response.data;
   }
 };

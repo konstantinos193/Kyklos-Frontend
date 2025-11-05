@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { adminAPI } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
 import { 
   Users, 
   Search, 
@@ -17,7 +18,8 @@ import {
   BookOpen,
   TrendingUp,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  Copy
 } from 'lucide-react';
 
 interface Student {
@@ -51,6 +53,7 @@ interface StudentStats {
 }
 
 export default function StudentManagementDashboard() {
+  const { toast } = useToast();
   const [students, setStudents] = useState<Student[]>([]);
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -77,6 +80,7 @@ export default function StudentManagementDashboard() {
     notes: ''
   });
   const [addingStudent, setAddingStudent] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [showSubjectAccessModal, setShowSubjectAccessModal] = useState(false);
   const [selectedStudentForAccess, setSelectedStudentForAccess] = useState<Student | null>(null);
   const [availableSubjects, setAvailableSubjects] = useState<string[]>([]);
@@ -216,11 +220,19 @@ export default function StudentManagementDashboard() {
         setShowKeyModal(true);
       } else {
         console.error('Error generating student IDs:', response.message);
-        alert('Σφάλμα κατά τη δημιουργία κωδικών μαθητών: ' + response.message);
+        toast({
+          title: "Σφάλμα",
+          description: `Σφάλμα κατά τη δημιουργία κωδικών μαθητών: ${response.message}`,
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('Error generating student IDs:', error);
-      alert('Σφάλμα κατά τη σύνδεση με τον διακομιστή');
+      toast({
+        title: "Σφάλμα",
+        description: "Σφάλμα κατά τη σύνδεση με τον διακομιστή",
+        variant: "destructive"
+      });
     } finally {
       setGeneratingKeys(false);
     }
@@ -229,7 +241,10 @@ export default function StudentManagementDashboard() {
   const copyKeyToClipboard = async (key: string) => {
     try {
       await navigator.clipboard.writeText(key);
-      alert('Κωδικός αντιγράφηκε στο clipboard!');
+      toast({
+        title: "Επιτυχία",
+        description: "Κωδικός αντιγράφηκε στο clipboard!",
+      });
     } catch (error) {
       console.error('Error copying to clipboard:', error);
       // Fallback for older browsers
@@ -239,7 +254,10 @@ export default function StudentManagementDashboard() {
       textArea.select();
       document.execCommand('copy');
       document.body.removeChild(textArea);
-      alert('Κωδικός αντιγράφηκε στο clipboard!');
+      toast({
+        title: "Επιτυχία",
+        description: "Κωδικός αντιγράφηκε στο clipboard!",
+      });
     }
   };
 
@@ -247,7 +265,10 @@ export default function StudentManagementDashboard() {
     try {
       const allKeys = generatedKeys.join('\n');
       await navigator.clipboard.writeText(allKeys);
-      alert('Όλοι οι κωδικοί αντιγράφηκαν στο clipboard!');
+      toast({
+        title: "Επιτυχία",
+        description: "Όλοι οι κωδικοί αντιγράφηκαν στο clipboard!",
+      });
     } catch (error) {
       console.error('Error copying to clipboard:', error);
       const textArea = document.createElement('textarea');
@@ -256,29 +277,78 @@ export default function StudentManagementDashboard() {
       textArea.select();
       document.execCommand('copy');
       document.body.removeChild(textArea);
-      alert('Όλοι οι κωδικοί αντιγράφηκαν στο clipboard!');
+      toast({
+        title: "Επιτυχία",
+        description: "Όλοι οι κωδικοί αντιγράφηκαν στο clipboard!",
+      });
     }
   };
 
   const handleAddStudent = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!newStudent.firstName || !newStudent.lastName || !newStudent.email || !newStudent.phone || !newStudent.grade) {
-      alert('Παρακαλώ συμπληρώστε τα υποχρεωτικά πεδία');
+    // Validate all required fields individually
+    const errors: Record<string, string> = {};
+    
+    if (!newStudent.firstName?.trim()) {
+      errors.firstName = 'Υποχρεωτικό πεδίο';
+    }
+    if (!newStudent.lastName?.trim()) {
+      errors.lastName = 'Υποχρεωτικό πεδίο';
+    }
+    if (!newStudent.email?.trim()) {
+      errors.email = 'Υποχρεωτικό πεδίο';
+    }
+    if (!newStudent.phone?.trim()) {
+      errors.phone = 'Υποχρεωτικό πεδίο';
+    }
+    if (!newStudent.grade?.trim()) {
+      errors.grade = 'Υποχρεωτικό πεδίο';
+    }
+    if (!newStudent.school?.trim()) {
+      errors.school = 'Υποχρεωτικό πεδίο';
+    }
+    if (!newStudent.parentName?.trim()) {
+      errors.parentName = 'Υποχρεωτικό πεδίο';
+    }
+    if (!newStudent.parentPhone?.trim()) {
+      errors.parentPhone = 'Υποχρεωτικό πεδίο';
+    }
+    
+    // Set errors and scroll to first error
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      // Scroll to first error field
+      const firstErrorField = Object.keys(errors)[0];
+      const element = document.querySelector(`[data-field="${firstErrorField}"]`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return;
     }
+    
+    // Clear errors if validation passes
+    setFieldErrors({});
     
     // Validate phone numbers have at least some digits
     const phoneDigits = (newStudent.phone || '').replace(/\D/g, '');
     const parentPhoneDigits = (newStudent.parentPhone || '').replace(/\D/g, '');
     
     if (!phoneDigits || phoneDigits.length === 0) {
-      alert('Παρακαλώ εισαγάγετε έγκυρο τηλέφωνο (10 ψηφία)');
+      toast({
+        title: "Επικύρωση",
+        description: "Παρακαλώ εισαγάγετε έγκυρο τηλέφωνο (10 ψηφία)",
+        variant: "destructive"
+      });
       return;
     }
     
     if (!parentPhoneDigits || parentPhoneDigits.length === 0) {
-      alert('Παρακαλώ εισαγάγετε έγκυρο τηλέφωνο γονέα (10 ψηφία)');
+      toast({
+        title: "Επικύρωση",
+        description: "Παρακαλώ εισαγάγετε έγκυρο τηλέφωνο γονέα (10 ψηφία)",
+        variant: "destructive"
+      });
       return;
     }
 
@@ -335,8 +405,13 @@ export default function StudentManagementDashboard() {
       const response = await adminAPI.createStudent(studentData);
       
       if (response.success) {
-        alert('Μαθητής προστέθηκε επιτυχώς!');
+        toast({
+          title: "Επιτυχία!",
+          description: "Μαθητής προστέθηκε επιτυχώς!",
+          variant: "success",
+        });
         setShowAddStudentModal(false);
+        setFieldErrors({});
         setNewStudent({
           firstName: '',
           lastName: '',
@@ -354,9 +429,13 @@ export default function StudentManagementDashboard() {
       } else {
         // Show detailed error messages from backend
         const errorMsg = response.errors 
-          ? response.errors.map((err: any) => `${err.param || 'Field'}: ${err.msg || err.message}`).join('\n')
+          ? response.errors.map((err: any) => `${err.param || 'Field'}: ${err.msg || err.message}`).join(', ')
           : response.message || 'Σφάλμα κατά την προσθήκη μαθητή';
-        alert('Σφάλμα κατά την προσθήκη μαθητή:\n' + errorMsg);
+        toast({
+          title: "Σφάλμα",
+          description: `Σφάλμα κατά την προσθήκη μαθητή: ${errorMsg}`,
+          variant: "destructive"
+        });
       }
     } catch (error: any) {
       // Show backend validation errors if available
@@ -387,9 +466,17 @@ export default function StudentManagementDashboard() {
           errorMsg = errorData.message || 'Σφάλμα κατά την προσθήκη μαθητή';
         }
         
-        alert('Σφάλμα κατά την προσθήκη μαθητή:\n\n' + errorMsg);
+        toast({
+          title: "Σφάλμα",
+          description: `Σφάλμα κατά την προσθήκη μαθητή: ${errorMsg}`,
+          variant: "destructive"
+        });
       } else {
-        alert('Σφάλμα κατά την προσθήκη μαθητή: ' + (error.message || 'Δεν ήταν δυνατή η σύνδεση με τον διακομιστή'));
+        toast({
+          title: "Σφάλμα",
+          description: `Σφάλμα κατά την προσθήκη μαθητή: ${error.message || 'Δεν ήταν δυνατή η σύνδεση με τον διακομιστή'}`,
+          variant: "destructive"
+        });
       }
     } finally {
       setAddingStudent(false);
@@ -414,15 +501,26 @@ export default function StudentManagementDashboard() {
       });
 
       if (response.success) {
-        alert('Πρόσβαση στα μαθήματα ενημερώθηκε επιτυχώς!');
+        toast({
+          title: "Επιτυχία!",
+          description: "Πρόσβαση στα μαθήματα ενημερώθηκε επιτυχώς!",
+        });
         setShowSubjectAccessModal(false);
         loadStudents(); // Reload the list
       } else {
-        alert('Σφάλμα κατά την ενημέρωση πρόσβασης: ' + response.message);
+        toast({
+          title: "Σφάλμα",
+          description: `Σφάλμα κατά την ενημέρωση πρόσβασης: ${response.message}`,
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('Error updating subject access:', error);
-      alert('Σφάλμα κατά την ενημέρωση πρόσβασης');
+      toast({
+        title: "Σφάλμα",
+        description: "Σφάλμα κατά την ενημέρωση πρόσβασης",
+        variant: "destructive"
+      });
     } finally {
       setUpdatingAccess(false);
     }
@@ -490,12 +588,20 @@ export default function StudentManagementDashboard() {
 
   const handleUpdateBulkAccess = async () => {
     if (selectedStudentsForBulk.length === 0) {
-      alert('Παρακαλώ επιλέξτε τουλάχιστον έναν μαθητή');
+      toast({
+        title: "Επικύρωση",
+        description: "Παρακαλώ επιλέξτε τουλάχιστον έναν μαθητή",
+        variant: "destructive"
+      });
       return;
     }
 
     if (bulkSubjectAccess.length === 0) {
-      alert('Παρακαλώ επιλέξτε τουλάχιστον ένα μάθημα');
+      toast({
+        title: "Επικύρωση",
+        description: "Παρακαλώ επιλέξτε τουλάχιστον ένα μάθημα",
+        variant: "destructive"
+      });
       return;
     }
 
@@ -512,12 +618,19 @@ export default function StudentManagementDashboard() {
       const results = await Promise.all(updatePromises);
       const successCount = results.filter(r => r.success).length;
 
-      alert(`Ενημερώθηκαν ${successCount} από ${selectedStudentsForBulk.length} μαθητές επιτυχώς!`);
+      toast({
+        title: "Επιτυχία!",
+        description: `Ενημερώθηκαν ${successCount} από ${selectedStudentsForBulk.length} μαθητές επιτυχώς!`,
+      });
       setShowBulkAccessModal(false);
       loadStudents(); // Reload the list
     } catch (error) {
       console.error('Error updating bulk access:', error);
-      alert('Σφάλμα κατά την ενημέρωση μαζικής πρόσβασης');
+      toast({
+        title: "Σφάλμα",
+        description: "Σφάλμα κατά την ενημέρωση μαζικής πρόσβασης",
+        variant: "destructive"
+      });
     } finally {
       setUpdatingBulkAccess(false);
     }
@@ -611,13 +724,6 @@ export default function StudentManagementDashboard() {
           >
             + Προσθήκη Μαθητή
           </button>
-          <button 
-            onClick={handleGenerateStudentIds}
-            disabled={generatingKeys}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
-          >
-            {generatingKeys ? 'Δημιουργία...' : 'Δημιουργία Κωδικών'}
-          </button>
         </div>
       </div>
 
@@ -699,8 +805,17 @@ export default function StudentManagementDashboard() {
               {filteredStudents.map((student) => (
                 <tr key={student.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <div className="text-sm font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded">
-                      {student.studentId}
+                    <div className="flex items-center gap-2">
+                      <div className="text-sm font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded">
+                        {student.studentId}
+                      </div>
+                      <button
+                        onClick={() => copyKeyToClipboard(student.studentId)}
+                        className="p-1.5 text-gray-500 hover:text-[#E7B109] hover:bg-gray-100 rounded transition-colors"
+                        title="Αντιγραφή κωδικού"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
                     </div>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
@@ -1019,21 +1134,51 @@ export default function StudentManagementDashboard() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Όνομα *</label>
                     <input
                       type="text"
+                      data-field="firstName"
                       value={newStudent.firstName}
-                      onChange={(e) => setNewStudent({...newStudent, firstName: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
-                      required
+                      onChange={(e) => {
+                        setNewStudent({...newStudent, firstName: e.target.value});
+                        if (fieldErrors.firstName) {
+                          setFieldErrors({...fieldErrors, firstName: ''});
+                        }
+                      }}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent ${
+                        fieldErrors.firstName ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     />
+                    {fieldErrors.firstName && (
+                      <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        {fieldErrors.firstName}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Επώνυμο *</label>
                     <input
                       type="text"
+                      data-field="lastName"
                       value={newStudent.lastName}
-                      onChange={(e) => setNewStudent({...newStudent, lastName: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
-                      required
+                      onChange={(e) => {
+                        setNewStudent({...newStudent, lastName: e.target.value});
+                        if (fieldErrors.lastName) {
+                          setFieldErrors({...fieldErrors, lastName: ''});
+                        }
+                      }}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent ${
+                        fieldErrors.lastName ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     />
+                    {fieldErrors.lastName && (
+                      <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        {fieldErrors.lastName}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -1042,27 +1187,55 @@ export default function StudentManagementDashboard() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Email *</label>
                     <input
                       type="email"
+                      data-field="email"
                       value={newStudent.email}
-                      onChange={(e) => setNewStudent({...newStudent, email: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
-                      required
+                      onChange={(e) => {
+                        setNewStudent({...newStudent, email: e.target.value});
+                        if (fieldErrors.email) {
+                          setFieldErrors({...fieldErrors, email: ''});
+                        }
+                      }}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent ${
+                        fieldErrors.email ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     />
+                    {fieldErrors.email && (
+                      <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        {fieldErrors.email}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Τηλέφωνο *</label>
                     <input
                       type="tel"
+                      data-field="phone"
                       value={newStudent.phone}
                       onChange={(e) => {
                         // Only allow digits, spaces, +, and dashes - filter out letters
                         const value = e.target.value.replace(/[^\d\s+\-]/g, '');
                         setNewStudent({...newStudent, phone: value});
+                        if (fieldErrors.phone) {
+                          setFieldErrors({...fieldErrors, phone: ''});
+                        }
                       }}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
-                      placeholder="π.χ. 6946795363"
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent ${
+                        fieldErrors.phone ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                      placeholder="π.χ. 6900000000"
                       maxLength={15}
-                      required
                     />
+                    {fieldErrors.phone && (
+                      <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        {fieldErrors.phone}
+                      </p>
+                    )}
                     <p className="text-xs text-gray-500 mt-1">Απλά πληκτρολογήστε τον αριθμό (10 ψηφία)</p>
                   </div>
                 </div>
@@ -1071,10 +1244,17 @@ export default function StudentManagementDashboard() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Τάξη *</label>
                     <select
+                      data-field="grade"
                       value={newStudent.grade}
-                      onChange={(e) => setNewStudent({...newStudent, grade: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
-                      required
+                      onChange={(e) => {
+                        setNewStudent({...newStudent, grade: e.target.value});
+                        if (fieldErrors.grade) {
+                          setFieldErrors({...fieldErrors, grade: ''});
+                        }
+                      }}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent ${
+                        fieldErrors.grade ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     >
                       <option value="">Επιλέξτε τάξη</option>
                       <option value="Α Λυκείου">Α' Λυκείου</option>
@@ -1084,16 +1264,39 @@ export default function StudentManagementDashboard() {
                       <option value="Β Γυμνασίου">Β' Γυμνασίου</option>
                       <option value="Γ Γυμνασίου">Γ' Γυμνασίου</option>
                     </select>
+                    {fieldErrors.grade && (
+                      <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        {fieldErrors.grade}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Σχολείο *</label>
                     <input
                       type="text"
+                      data-field="school"
                       value={newStudent.school}
-                      onChange={(e) => setNewStudent({...newStudent, school: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
-                      required
+                      onChange={(e) => {
+                        setNewStudent({...newStudent, school: e.target.value});
+                        if (fieldErrors.school) {
+                          setFieldErrors({...fieldErrors, school: ''});
+                        }
+                      }}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent ${
+                        fieldErrors.school ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     />
+                    {fieldErrors.school && (
+                      <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        {fieldErrors.school}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -1102,27 +1305,55 @@ export default function StudentManagementDashboard() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Όνομα Γονέα *</label>
                     <input
                       type="text"
+                      data-field="parentName"
                       value={newStudent.parentName}
-                      onChange={(e) => setNewStudent({...newStudent, parentName: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
-                      required
+                      onChange={(e) => {
+                        setNewStudent({...newStudent, parentName: e.target.value});
+                        if (fieldErrors.parentName) {
+                          setFieldErrors({...fieldErrors, parentName: ''});
+                        }
+                      }}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent ${
+                        fieldErrors.parentName ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     />
+                    {fieldErrors.parentName && (
+                      <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        {fieldErrors.parentName}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Τηλέφωνο Γονέα *</label>
                     <input
                       type="tel"
+                      data-field="parentPhone"
                       value={newStudent.parentPhone}
                       onChange={(e) => {
                         // Only allow digits, spaces, +, and dashes
                         const value = e.target.value.replace(/[^\d\s+\-]/g, '');
                         setNewStudent({...newStudent, parentPhone: value});
+                        if (fieldErrors.parentPhone) {
+                          setFieldErrors({...fieldErrors, parentPhone: ''});
+                        }
                       }}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
-                      placeholder="π.χ. 6946795363"
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent ${
+                        fieldErrors.parentPhone ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                      placeholder="π.χ. 6900000000"
                       maxLength={15}
-                      required
                     />
+                    {fieldErrors.parentPhone && (
+                      <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        {fieldErrors.parentPhone}
+                      </p>
+                    )}
                     <p className="text-xs text-gray-500 mt-1">Απλά πληκτρολογήστε τον αριθμό (10 ψηφία)</p>
                   </div>
                 </div>
@@ -1195,7 +1426,10 @@ export default function StudentManagementDashboard() {
                 <div className="flex justify-end gap-3 pt-4 border-t">
                   <button
                     type="button"
-                    onClick={() => setShowAddStudentModal(false)}
+                    onClick={() => {
+                      setShowAddStudentModal(false);
+                      setFieldErrors({});
+                    }}
                     className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                   >
                     Ακύρωση

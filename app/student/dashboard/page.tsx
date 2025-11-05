@@ -168,10 +168,13 @@ export default function StudentDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              {new Date(student.lastLogin).toLocaleDateString('el-GR', { 
-                day: 'numeric', 
-                month: 'short' 
-              })}
+              {student.lastLogin 
+                ? new Date(student.lastLogin).toLocaleDateString('el-GR', { 
+                    day: 'numeric', 
+                    month: 'short',
+                    year: 'numeric'
+                  })
+                : 'Ποτέ'}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               Τελευταία δραστηριότητα

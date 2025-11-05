@@ -1,8 +1,32 @@
 "use client";
 
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { LocationIcon, PhoneIcon, MailIcon, FacebookIcon, InstagramIcon, TikTokIcon } from "@/components/icons";
 
 export function HeaderTop() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if student is logged in
+    const checkLoginStatus = () => {
+      const studentData = localStorage.getItem('student');
+      const studentToken = localStorage.getItem('studentToken');
+      
+      setIsLoggedIn(!!(studentData && studentToken));
+    };
+
+    // Check on mount
+    checkLoginStatus();
+
+    // Listen for storage changes (when user logs in/out in another tab)
+    window.addEventListener('storage', checkLoginStatus);
+
+    return () => {
+      window.removeEventListener('storage', checkLoginStatus);
+    };
+  }, []);
+
   return (
     <div className="bg-slate-200 text-slate-600 py-2 text-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -27,13 +51,13 @@ export function HeaderTop() {
 
           {/* Right side - Links and Social */}
           <div className="ml-auto flex items-center gap-3 sm:gap-4">
-            <a 
-              href="#" 
+            <Link 
+              href={isLoggedIn ? '/student/dashboard' : '/student-login'}
               className="transition-colors font-medium"
               style={{ color: '#CE3B49' }}
             >
-              My Account
-            </a>
+              Λογαριασμός
+            </Link>
             <div className="hidden xs:flex items-center gap-3">
               <a href="#" className="hover:text-gray-800 transition-colors">FAQ</a>
               <a href="#" className="hover:text-gray-800 transition-colors">Contact</a>

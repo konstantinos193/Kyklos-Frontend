@@ -16,22 +16,26 @@ import {
   BookOpen,
   TrendingUp,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  Lock,
+  Unlock
 } from 'lucide-react';
+import { adminAPI } from '@/lib/api';
 
 interface Student {
-  id: string;
-  name: string;
+  _id: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   grade: string;
   subjects: string[];
-  enrollmentDate: string;
-  lastActivity: string;
-  status: 'active' | 'inactive' | 'suspended';
-  progress: number;
-  totalHours: number;
-  nextClass: string;
+  registrationDate: string;
+  lastLogin: string | null;
+  status: 'active' | 'inactive' | 'graduated' | 'suspended';
+  hasAccessToThemata?: boolean;
+  uniqueKey?: string;
+  studentId?: string;
 }
 
 interface StudentStats {
@@ -51,6 +55,9 @@ export default function StudentManagementDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [selectedStudents, setSelectedStudents] = useState<Set<string>>(new Set());
+  const [isUpdatingAccess, setIsUpdatingAccess] = useState(false);
+  const [error, setError] = useState<string>('');
 
   const [stats, setStats] = useState<StudentStats>({
     total: 0,
@@ -60,74 +67,65 @@ export default function StudentManagementDashboard() {
     averageProgress: 0
   });
 
-  // Mock data - replace with actual API calls
+  // Fetch students from API
   useEffect(() => {
-    const mockStudents: Student[] = [
-      {
-        id: '1',
-        name: 'Μαρία Παπαδοπούλου',
-        email: 'maria.papadopoulou@email.com',
-        phone: '2101234567',
-        grade: 'Γ\' Λυκείου',
-        subjects: ['Μαθηματικά', 'Φυσική', 'Χημεία'],
-        enrollmentDate: '2024-01-15',
-        lastActivity: '2024-01-20',
-        status: 'active',
-        progress: 85,
-        totalHours: 120,
-        nextClass: '2024-01-25 10:00'
-      },
-      {
-        id: '2',
-        name: 'Γιάννης Κωνσταντίνου',
-        email: 'giannis.konstantinou@email.com',
-        phone: '2109876543',
-        grade: 'Β\' Λυκείου',
-        subjects: ['Βιολογία', 'Χημεία'],
-        enrollmentDate: '2024-01-10',
-        lastActivity: '2024-01-19',
-        status: 'active',
-        progress: 72,
-        totalHours: 95,
-        nextClass: '2024-01-24 14:00'
-      },
-      {
-        id: '3',
-        name: 'Ελένη Δημητρίου',
-        email: 'elena.dimitriou@email.com',
-        phone: '2105555555',
-        grade: 'Γ\' Λυκείου',
-        subjects: ['Ιστορία', 'Αρχαία Ελληνικά'],
-        enrollmentDate: '2023-12-01',
-        lastActivity: '2024-01-18',
-        status: 'inactive',
-        progress: 45,
-        totalHours: 60,
-        nextClass: 'Δεν έχει προγραμματιστεί'
+    fetchStudents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterStatus, filterGrade]);
+
+  // Debounced search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchStudents();
+    }, 500); // Wait 500ms after user stops typing
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
+
+  const fetchStudents = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      const response = await adminAPI.getStudents({
+        page: 1,
+        limit: 100,
+        search: searchTerm || undefined,
+        status: filterStatus !== 'all' ? filterStatus : undefined,
+        grade: filterGrade !== 'all' ? filterGrade : undefined,
+        sortBy: 'registrationDate',
+        sortOrder: 'desc'
+      });
+
+      if (response.success && response.data) {
+        const studentsData = response.data.students || response.data || [];
+        setStudents(studentsData);
+        setFilteredStudents(studentsData);
+        
+        // Calculate stats
+        const activeStudents = studentsData.filter((s: Student) => s.status === 'active').length;
+        const inactiveStudents = studentsData.filter((s: Student) => s.status === 'inactive').length;
+        const thisMonth = new Date();
+        thisMonth.setDate(1);
+        const newThisMonth = studentsData.filter((s: Student) => 
+          new Date(s.registrationDate) >= thisMonth
+        ).length;
+
+        setStats({
+          total: studentsData.length,
+          active: activeStudents,
+          inactive: inactiveStudents,
+          newThisMonth,
+          averageProgress: 0 // Not available from backend
+        });
       }
-    ];
-
-    setStudents(mockStudents);
-    setFilteredStudents(mockStudents);
-    
-    // Calculate stats
-    const activeStudents = mockStudents.filter(s => s.status === 'active').length;
-    const inactiveStudents = mockStudents.filter(s => s.status === 'inactive').length;
-    const newThisMonth = mockStudents.filter(s => 
-      new Date(s.enrollmentDate) >= new Date('2024-01-01')
-    ).length;
-    const averageProgress = mockStudents.reduce((sum, s) => sum + s.progress, 0) / mockStudents.length;
-
-    setStats({
-      total: mockStudents.length,
-      active: activeStudents,
-      inactive: inactiveStudents,
-      newThisMonth,
-      averageProgress: Math.round(averageProgress)
-    });
-
-    setIsLoading(false);
-  }, []);
+    } catch (err: any) {
+      console.error('Error fetching students:', err);
+      setError(err.response?.data?.message || 'Σφάλμα φόρτωσης μαθητών');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Filter and search functionality
   useEffect(() => {
@@ -135,9 +133,10 @@ export default function StudentManagementDashboard() {
 
     if (searchTerm) {
       filtered = filtered.filter(student =>
-        student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        `${student.firstName} ${student.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
         student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        student.phone.includes(searchTerm)
+        student.phone.includes(searchTerm) ||
+        student.uniqueKey?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -151,6 +150,90 @@ export default function StudentManagementDashboard() {
 
     setFilteredStudents(filtered);
   }, [students, searchTerm, filterStatus, filterGrade]);
+
+  // Handle exam access toggle for single student
+  const handleToggleExamAccess = async (student: Student, hasAccess: boolean) => {
+    try {
+      setIsUpdatingAccess(true);
+      setError('');
+      await adminAPI.grantExamAccess(student._id, hasAccess);
+      
+      // Update local state
+      setStudents(prev => prev.map(s => 
+        s._id === student._id 
+          ? { ...s, hasAccessToThemata: hasAccess }
+          : s
+      ));
+      
+      // Update selected student if it's the same
+      if (selectedStudent?._id === student._id) {
+        setSelectedStudent({ ...selectedStudent, hasAccessToThemata: hasAccess });
+      }
+      
+      // Refresh data
+      await fetchStudents();
+    } catch (err: any) {
+      console.error('Error updating exam access:', err);
+      setError(err.response?.data?.message || 'Σφάλμα ενημέρωσης πρόσβασης');
+    } finally {
+      setIsUpdatingAccess(false);
+    }
+  };
+
+  // Handle bulk exam access
+  const handleBulkExamAccess = async (hasAccess: boolean) => {
+    if (selectedStudents.size === 0) {
+      setError('Παρακαλώ επιλέξτε τουλάχιστον έναν μαθητή');
+      return;
+    }
+
+    try {
+      setIsUpdatingAccess(true);
+      setError('');
+      const studentIds = Array.from(selectedStudents);
+      await adminAPI.bulkGrantExamAccess(studentIds, hasAccess);
+      
+      // Update local state
+      setStudents(prev => prev.map(s => 
+        selectedStudents.has(s._id)
+          ? { ...s, hasAccessToThemata: hasAccess }
+          : s
+      ));
+      
+      // Clear selection
+      setSelectedStudents(new Set());
+      
+      // Refresh data
+      await fetchStudents();
+    } catch (err: any) {
+      console.error('Error bulk updating exam access:', err);
+      setError(err.response?.data?.message || 'Σφάλμα μαζικής ενημέρωσης πρόσβασης');
+    } finally {
+      setIsUpdatingAccess(false);
+    }
+  };
+
+  // Toggle student selection
+  const toggleStudentSelection = (studentId: string) => {
+    setSelectedStudents(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(studentId)) {
+        newSet.delete(studentId);
+      } else {
+        newSet.add(studentId);
+      }
+      return newSet;
+    });
+  };
+
+  // Toggle all students selection
+  const toggleAllSelection = () => {
+    if (selectedStudents.size === filteredStudents.length) {
+      setSelectedStudents(new Set());
+    } else {
+      setSelectedStudents(new Set(filteredStudents.map(s => s._id)));
+    }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -309,12 +392,58 @@ export default function StudentManagementDashboard() {
         </div>
       </div>
 
+      {/* Bulk Actions */}
+      {selectedStudents.size > 0 && (
+        <div className="bg-[#E7B109] text-white rounded-xl shadow-sm p-4 flex items-center justify-between">
+          <span className="font-medium">
+            {selectedStudents.size} μαθητή/ές επιλέχθηκαν
+          </span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleBulkExamAccess(true)}
+              disabled={isUpdatingAccess}
+              className="px-4 py-2 bg-white text-[#E7B109] rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
+            >
+              {isUpdatingAccess ? 'Ενημέρωση...' : 'Χορήγηση Πρόσβασης'}
+            </button>
+            <button
+              onClick={() => handleBulkExamAccess(false)}
+              disabled={isUpdatingAccess}
+              className="px-4 py-2 bg-white text-[#E7B109] rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
+            >
+              {isUpdatingAccess ? 'Ενημέρωση...' : 'Ανάκληση Πρόσβασης'}
+            </button>
+            <button
+              onClick={() => setSelectedStudents(new Set())}
+              className="px-4 py-2 bg-white text-[#E7B109] rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              Ακύρωση
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+          {error}
+        </div>
+      )}
+
       {/* Students Table */}
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
+                <th className="px-6 py-3 text-left">
+                  <input
+                    type="checkbox"
+                    checked={selectedStudents.size === filteredStudents.length && filteredStudents.length > 0}
+                    onChange={toggleAllSelection}
+                    className="rounded border-gray-300 text-[#E7B109] focus:ring-[#E7B109]"
+                  />
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Μαθητής
                 </th>
@@ -325,13 +454,10 @@ export default function StudentManagementDashboard() {
                   Μαθήματα
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Πρόοδος
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Κατάσταση
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Επόμενο Μάθημα
+                  Πρόσβαση Θεμάτων
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Ενέργειες
@@ -340,12 +466,25 @@ export default function StudentManagementDashboard() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredStudents.map((student) => (
-                <tr key={student.id} className="hover:bg-gray-50">
+                <tr key={student._id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <input
+                      type="checkbox"
+                      checked={selectedStudents.has(student._id)}
+                      onChange={() => toggleStudentSelection(student._id)}
+                      className="rounded border-gray-300 text-[#E7B109] focus:ring-[#E7B109]"
+                    />
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
-                      <div className="text-sm font-medium text-gray-900">{student.name}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {student.firstName} {student.lastName}
+                      </div>
                       <div className="text-sm text-gray-500">{student.email}</div>
                       <div className="text-sm text-gray-500">{student.phone}</div>
+                      {student.uniqueKey && (
+                        <div className="text-xs text-gray-400">Κλειδί: {student.uniqueKey}</div>
+                      )}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -353,25 +492,18 @@ export default function StudentManagementDashboard() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-wrap gap-1">
-                      {student.subjects.map((subject, index) => (
-                        <span
-                          key={index}
-                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-                        >
-                          {subject}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
-                        <div
-                          className="bg-[#E7B109] h-2 rounded-full"
-                          style={{ width: `${student.progress}%` }}
-                        ></div>
-                      </div>
-                      <span className="text-sm text-gray-900">{student.progress}%</span>
+                      {student.subjects && student.subjects.length > 0 ? (
+                        student.subjects.map((subject, index) => (
+                          <span
+                            key={index}
+                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                          >
+                            {subject}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-xs text-gray-400">Δεν υπάρχουν μαθήματα</span>
+                      )}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -380,8 +512,24 @@ export default function StudentManagementDashboard() {
                       {getStatusText(student.status)}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {student.nextClass}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      student.hasAccessToThemata 
+                        ? 'text-green-600 bg-green-50' 
+                        : 'text-red-600 bg-red-50'
+                    }`}>
+                      {student.hasAccessToThemata ? (
+                        <>
+                          <Unlock className="w-3 h-3" />
+                          Έχει Πρόσβαση
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="w-3 h-3" />
+                          Δεν Έχει Πρόσβαση
+                        </>
+                      )}
+                    </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end gap-2">
@@ -391,14 +539,9 @@ export default function StudentManagementDashboard() {
                           setShowModal(true);
                         }}
                         className="text-gray-400 hover:text-gray-600"
+                        title="Προβολή Λεπτομερειών"
                       >
                         <Eye className="w-4 h-4" />
-                      </button>
-                      <button className="text-gray-400 hover:text-gray-600">
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button className="text-gray-400 hover:text-red-600">
-                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </td>
@@ -439,7 +582,7 @@ export default function StudentManagementDashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h4 className="text-sm font-medium text-gray-500 mb-2">Ονοματεπώνυμο</h4>
-                    <p className="text-lg text-gray-900">{selectedStudent.name}</p>
+                    <p className="text-lg text-gray-900">{selectedStudent.firstName} {selectedStudent.lastName}</p>
                   </div>
                   <div>
                     <h4 className="text-sm font-medium text-gray-500 mb-2">Email</h4>
@@ -453,38 +596,29 @@ export default function StudentManagementDashboard() {
                     <h4 className="text-sm font-medium text-gray-500 mb-2">Τάξη</h4>
                     <p className="text-lg text-gray-900">{selectedStudent.grade}</p>
                   </div>
+                  {selectedStudent.uniqueKey && (
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500 mb-2">Μοναδικό Κλειδί</h4>
+                      <p className="text-lg text-gray-900 font-mono">{selectedStudent.uniqueKey}</p>
+                    </div>
+                  )}
                 </div>
 
                 <div>
                   <h4 className="text-sm font-medium text-gray-500 mb-2">Μαθήματα</h4>
                   <div className="flex flex-wrap gap-2">
-                    {selectedStudent.subjects.map((subject, index) => (
-                      <span
-                        key={index}
-                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
-                      >
-                        {subject}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-2">Πρόοδος</h4>
-                    <div className="flex items-center">
-                      <div className="w-24 bg-gray-200 rounded-full h-2 mr-3">
-                        <div
-                          className="bg-[#E7B109] h-2 rounded-full"
-                          style={{ width: `${selectedStudent.progress}%` }}
-                        ></div>
-                      </div>
-                      <span className="text-lg font-medium text-gray-900">{selectedStudent.progress}%</span>
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-2">Συνολικές Ώρες</h4>
-                    <p className="text-lg text-gray-900">{selectedStudent.totalHours} ώρες</p>
+                    {selectedStudent.subjects && selectedStudent.subjects.length > 0 ? (
+                      selectedStudent.subjects.map((subject, index) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                        >
+                          {subject}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-sm text-gray-400">Δεν υπάρχουν μαθήματα</span>
+                    )}
                   </div>
                 </div>
 
@@ -492,32 +626,73 @@ export default function StudentManagementDashboard() {
                   <div>
                     <h4 className="text-sm font-medium text-gray-500 mb-2">Ημερομηνία Εγγραφής</h4>
                     <p className="text-lg text-gray-900">
-                      {new Date(selectedStudent.enrollmentDate).toLocaleDateString('el-GR')}
+                      {new Date(selectedStudent.registrationDate).toLocaleDateString('el-GR')}
                     </p>
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-2">Τελευταία Δραστηριότητα</h4>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Τελευταία Σύνδεση</h4>
                     <p className="text-lg text-gray-900">
-                      {new Date(selectedStudent.lastActivity).toLocaleDateString('el-GR')}
+                      {selectedStudent.lastLogin 
+                        ? new Date(selectedStudent.lastLogin).toLocaleDateString('el-GR')
+                        : 'Δεν έχει συνδεθεί ποτέ'}
                     </p>
                   </div>
                 </div>
 
-                <div>
-                  <h4 className="text-sm font-medium text-gray-500 mb-2">Επόμενο Μάθημα</h4>
-                  <p className="text-lg text-gray-900">{selectedStudent.nextClass}</p>
+                {/* Exam Access Section */}
+                <div className="border-t pt-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-900 mb-1">Πρόσβαση στα Θέματα Πανελληνίων</h4>
+                      <p className="text-sm text-gray-500">
+                        {selectedStudent.hasAccessToThemata 
+                          ? 'Ο μαθητής έχει πρόσβαση στα θέματα πανελληνίων'
+                          : 'Ο μαθητής δεν έχει πρόσβαση στα θέματα πανελληνίων'}
+                      </p>
+                    </div>
+                    <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
+                      selectedStudent.hasAccessToThemata 
+                        ? 'text-green-600 bg-green-50' 
+                        : 'text-red-600 bg-red-50'
+                    }`}>
+                      {selectedStudent.hasAccessToThemata ? (
+                        <>
+                          <Unlock className="w-4 h-4" />
+                          Έχει Πρόσβαση
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="w-4 h-4" />
+                          Δεν Έχει Πρόσβαση
+                        </>
+                      )}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => handleToggleExamAccess(selectedStudent, !selectedStudent.hasAccessToThemata)}
+                    disabled={isUpdatingAccess}
+                    className={`w-full px-4 py-2 rounded-lg font-medium transition-colors ${
+                      selectedStudent.hasAccessToThemata
+                        ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                        : 'bg-green-100 text-green-700 hover:bg-green-200'
+                    } disabled:opacity-50`}
+                  >
+                    {isUpdatingAccess 
+                      ? 'Ενημέρωση...' 
+                      : selectedStudent.hasAccessToThemata
+                        ? 'Ανάκληση Πρόσβασης'
+                        : 'Χορήγηση Πρόσβασης'
+                    }
+                  </button>
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 mt-8">
+              <div className="flex justify-end gap-3 mt-8 border-t pt-6">
                 <button
                   onClick={() => setShowModal(false)}
                   className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                 >
                   Κλείσιμο
-                </button>
-                <button className="px-4 py-2 bg-[#E7B109] text-white rounded-lg hover:bg-[#D97706] transition-colors">
-                  Επεξεργασία
                 </button>
               </div>
             </div>

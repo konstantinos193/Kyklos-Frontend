@@ -51,6 +51,12 @@ export default function StudentLoginForm({ onSuccess, redirectTo }: StudentLogin
 
       const data = await response.json();
 
+      if (!response.ok) {
+        // Handle error responses
+        setError(data.message || 'Μη έγκυρος κωδικός μαθητή. Ελέγξτε και δοκιμάστε ξανά.');
+        return;
+      }
+
       if (data.success) {
         toast({
           title: "Καλώς ήρθατε!",

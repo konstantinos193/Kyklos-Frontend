@@ -241,45 +241,7 @@ export default function AdminPanel() {
               })}
             </nav>
 
-            {/* Server Status */}
-            <div className="mt-8">
-              <ServerStatus />
-            </div>
-
-            {/* Quick Stats */}
-            <div className="mt-4 bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Σύντομα Στατιστικά</h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-blue-600" />
-                    <span className="text-sm text-gray-600">Χρήστες</span>
-                  </div>
-                  <span className="font-semibold text-gray-900">{adminStats.totalUsers.toLocaleString('el-GR')}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-green-600" />
-                    <span className="text-sm text-gray-600">Άρθρα</span>
-                  </div>
-                  <span className="font-semibold text-gray-900">{adminStats.totalBlogs.toLocaleString('el-GR')}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-purple-600" />
-                    <span className="text-sm text-gray-600">Συνδρομητές</span>
-                  </div>
-                  <span className="font-semibold text-gray-900">{adminStats.totalEmails.toLocaleString('el-GR')}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-orange-600" />
-                    <span className="text-sm text-gray-600">Προβολές</span>
-                  </div>
-                  <span className="font-semibold text-gray-900">{adminStats.totalViews.toLocaleString('el-GR')}</span>
-                </div>
-              </div>
-            </div>
+          {/* Removed Server Status and Quick Stats sidebar widgets as requested */}
           </div>
 
           {/* Main Content */}

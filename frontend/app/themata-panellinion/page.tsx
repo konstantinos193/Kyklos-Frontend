@@ -1,4 +1,34 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
+
 export default function ThemataPanellinionPage() {
+  const [status, setStatus] = useState<"checking" | "not_logged_in" | "no_access" | "has_access">("checking");
+
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('studentToken') : null;
+        if (!token) {
+          setStatus("not_logged_in");
+          return;
+        }
+        // Verify and get student data
+        const res = await api.post('/api/auth/student-verify');
+        const hasAccess = !!res.data?.student?.hasAccessToThemata;
+        if (hasAccess) {
+          window.location.href = '/student/exam-materials';
+        } else {
+          setStatus("no_access");
+        }
+      } catch (e: any) {
+        setStatus("not_logged_in");
+      }
+    };
+    check();
+  }, []);
+
   return (
     <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="text-center mb-12 sm:mb-16">
@@ -6,24 +36,21 @@ export default function ThemataPanellinionPage() {
           Θέματα Πανελληνίων
         </h1>
         <div className="w-16 sm:w-20 h-1 bg-gradient-to-r from-[#E7B109] to-[#D97706] rounded-full mx-auto mb-4 sm:mb-6"></div>
-        <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-          Συγκεντρωμένα θέματα και ενδεικτικές λύσεις για προετοιμασία.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <a href="#" className="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Γλώσσα & Λογοτεχνία</h2>
-          <p className="text-gray-600 text-sm">Θέματα προηγούμενων ετών και ύλη.</p>
-        </a>
-        <a href="#" className="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Μαθηματικά</h2>
-          <p className="text-gray-600 text-sm">Ενότητες, εκφωνήσεις και λύσεις.</p>
-        </a>
-        <a href="#" className="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Θετικές Επιστήμες</h2>
-          <p className="text-gray-600 text-sm">Φυσική, Χημεία, Βιολογία.</p>
-        </a>
+        {status === "checking" && (
+          <p className="text-base sm:text-lg text-gray-600">Έλεγχος πρόσβασης...</p>
+        )}
+        {status === "not_logged_in" && (
+          <div className="space-y-4">
+            <p className="text-base sm:text-lg text-gray-600">Για να δείτε τα θέματα, παρακαλώ συνδεθείτε.</p>
+            <a href="/student-login" className="inline-flex px-5 py-2.5 bg-[#E7B109] text-white rounded-lg hover:bg-[#D97706]">Σύνδεση Μαθητή</a>
+          </div>
+        )}
+        {status === "no_access" && (
+          <div className="space-y-4">
+            <p className="text-base sm:text-lg text-gray-600">Δεν έχετε πρόσβαση. Επικοινωνήστε με το φροντιστήριο.</p>
+            <a href="/contact" className="inline-flex px-5 py-2.5 border border-[#E7B109] text-[#E7B109] rounded-lg hover:bg-yellow-50">Επικοινωνία</a>
+          </div>
+        )}
       </div>
     </main>
   );
