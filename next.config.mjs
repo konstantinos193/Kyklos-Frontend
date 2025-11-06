@@ -3,13 +3,14 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {
-    turbopackFileSystemCacheForDev: true,
-  },
+  // experimental: {
+  //   turbopackFileSystemCacheForDev: true, // Disabled due to Windows compatibility issues
+  // },
   images: {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512],
+    qualities: [60, 75, 85, 100],
     minimumCacheTTL: 31536000,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
@@ -18,6 +19,7 @@ const nextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: 'cdn.pixabay.com' },
       { protocol: 'https', hostname: 'plus.unsplash.com' },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'images.stockcake.com' },
       { protocol: 'https', hostname: 'img.freepik.com' },
       { protocol: 'https', hostname: 'encrypted-tbn0.gstatic.com' },
