@@ -14,33 +14,35 @@ export interface Teacher {
   bio: string;
 }
 
-export const chemistryTeachers: Teacher[] = [
+export const philologyTeachers: Teacher[] = [
   {
-    id: 'chem-1',
-    name: 'Γιώτης Χριστόφορος',
+    id: 'phil-1',
+    name: 'Παππά Δώρα',
     title: '',
     specialization: '',
     experience: 0,
-    education: 'Τμήμα Χημείας Α.Π.Θ. — Μεταπτυχιακό στη Διδακτική της Χημείας',
+    education: 'Τμήμα Φιλοσοφικής Ιωαννίνων',
     email: '',
     phone: '',
     rating: 0,
-    subjects: [],
+    subjects: ['Αρχαία', 'Έκθεση - Λογοτεχνία', 'Ιστορία', 'Λατινικά'],
     availability: '',
     bio: ''
   },
   {
-    id: 'chem-2',
-    name: 'Αντωνίου Βασιλική',
+    id: 'phil-2',
+    name: 'Μπισκονάκη Βασιλική',
     title: '',
     specialization: '',
     experience: 0,
-    education: 'Τμήμα Χημείας Πανεπιστήμιο Ιωαννίνων — Μεταπτυχιακό στην Ιατρική Χημεία',
+    education: 'Τμήμα Φιλολογίας Α.Π.Θ.',
     email: '',
     phone: '',
     rating: 0,
-    subjects: [],
+    subjects: ['Αρχαία', 'Έκθεση - Λογοτεχνία', 'Ιστορία', 'Λατινικά'],
     availability: '',
     bio: ''
   }
 ];
+
+

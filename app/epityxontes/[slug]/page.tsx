@@ -1,5 +1,8 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import MultiUseDetailsPage from '@/components/details/MultiUseDetailsPage';
+import { StudentsList } from '@/components/epityxontes/students-list';
+import { students2011, students2012, students2013, students2014, students2015, students2016 } from '@/components/epityxontes/students-data';
 
 const yearContent: Record<string, { title: string; html: string }> = {
   'epityxontes-etos-2002-2003': {
@@ -11,6 +14,15 @@ const yearContent: Record<string, { title: string; html: string }> = {
 </div>
     `,
   },
+};
+
+const studentsByYear: Record<string, typeof students2011> = {
+  'epityxontes-etos-2011-2012': students2011,
+  'epityxontes-etos-2012-2013': students2012,
+  'epityxontes-etos-2013-2014': students2013,
+  'epityxontes-etos-2014-2015': students2014,
+  'epityxontes-etos-2015-2016': students2015,
+  'epityxontes-etos-2016-2017': students2016,
 };
 
 const categories = [
@@ -29,24 +41,70 @@ const categories = [
   { label: 'Επιτυχόντες Έτος 2012-2013', href: '/epityxontes/epityxontes-etos-2012-2013' },
   { label: 'Επιτυχόντες Έτος 2011-2012', href: '/epityxontes/epityxontes-etos-2011-2012' },
   { label: 'Επιτυχόντες Έτος 2010-2011', href: '/epityxontes/epityxontes-etos-2010-2011' },
-  { label: 'Επιτυχόντες Έτος 2009-2010', href: '/epityxontes/epityxontes-etos-2009-2010' },
-  { label: 'Επιτυχόντες Έτος 2008-2009', href: '/epityxontes/epityxontes-etos-2008-2009' },
-  { label: 'Επιτυχόντες Έτος 2007-2008', href: '/epityxontes/epityxontes-etos-2007-2008' },
-  { label: 'Επιτυχόντες Έτος 2006-2007', href: '/epityxontes/epityxontes-etos-2006-2007' },
-  { label: 'Επιτυχόντες Έτος 2005-2006', href: '/epityxontes/epityxontes-etos-2005-2006' },
-  { label: 'Επιτυχόντες Έτος 2002-2003', href: '/epityxontes/epityxontes-etos-2002-2003' },
 ];
 
-const latestPosts = [
-  { href: '/posts/enarxi-eggrafon', title: 'ΕΝΑΡΞΗ ΕΓΓΡΑΦΩΝ!', thumbSrc: '/uplds/thpic.jpg', thumbAlt: '' },
-  { href: '/epityxontes/epityxontes-etos-2025', title: 'Επιτυχόντες Έτος 2025', thumbSrc: '/uplds/grad-0-2.jpg', thumbAlt: '' },
-  { href: '/epityxontes/epityxontes-vathmologies', title: 'ΑΡΙΣΤΕΣ ΕΠΙΔΟΣΕΙΣ, ΣΤΟΧΕΥΜΕΝΗ & ΕΞΕΙΔΙΚΕΥΜΕΝΗ ΕΚΠΑΙΔΕΥΣΗ', thumbSrc: '/uplds/grad-0-1.jpg', thumbAlt: '' },
-  { href: '/posts/enarxi-kalokairinon-mathimaton-1', title: 'Έναρξη Καλοκαιρινών Μαθημάτων', thumbSrc: '/uplds/kalo.JPG', thumbAlt: '' },
-  { href: '/posts/ekdromi-stin-araxova-parnassos', title: 'Εκδρομή στην Αράχωβα, Παρνασσός', thumbSrc: '/uplds/79852151-9BD1-45E5-8D01-3BF28106843D-0.JPG', thumbAlt: '' },
-];
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const item = yearContent[slug];
+  const students = studentsByYear[slug];
 
-export default function Page({ params }: { params: { slug: string } }) {
-  const item = yearContent[params.slug];
+  // If we have students data (even if empty), use the component-based approach
+  if (students !== undefined) {
+    return (
+      <section className="blog-details-page py-10 md:py-12">
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-8">
+              <div className="blog-details-content">
+                <div className="details-content mt-6">
+                  <h3 className="title text-2xl md:text-3xl font-semibold text-gray-900">
+                    {slug === 'epityxontes-etos-2011-2012' && 'Επιτυχόντες Έτος 2011-2012'}
+                    {slug === 'epityxontes-etos-2012-2013' && 'Επιτυχόντες Έτος 2012-2013'}
+                    {slug === 'epityxontes-etos-2013-2014' && 'Επιτυχόντες Έτος 2013-2014'}
+                    {slug === 'epityxontes-etos-2014-2015' && 'Επιτυχόντες Έτος 2014-2015'}
+                    {slug === 'epityxontes-etos-2015-2016' && 'Επιτυχόντες Έτος 2015-2016'}
+                    {slug === 'epityxontes-etos-2016-2017' && 'Επιτυχόντες Έτος 2016-2017'}
+                  </h3>
+                  <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 lg:p-7 shadow-sm">
+                    {students.length > 0 ? (
+                      <StudentsList students={students} />
+                    ) : (
+                      <p className="text-gray-600">Δεν υπάρχουν διαθέσιμα δεδομένα για αυτό το έτος.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-4">
+              <div className="blog-sidebar right-sidebar pt-4 lg:pt-5">
+                <div className="blog-sidebar-category mt-6">
+                  <div className="sidebar-title">
+                    <h4 className="title text-lg font-semibold text-gray-900">Επιτυχόντες</h4>
+                  </div>
+                  <ul className="category-items mt-3 space-y-2">
+                    {categories.map((cat) => (
+                      <li key={cat.href}>
+                        <div className="form-radio">
+                          <label>
+                            <Link href={cat.href} className="text-slate-700 hover:text-[#CE3B49] hover:underline">
+                              {cat.label}
+                            </Link>
+                          </label>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Fallback to HTML content for older years
   if (!item) return notFound();
 
   return (
@@ -54,7 +112,6 @@ export default function Page({ params }: { params: { slug: string } }) {
       title={item.title}
       htmlContent={item.html}
       categories={categories}
-      latestPosts={latestPosts}
     />
   );
 }

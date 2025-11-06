@@ -28,20 +28,6 @@ const categories = [
   { label: 'Επιτυχόντες Έτος 2012-2013', href: '/curriculum/epityxontes-etos-2012-2013' },
   { label: 'Επιτυχόντες Έτος 2011-2012', href: '/curriculum/epityxontes-etos-2011-2012' },
   { label: 'Επιτυχόντες Έτος 2010-2011', href: '/curriculum/epityxontes-etos-2010-2011' },
-  { label: 'Επιτυχόντες Έτος 2009-2010', href: '/curriculum/epityxontes-etos-2009-2010' },
-  { label: 'Επιτυχόντες Έτος 2008-2009', href: '/curriculum/epityxontes-etos-2008-2009' },
-  { label: 'Επιτυχόντες Έτος 2007-2008', href: '/curriculum/epityxontes-etos-2007-2008' },
-  { label: 'Επιτυχόντες Έτος 2006-2007', href: '/curriculum/epityxontes-etos-2006-2007' },
-  { label: 'Επιτυχόντες Έτος 2005-2006', href: '/curriculum/epityxontes-etos-2005-2006' },
-  { label: 'Επιτυχόντες Έτος 2002-2003', href: '/curriculum/epityxontes-etos-2002-2003' },
-];
-
-const latestPosts = [
-  { href: '/posts/enarxi-eggrafon', title: 'ΕΝΑΡΞΗ ΕΓΓΡΑΦΩΝ!', thumbSrc: '/uplds/thpic.jpg', thumbAlt: '' },
-  { href: '/epityxontes/epityxontes-etos-2025', title: 'Επιτυχόντες Έτος 2025', thumbSrc: '/uplds/grad-0-2.jpg', thumbAlt: '' },
-  { href: '/epityxontes/epityxontes-vathmologies', title: 'ΑΡΙΣΤΕΣ ΕΠΙΔΟΣΕΙΣ, ΣΤΟΧΕΥΜΕΝΗ & ΕΞΕΙΔΙΚΕΥΜΕΝΗ ΕΚΠΑΙΔΕΥΣΗ', thumbSrc: '/uplds/grad-0-1.jpg', thumbAlt: '' },
-  { href: '/posts/enarxi-kalokairinon-mathimaton-1', title: 'Έναρξη Καλοκαιρινών Μαθημάτων', thumbSrc: '/uplds/kalo.JPG', thumbAlt: '' },
-  { href: '/posts/ekdromi-stin-araxova-parnassos', title: 'Εκδρομή στην Αράχωβα, Παρνασσός', thumbSrc: '/uplds/79852151-9BD1-45E5-8D01-3BF28106843D-0.JPG', thumbAlt: '' },
 ];
 
 export default function Page({ params }: { params: { slug: string } }) {
@@ -53,7 +39,6 @@ export default function Page({ params }: { params: { slug: string } }) {
       title={item.title}
       htmlContent={item.html}
       categories={categories}
-      latestPosts={latestPosts}
     />
   );
 }

@@ -1,4 +1,6 @@
 import { BiologySections } from '@/components/curriculum/biology-sections';
+import { HoursSections } from '@/components/curriculum/hours-sections';
+import { biologyHours } from '@/components/curriculum/biology-hours-data';
 import { TeachersList } from '@/components/curriculum/teachers-list';
 import { biologyTeachers } from '@/components/curriculum/biology-teachers-data';
 
@@ -37,7 +39,7 @@ export default function BiologyPage() {
                 <div className="mt-2 h-1 w-12 bg-gradient-to-r from-[#CF3B49] to-[#E7B109] rounded-full" />
               </div>
               <div className="mt-5">
-                <BiologySections />
+                <HoursSections data={biologyHours} />
               </div>
             </section>
 
