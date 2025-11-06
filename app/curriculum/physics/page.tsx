@@ -1,4 +1,6 @@
 import { PhysicsSections } from '@/components/curriculum/physics-sections';
+import { HoursSections } from '@/components/curriculum/hours-sections';
+import { physicsHours } from '@/components/curriculum/physics-hours-data';
 import { TeachersList } from '@/components/curriculum/teachers-list';
 import { physicsTeachers } from '@/components/curriculum/physics-teachers-data';
 
@@ -37,7 +39,7 @@ export default function PhysicsPage() {
                 <div className="mt-2 h-1 w-12 bg-gradient-to-r from-[#CF3B49] to-[#E7B109] rounded-full" />
               </div>
               <div className="mt-5">
-                <PhysicsSections />
+                <HoursSections data={physicsHours} />
               </div>
             </section>
 

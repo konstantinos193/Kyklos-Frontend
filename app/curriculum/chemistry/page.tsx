@@ -1,4 +1,6 @@
 import { ChemistrySections } from '@/components/curriculum/chemistry-sections';
+import { HoursSections } from '@/components/curriculum/hours-sections';
+import { chemistryHours } from '@/components/curriculum/chemistry-hours-data';
 import { TeachersList } from '@/components/curriculum/teachers-list';
 import { chemistryTeachers } from '@/components/curriculum/chemistry-teachers-data';
 
@@ -37,7 +39,7 @@ export default function ChemistryPage() {
                 <div className="mt-2 h-1 w-12 bg-gradient-to-r from-[#CF3B49] to-[#E7B109] rounded-full" />
               </div>
               <div className="mt-5">
-                <ChemistrySections />
+                <HoursSections data={chemistryHours} />
               </div>
             </section>
 

@@ -307,7 +307,7 @@ export default function RootLayout({
   }
 
   return (
-    <html lang="el">
+    <html lang="el" data-scroll-behavior="smooth">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <script
           type="application/ld+json"

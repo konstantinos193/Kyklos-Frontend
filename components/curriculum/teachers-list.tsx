@@ -65,74 +65,95 @@ export function TeachersList({ title, teachers }: TeachersListProps) {
                     <h4 className="text-sm sm:text-base font-semibold text-slate-900">
                       {teacher.name}
                     </h4>
-                    <p className="text-xs sm:text-sm text-slate-600 mt-1">
-                      {teacher.title}
-                    </p>
-                    <p className="text-xs text-slate-500 mt-1">
-                      {teacher.specialization}
-                    </p>
+                    {teacher.title && (
+                      <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                        {teacher.title}
+                      </p>
+                    )}
+                    {teacher.specialization && (
+                      <p className="text-xs text-slate-500 mt-1">
+                        {teacher.specialization}
+                      </p>
+                    )}
                   </div>
                   
                   {/* Rating */}
-                  <div className="flex items-center gap-1">
-                    <div className="flex">
-                      {renderStars(teacher.rating)}
+                  {teacher.rating > 0 && (
+                    <div className="flex items-center gap-1">
+                      <div className="flex">
+                        {renderStars(teacher.rating)}
+                      </div>
+                      <span className="text-xs text-slate-500 ml-1">
+                        ({teacher.rating}/5)
+                      </span>
                     </div>
-                    <span className="text-xs text-slate-500 ml-1">
-                      ({teacher.rating}/5)
-                    </span>
-                  </div>
+                  )}
                 </div>
 
                 {/* Experience and Education */}
                 <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-600">
-                  <div className="flex items-center gap-1">
-                    <Award className="w-3 h-3" />
-                    <span>{teacher.experience} χρόνια εμπειρία</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <GraduationCap className="w-3 h-3" />
-                    <span>{teacher.education}</span>
-                  </div>
+                  {teacher.experience > 0 && (
+                    <div className="flex items-center gap-1">
+                      <Award className="w-3 h-3" />
+                      <span>{teacher.experience} χρόνια εμπειρία</span>
+                    </div>
+                  )}
+                  {teacher.education && (
+                    <div className="flex items-center gap-1">
+                      <GraduationCap className="w-3 h-3" />
+                      <span>{teacher.education}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Subjects */}
-                <div className="mt-3">
-                  <div className="flex flex-wrap gap-1">
-                    {teacher.subjects.map((subject, index) => (
-                      <span
-                        key={index}
-                        className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-                      >
-                        {subject}
-                      </span>
-                    ))}
+                {teacher.subjects && teacher.subjects.length > 0 && (
+                  <div className="mt-3">
+                    <div className="flex flex-wrap gap-1">
+                      {teacher.subjects.map((subject, index) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                        >
+                          {subject}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Bio */}
-                <p className="text-xs text-slate-600 mt-3 line-clamp-2">
-                  {teacher.bio}
-                </p>
+                {teacher.bio && (
+                  <p className="text-xs text-slate-600 mt-3 line-clamp-2">
+                    {teacher.bio}
+                  </p>
+                )}
 
                 {/* Contact and Availability */}
-                <div className="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                  <div className="flex items-center gap-3 text-xs text-slate-500">
-                    <div className="flex items-center gap-1">
-                      <Mail className="w-3 h-3" />
-                      <span>{teacher.email}</span>
+                {(teacher.email || teacher.phone || teacher.availability) && (
+                  <div className="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div className="flex items-center gap-3 text-xs text-slate-500">
+                      {teacher.email && (
+                        <div className="flex items-center gap-1">
+                          <Mail className="w-3 h-3" />
+                          <span>{teacher.email}</span>
+                        </div>
+                      )}
+                      {teacher.phone && (
+                        <div className="flex items-center gap-1">
+                          <Phone className="w-3 h-3" />
+                          <span>{teacher.phone}</span>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Phone className="w-3 h-3" />
-                      <span>{teacher.phone}</span>
-                    </div>
+                    {teacher.availability && (
+                      <div className="flex items-center gap-1 text-xs text-slate-500">
+                        <Clock className="w-3 h-3" />
+                        <span>{teacher.availability}</span>
+                      </div>
+                    )}
                   </div>
-                  
-                  <div className="flex items-center gap-1 text-xs text-slate-500">
-                    <Clock className="w-3 h-3" />
-                    <span>{teacher.availability}</span>
-                  </div>
-                </div>
+                )}
 
                 {/* Action Button */}
                 <div className="mt-3">
@@ -147,20 +168,16 @@ export function TeachersList({ title, teachers }: TeachersListProps) {
       </div>
 
       {/* Summary Stats */}
-      <div className="mt-6 pt-4 border-t border-slate-200">
-        <div className="grid grid-cols-2 gap-4 text-center">
-          <div>
-            <p className="text-lg font-semibold text-slate-900">{teachers.length}</p>
-            <p className="text-xs text-slate-500">Διδάσκοντες</p>
-          </div>
-          <div>
-            <p className="text-lg font-semibold text-slate-900">
-              {teachers.reduce((sum, teacher) => sum + teacher.experience, 0) / teachers.length}
-            </p>
-            <p className="text-xs text-slate-500">Μέση Εμπειρία</p>
+      {teachers.length > 0 && (
+        <div className="mt-6 pt-4 border-t border-slate-200">
+          <div className="grid grid-cols-2 gap-4 text-center">
+            <div>
+              <p className="text-lg font-semibold text-slate-900">{teachers.length}</p>
+              <p className="text-xs text-slate-500">Διδάσκοντες</p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -5,15 +5,27 @@ import Link from 'next/link';
 import { LocationIcon, PhoneIcon, MailIcon, FacebookIcon, InstagramIcon, TikTokIcon } from "@/components/icons";
 
 export function HeaderTop() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [accountRoute, setAccountRoute] = useState<string>('/student-login');
 
   useEffect(() => {
-    // Check if student is logged in
+    // Check which user type is logged in and set appropriate route
     const checkLoginStatus = () => {
+      // Check for admin login (check both localStorage and sessionStorage)
+      const adminToken = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+      const adminInfo = localStorage.getItem('adminInfo') || sessionStorage.getItem('adminInfo');
+      
+      // Check for student login
       const studentData = localStorage.getItem('student');
       const studentToken = localStorage.getItem('studentToken');
       
-      setIsLoggedIn(!!(studentData && studentToken));
+      // Prioritize admin if both are logged in, otherwise use whichever is logged in
+      if (adminToken && adminInfo) {
+        setAccountRoute('/admin');
+      } else if (studentData && studentToken) {
+        setAccountRoute('/student/dashboard');
+      } else {
+        setAccountRoute('/student-login');
+      }
     };
 
     // Check on mount
@@ -22,8 +34,17 @@ export function HeaderTop() {
     // Listen for storage changes (when user logs in/out in another tab)
     window.addEventListener('storage', checkLoginStatus);
 
+    // Also listen for custom events (for same-tab login/logout)
+    const handleAuthChange = () => checkLoginStatus();
+    window.addEventListener('auth-change', handleAuthChange);
+
+    // Polling mechanism as fallback for same-tab changes (checks every 2 seconds)
+    const intervalId = setInterval(checkLoginStatus, 2000);
+
     return () => {
       window.removeEventListener('storage', checkLoginStatus);
+      window.removeEventListener('auth-change', handleAuthChange);
+      clearInterval(intervalId);
     };
   }, []);
 
@@ -52,7 +73,7 @@ export function HeaderTop() {
           {/* Right side - Links and Social */}
           <div className="ml-auto flex items-center gap-3 sm:gap-4">
             <Link 
-              href={isLoggedIn ? '/student/dashboard' : '/student-login'}
+              href={accountRoute}
               className="transition-colors font-medium"
               style={{ color: '#CE3B49' }}
             >
