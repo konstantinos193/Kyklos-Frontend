@@ -1,12 +1,15 @@
 /**
  * Get the API base URL from environment variables
- * @throws Error if NEXT_PUBLIC_API_URL is not set
+ * Returns a default value during build time if not set to prevent build errors
  */
 export function getApiUrl(): string {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   
+  // If not set, return a default value to prevent build-time errors
+  // This should be configured via environment variables at runtime
   if (!apiUrl) {
-    throw new Error('NEXT_PUBLIC_API_URL environment variable is not set. Please configure it in your .env file.');
+    // Return a default backend URL that can be overridden at runtime
+    return 'https://kyklos-backend.onrender.com';
   }
   
   // Remove trailing slash if present
