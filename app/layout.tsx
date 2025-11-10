@@ -5,12 +5,22 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
+import { Noto_Sans } from "next/font/google"
+
+const notoSans = Noto_Sans({
+  subsets: ["latin", "greek"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-noto-sans",
+  display: "swap",
+})
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
+  // Windows optimizations
+  viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#1e40af" },
     { media: "(prefers-color-scheme: dark)", color: "#0f172a" }
@@ -308,7 +318,7 @@ export default function RootLayout({
 
   return (
     <html lang="el" data-scroll-behavior="smooth">
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className={`${notoSans.variable} font-sans ${GeistSans.variable} ${GeistMono.variable} bg-slate-200`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

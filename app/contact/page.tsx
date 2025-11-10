@@ -3,7 +3,7 @@ import { LocationIcon, PhoneIcon, ClockIcon, MailIcon } from "@/components/icons
 import { contactAPI } from "@/lib/api";
 import { FAQSection } from "@/components/contact/faq-section";
 import { useState } from "react";
-import Head from "next/head";
+import { generateBreadcrumbSchema, generateWebPageSchema, generateLocalBusinessSchema, generateFAQSchema } from "@/lib/seo-utils";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -69,75 +69,69 @@ export default function ContactPage() {
     }
   };
 
+  // Structured data
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Αρχική", url: "/" },
+    { name: "Επικοινωνία", url: "/contact" },
+  ]);
+
+  const webPageSchema = generateWebPageSchema({
+    name: "Επικοινωνία | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+    description: "Επικοινωνήστε με το ΚΥΚΛΟΣ Φροντιστήριο. Βρισκόμαστε στη Βασιλέως Κωνσταντίνου 42, Άρτα. Τηλέφωνο: +30 26810 26671.",
+    url: "/contact",
+    breadcrumb: [
+      { name: "Αρχική", url: "/" },
+      { name: "Επικοινωνία", url: "/contact" },
+    ],
+  });
+
+  const localBusinessSchema = generateLocalBusinessSchema();
+
+  const faqSchema = generateFAQSchema([
+    {
+      question: "Πού βρίσκεται το φροντιστήριο;",
+      answer: "Το ΚΥΚΛΟΣ Φροντιστήριο βρίσκεται στη Βασιλέως Κωνσταντίνου 42, Άρτα.",
+    },
+    {
+      question: "Ποιες είναι οι ώρες λειτουργίας;",
+      answer: "Δευτέρα - Παρασκευή: 09:00 - 21:00, Σάββατο: 10:00 - 15:00.",
+    },
+    {
+      question: "Πώς μπορώ να επικοινωνήσω;",
+      answer: "Μπορείτε να μας καλέσετε στο +30 26810 26671 ή να συμπληρώσετε τη φόρμα επικοινωνίας.",
+    },
+    {
+      question: "Ποια μαθήματα προσφέρετε;",
+      answer: "Προσφέρουμε Μαθηματικά, Φυσική, Χημεία, Βιολογία, Ελληνική Γλώσσα, Λογοτεχνία, Αρχαία, Ιστορία, Λατινικά, ΑΟΘ και Πληροφορική.",
+    },
+  ]);
+
   return (
     <>
-      <Head>
-        <title>Επικοινωνία - ΚΥΚΛΟΣ Φροντιστήριο | Εξειδικευμένο Φροντιστήριο για Γυμνάσιο & Λύκειο</title>
-        <meta name="description" content="Επικοινωνήστε με το ΚΥΚΛΟΣ Φροντιστήριο. Βρισκόμαστε στη Βασιλέως Κωνσταντίνου 42, Άρτα. Τηλέφωνο: +30 26810 26671. Εξειδικευμένο φροντιστήριο για Γυμνάσιο & Λύκειο με προετοιμασία για τις Πανελλαδικές εξετάσεις." />
-        <meta name="keywords" content="φροντιστήριο, επικοινωνία, Άρτα, γυμνάσιο, λύκειο, πανελλαδικές, εξετάσεις, μαθηματικά, φυσική, χημεία, βιολογία, αρχαία, έκθεση, λογοτεχνία" />
-        <meta name="author" content="ΚΥΚΛΟΣ Φροντιστήριο" />
-        <meta name="robots" content="index, follow" />
-        
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://kyklosedu.gr/contact" />
-        <meta property="og:title" content="Επικοινωνία - ΚΥΚΛΟΣ Φροντιστήριο" />
-        <meta property="og:description" content="Επικοινωνήστε με το ΚΥΚΛΟΣ Φροντιστήριο. Εξειδικευμένο φροντιστήριο για Γυμνάσιο & Λύκειο με προετοιμασία για τις Πανελλαδικές εξετάσεις. Βρισκόμαστε στη Βασιλέως Κωνσταντίνου 42, Άρτα." />
-        <meta property="og:image" content="https://kyklosedu.gr/api/og/contact" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="ΚΥΚΛΟΣ Φροντιστήριο - Επικοινωνία" />
-        <meta property="og:site_name" content="ΚΥΚΛΟΣ Φροντιστήριο" />
-        <meta property="og:locale" content="el_GR" />
-        
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://kyklosedu.gr/contact" />
-        <meta name="twitter:title" content="Επικοινωνία - ΚΥΚΛΟΣ Φροντιστήριο" />
-        <meta name="twitter:description" content="Επικοινωνήστε με το ΚΥΚΛΟΣ Φροντιστήριο. Εξειδικευμένο φροντιστήριο για Γυμνάσιο & Λύκειο με προετοιμασία για τις Πανελλαδικές εξετάσεις." />
-        <meta name="twitter:image" content="https://kyklosedu.gr/api/og/contact" />
-        <meta name="twitter:image:alt" content="ΚΥΚΛΟΣ Φροντιστήριο - Επικοινωνία" />
-        
-        {/* Additional SEO */}
-        <meta name="geo.region" content="GR-31" />
-        <meta name="geo.placename" content="Άρτα" />
-        <meta name="geo.position" content="39.1609;20.9856" />
-        <meta name="ICBM" content="39.1609, 20.9856" />
-        
-        {/* Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "EducationalOrganization",
-              "name": "ΚΥΚΛΟΣ Φροντιστήριο",
-              "description": "Εξειδικευμένο Φροντιστήριο για Γυμνάσιο & Λύκειο με προετοιμασία για τις Πανελλαδικές εξετάσεις",
-              "url": "https://kyklosedu.gr",
-              "logo": "https://kyklosedu.gr/logo.png",
-              "image": "https://kyklosedu.gr/logo.png",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Βασιλέως Κωνσταντίνου 42",
-                "addressLocality": "Άρτα",
-                "addressCountry": "GR"
-              },
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "telephone": "+30-26810-26671",
-                "contactType": "customer service",
-                "availableLanguage": "Greek"
-              },
-              "openingHours": "Mo-Fr 09:00-21:00, Sa 10:00-15:00",
-              "sameAs": [
-                "https://www.facebook.com/kyklosedu",
-                "https://www.instagram.com/kyklosedu"
-              ]
-            })
-          }}
-        />
-      </Head>
-      
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webPageSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(localBusinessSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
+        }}
+      />
       <main className="relative">
       {/* Hero */}
       <section className="relative overflow-hidden">
@@ -223,7 +217,7 @@ export default function ContactPage() {
             <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-2">
               <div className="aspect-[4/3] w-full overflow-hidden rounded-xl">
                 <iframe
-                  title="Χάρτης"
+                  title="Χάρτης τοποθεσίας ΚΥΚΛΟΣ Φροντιστήριο Άρτα"
                   src="https://www.google.com/maps?q=%CE%9A%CE%A5%CE%9A%CE%9B%CE%9F%CE%A3%20%CE%95%CE%BA%CF%80%CE%B1%CE%AF%CE%B4%CE%B5%CF%85%CF%83%CE%B7%20%CE%86%CF%81%CF%84%CE%B1&output=embed"
                   width="600"
                   height="450"
@@ -369,5 +363,3 @@ export default function ContactPage() {
     </>
   );
 }
-
-

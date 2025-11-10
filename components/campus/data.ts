@@ -3,7 +3,7 @@ import { CampusContent } from "./types";
 export const campusContent: CampusContent = {
   title: "Ένα ταξίδι στο φροντιστήριο μας με φωτογραφίες",
   buttonText: "Περισσότερα",
-  buttonHref: "gallery",
+  buttonHref: "/gallery",
   images: [
     { id: "1", src: "/building/0-02-05-478c0937fdff63e4ab45201a399a1b1c3dad0c2a14c4cf8b65738dd77edfc916_acfb2c2f26f11734.jpg", alt: "ΚΥΚΛΟΣ Φροντιστήριο - Κύρια είσοδος" },
     { id: "2", src: "/building/0-02-05-3b3d8a2d20530e4f20a2f292136fede7d8148f5a5135339db427ddb6797c27ec_a83eae51ddeeb3df.jpg", alt: "ΚΥΚΛΟΣ Φροντιστήριο - Εξωτερική άποψη" },

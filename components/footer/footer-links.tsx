@@ -1,3 +1,5 @@
+"use client";
+
 import { FooterData } from "./types";
 
 interface FooterLinksProps {

@@ -1,8 +1,6 @@
-"use client";
-import { lazy, Suspense } from "react";
 import { SubjectCard } from "@/components/curriculum/subject-card";
-
-const SectionsTabs = lazy(() => import("@/components/curriculum/sections-tabs").then(m => ({ default: m.SectionsTabs })));
+import { generateMetadata as generateSEOMetadata, generateWebPageSchema, generateBreadcrumbSchema } from "@/lib/seo-utils";
+import { Metadata } from "next";
 
 // Move imageMap outside component to avoid recreation on every render
 const IMAGE_MAP: Record<string, string> = {
@@ -20,6 +18,29 @@ const IMAGE_MAP: Record<string, string> = {
   "Πληροφορική": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2F6c41P3JIMTpPP1sMciktCZ_LG6eX3pnag&s",
 };
 
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Πρόγραμμα Σπουδών | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+  description: "Σύγχρονο πρόγραμμα σπουδών με εξατομικευμένη υποστήριξη, στοχευμένη προετοιμασία και μετρήσιμα αποτελέσματα. Μαθηματικά, Φυσική, Χημεία, Βιολογία, Ελληνική Γλώσσα, Λογοτεχνία, Αρχαία, Ιστορία, Λατινικά, ΑΟΘ, Πληροφορική.",
+  keywords: [
+    "πρόγραμμα σπουδών",
+    "μαθήματα φροντιστηρίου",
+    "μαθηματικά άρτα",
+    "φυσική άρτα",
+    "χημεία άρτα",
+    "βιολογία άρτα",
+    "ελληνική γλώσσα άρτα",
+    "λογοτεχνία άρτα",
+    "αρχαία άρτα",
+    "ιστορία άρτα",
+    "λατινικά άρτα",
+    "αοθ άρτα",
+    "πληροφορική άρτα",
+    "φροντιστήριο κύκλος",
+  ],
+  path: "/curriculum",
+  type: "website",
+});
+
 const SUBJECTS = [
     { href: "/curriculum/mathematics", label: "Μαθηματικά", description: "Άλγεβρα, Γεωμετρία, Ανάλυση" },
     { href: "/curriculum/physics", label: "Φυσική", description: "Μηχανική, Ηλεκτρομαγνητισμός, Κύματα" },
@@ -36,8 +57,36 @@ const SUBJECTS = [
   ];
 
 export default function CurriculumPage() {
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Αρχική", url: "/" },
+    { name: "Πρόγραμμα Σπουδών", url: "/curriculum" },
+  ]);
+
+  const webPageSchema = generateWebPageSchema({
+    name: "Πρόγραμμα Σπουδών | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+    description: "Σύγχρονο πρόγραμμα σπουδών με εξατομικευμένη υποστήριξη, στοχευμένη προετοιμασία και μετρήσιμα αποτελέσματα.",
+    url: "/curriculum",
+    breadcrumb: [
+      { name: "Αρχική", url: "/" },
+      { name: "Πρόγραμμα Σπουδών", url: "/curriculum" },
+    ],
+  });
+
   return (
-    <main className="relative">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webPageSchema),
+        }}
+      />
+      <main className="relative">
       {/* Banner - custom hero markup */}
       <div className="relative w-full bg-gradient-to-tr from-[#0f172a] via-[#1f2937] to-[#E7B109]">
         <div
@@ -87,11 +136,7 @@ export default function CurriculumPage() {
           })}
         </div>
       </section>
-
-      {/* Curriculum Sections with Tabs */}
-      <Suspense fallback={<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16">Loading...</div>}>
-        <SectionsTabs />
-      </Suspense>
     </main>
+    </>
   );
 }

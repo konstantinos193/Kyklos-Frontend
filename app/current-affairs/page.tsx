@@ -10,7 +10,7 @@ export default function CurrentAffairsPage() {
   return (
     <main>
       <AboutBanner
-        title="Επικαιρότητα"
+        title="Εκπαιδευτικά Νέα"
         backgroundImage={
           "https://placehold.co/1600x500/E7B109/FFFFFF?text=%CE%95%CF%80%CE%B9%CE%BA%CE%B1%CE%B9%CF%81%CF%8C%CF%84%CE%B7%CF%84%CE%B1"
         }

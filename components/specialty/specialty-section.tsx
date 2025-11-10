@@ -5,7 +5,7 @@ import { specialtyContent } from "./data";
 
 export function SpecialtySection() {
   return (
-    <section className="relative py-24 bg-gradient-to-br from-slate-50 via-white to-blue-50 overflow-hidden">
+    <section className="relative py-24 bg-slate-200 overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-80 h-80 bg-[#E7B109]/8 rounded-full blur-3xl animate-pulse"></div>

@@ -5,7 +5,7 @@ import { successStories } from './success-stories-data';
 
 export default function SuccessStoriesReplacement() {
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="relative min-h-screen bg-slate-200">
       {/* Background with animated elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-10 sm:top-20 left-10 sm:left-20 w-40 sm:w-80 h-40 sm:h-80 bg-[#E7B109]/8 rounded-full blur-3xl animate-pulse"></div>

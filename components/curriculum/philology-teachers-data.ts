@@ -31,7 +31,7 @@ export const philologyTeachers: Teacher[] = [
   },
   {
     id: 'phil-2',
-    name: 'Μπισκονάκη Βασιλική',
+    name: 'Μπισκανάκη Βασιλική',
     title: '',
     specialization: '',
     experience: 0,

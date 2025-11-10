@@ -19,7 +19,7 @@ export const testimonialsContent: TestimonialsContent = {
     {
       id: "1",
       text: "Συνεργάσιμοι καθηγητές , δίπλα στους μαθητές",
-      author: "placeholder_name10",
+      author: "Μαρια Παπαδωπουλου",
       department: "ΨΥΧΟΛΟΓΙΑ"
     },
     {

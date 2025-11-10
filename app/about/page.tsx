@@ -1,17 +1,13 @@
 import { AboutBanner } from "@/components/about/about-banner";
 import { AboutGoals } from "@/components/about/about-goals";
-import { AboutHighlight } from "@/components/about/about-highlight";
-import { AboutFeatures } from "@/components/about/about-features";
 import { AboutHistory } from "@/components/about/about-history";
-import { AboutFacilities } from "@/components/about/about-facilities";
 import { AboutMissionVision } from "@/components/about/about-mission-vision";
 import { AboutStaff } from "@/components/about/about-staff";
-import { AboutLeadership } from "@/components/about/about-leadership";
 import { AboutValues } from "@/components/about/about-values";
 import { AboutSection } from "@/components/about-section";
-import { Metadata } from "next";
+import { generateMetadata as generateSEOMetadata, generateWebPageSchema, generateBreadcrumbSchema, generateOrganizationSchema } from "@/lib/seo-utils";
 
-export const metadata: Metadata = {
+export const metadata = generateSEOMetadata({
   title: "Σχετικά με εμάς | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
   description: "Γνωρίστε το ΚΥΚΛΟΣ Φροντιστήριο στην Άρτα! 25+ χρόνια εμπειρίας στην εκπαίδευση, 95% επιτυχία στις Πανελλαδικές εξετάσεις. Εξειδικευμένοι καθηγητές, σύγχρονες εγκαταστάσεις και προσωποποιημένη προετοιμασία για Γυμνάσιο & Λύκειο.",
   keywords: [
@@ -24,33 +20,66 @@ export const metadata: Metadata = {
     "μαθησιακό κέντρο άρτα",
     "εκπαιδευτική φιλοσοφία",
     "στόχοι φροντιστηρίου",
-    "ιστορία φροντιστηρίου άρτα"
+    "ιστορία φροντιστηρίου άρτα",
+    "φροντιστήριο άρτα",
+    "μαθησιακό κέντρο",
+    "εκπαίδευση άρτα"
   ],
-  openGraph: {
-    title: "Σχετικά με εμάς | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
-    description: "Γνωρίστε το ΚΥΚΛΟΣ Φροντιστήριο στην Άρτα! 25+ χρόνια εμπειρίας, 95% επιτυχία στις Πανελλαδικές εξετάσεις.",
-    images: ["/logo.png"],
-  },
-};
+  path: "/about",
+  type: "website",
+});
 
 export default function AboutPage() {
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Αρχική", url: "/" },
+    { name: "Σχετικά με εμάς", url: "/about" },
+  ]);
+
+  const webPageSchema = generateWebPageSchema({
+    name: "Σχετικά με εμάς | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+    description: "Γνωρίστε το ΚΥΚΛΟΣ Φροντιστήριο στην Άρτα! 25+ χρόνια εμπειρίας στην εκπαίδευση, 95% επιτυχία στις Πανελλαδικές εξετάσεις.",
+    url: "/about",
+    breadcrumb: [
+      { name: "Αρχική", url: "/" },
+      { name: "Σχετικά με εμάς", url: "/about" },
+    ],
+  });
+
+  const organizationSchema = generateOrganizationSchema();
+
   return (
-    <main>
-      <AboutBanner 
-        title="Ποιοί Είμαστε" 
-        backgroundImage="/building/0-02-05-478c0937fdff63e4ab45201a399a1b1c3dad0c2a14c4cf8b65738dd77edfc916_acfb2c2f26f11734.jpg" 
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
       />
-      <AboutSection />
-      <AboutMissionVision />
-      <AboutGoals />
-      <AboutHighlight />
-      <AboutFeatures />
-      <AboutStaff />
-      <AboutLeadership />
-      <AboutValues />
-      <AboutHistory />
-      <AboutFacilities />
-    </main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webPageSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationSchema),
+        }}
+      />
+      <main>
+        <AboutBanner 
+          title="Ποιοί Είμαστε" 
+          backgroundImage="/building/0-02-05-478c0937fdff63e4ab45201a399a1b1c3dad0c2a14c4cf8b65738dd77edfc916_acfb2c2f26f11734.jpg" 
+        />
+        <AboutSection />
+        <AboutMissionVision />
+        <AboutGoals />
+        <AboutStaff />
+        <AboutValues />
+        <AboutHistory />
+      </main>
+    </>
   );
 }
 

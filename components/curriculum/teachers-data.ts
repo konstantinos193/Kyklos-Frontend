@@ -73,7 +73,7 @@ export const mathematicsTeachers: Teacher[] = [
   },
   {
     id: 'math-5',
-    name: 'Μπισκονάκη Μαρία',
+    name: 'Μπισκανάκη Μαρία',
     title: '',
     specialization: '',
     experience: 0,

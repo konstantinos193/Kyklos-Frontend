@@ -3,7 +3,6 @@ import { FooterLinks } from "./footer/footer-links";
 import { FooterContact } from "./footer/footer-contact";
 import { FooterNewsletter } from "./footer/footer-newsletter";
 import { FooterBottom } from "./footer/footer-bottom";
-import { FooterMobileMenu } from "./footer/footer-mobile-menu";
 import { ScrollToTop } from "./footer/scroll-to-top";
 import { footerData } from "./footer/data";
 
@@ -53,14 +52,14 @@ export function Footer() {
             socialLinks={footerData.socialLinks} 
           />
 
+          {/* Quick Links - Always visible on mobile */}
+          <FooterLinks quickLinks={footerData.quickLinks} />
+
+          {/* Contact Info - Always visible on mobile */}
+          <FooterContact contact={footerData.contact} />
+
           {/* Newsletter - Always visible on mobile */}
           <FooterNewsletter />
-
-          {/* Collapsible sections for mobile */}
-          <FooterMobileMenu 
-            quickLinks={footerData.quickLinks}
-            contact={footerData.contact}
-          />
         </div>
 
         {/* Bottom Bar */}

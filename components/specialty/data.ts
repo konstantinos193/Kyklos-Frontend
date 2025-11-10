@@ -12,7 +12,7 @@ export const specialtyContent: SpecialtyContent = {
     {
       id: "prospectus",
       title: "Κατεβάστε το Prospectus",
-      href: "prospectus",
+      href: "/prospectus",
       target: "_blank",
       icon: "document",
       isActive: true
@@ -20,7 +20,7 @@ export const specialtyContent: SpecialtyContent = {
     {
       id: "oi-kalyteroi-olon-ton-epoxon",
       title: "Οι καλύτεροι της δεκαετίας",
-      href: "oi-kalyteroi-olon-ton-epoxon",
+      href: "/oi-kalyteroi-olon-ton-epoxon",
       icon: "trophy"
     }
   ]

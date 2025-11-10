@@ -1,3 +1,10 @@
+export interface CourseSubject {
+  name: string;
+  hours: number;
+  description?: string;
+  icon?: string;
+}
+
 export interface Course {
   id: string;
   title: string;
@@ -7,6 +14,7 @@ export interface Course {
   applyText?: string;
   applyHref: string;
   moreHref: string;
+  subjects?: CourseSubject[];
 }
 
 export interface CoursesContent {

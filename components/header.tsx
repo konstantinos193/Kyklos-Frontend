@@ -36,14 +36,42 @@ export function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isMobileMenuOpen]);
 
-  // Lock body scroll when mobile menu is open
+  // Lock body scroll when mobile menu is open (Windows optimized)
   useEffect(() => {
     const body = document.body;
+    const html = document.documentElement;
+    
     if (isMobileMenuOpen) {
-      const previousOverflow = body.style.overflow;
+      // Store original values
+      const previousBodyOverflow = body.style.overflow;
+      const previousBodyPosition = body.style.position;
+      const previousBodyTop = body.style.top;
+      const previousBodyWidth = body.style.width;
+      const scrollY = window.scrollY;
+      
+      // Lock scroll
       body.style.overflow = 'hidden';
+      body.style.position = 'fixed';
+      body.style.top = `-${scrollY}px`;
+      body.style.width = '100%';
+      
+      // Prevent iOS bounce scrolling
+      html.style.overflow = 'hidden';
+      html.style.position = 'fixed';
+      html.style.height = '100%';
+      
       return () => {
-        body.style.overflow = previousOverflow;
+        // Restore original values
+        body.style.overflow = previousBodyOverflow;
+        body.style.position = previousBodyPosition;
+        body.style.top = previousBodyTop;
+        body.style.width = previousBodyWidth;
+        html.style.overflow = '';
+        html.style.position = '';
+        html.style.height = '';
+        
+        // Restore scroll position
+        window.scrollTo(0, scrollY);
       };
     }
   }, [isMobileMenuOpen]);
@@ -58,7 +86,7 @@ export function Header() {
       
       {/* Main Navigation - Mobile-First Responsive Design */}
       <div 
-        className={`sticky top-0 z-40 w-full transition-all duration-300 ${
+        className={`sticky top-0 z-50 w-full transition-all duration-300 overflow-visible ${
           isScrolled 
             ? "bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200" 
             : "bg-white border-b-2 border-gray-200"
@@ -100,14 +128,6 @@ export function Header() {
         {/* Mobile menu handled by HeaderMobileMenu above */}
       </div>
 
-      {/* Backdrop overlay when mobile menu is open */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-[1px] lg:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-          aria-hidden="true"
-        />
-      )}
     </header>
   );
 }

@@ -7,7 +7,7 @@ import { heroData } from "./hero/data";
 
 export function HeroSection() {
   return (
-        <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50">
+        <section className="relative min-h-screen overflow-hidden bg-slate-200">
           {/* Educational Pattern Background */}
           <div className="absolute inset-0 opacity-30">
             <div className="absolute inset-0" style={{

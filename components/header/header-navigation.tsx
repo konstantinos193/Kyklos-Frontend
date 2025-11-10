@@ -71,7 +71,7 @@ export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: H
     if (isMobile) {
       return { visibleNav: navigation } as { visibleNav: NavigationItem[] };
     }
-    const pinnedLabels = ["Ποιοί Είμαστε", "Πρόγραμμα Σπουδών", "Επικοινωνία"];
+    const pinnedLabels = ["Ποιοί Είμαστε", "Καθηγητές", "Πρόγραμμα Σπουδών", "Επικοινωνία"];
     const pinned = navigation.filter((n) => pinnedLabels.includes(n.label));
     const others = navigation.filter((n) => !pinnedLabels.includes(n.label));
 
@@ -129,7 +129,7 @@ export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: H
   }
 
   return (
-    <div className="flex items-center gap-2.5 xl:gap-3.5 2xl:gap-4 whitespace-nowrap">
+    <div className="flex items-center gap-1.5 lg:gap-2 xl:gap-3.5 2xl:gap-4 whitespace-nowrap lg:overflow-visible overflow-x-auto scrollbar-hide">
       {visibleNav.map((item) => {
         if (item.isDropdown && item.dropdownItems) {
           return (
@@ -139,7 +139,7 @@ export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: H
               items={item.dropdownItems}
               isMobile={false}
               parentHref={item.href}
-              triggerClassName="px-1.5 xl:px-2 py-1.5"
+              triggerClassName="px-1.5 lg:px-2 xl:px-2.5 py-1.5"
             />
           );
         }
@@ -156,7 +156,7 @@ export function HeaderNavigation({ navigation, isScrolled, isMobile = false }: H
                 handleNavClick(item.href);
               }
             }}
-            className={`text-[13px] sm:text-sm font-medium px-1.5 xl:px-2 py-1.5 transition-colors duration-200 border-b-2 ${
+            className={`text-xs lg:text-[13px] xl:text-sm font-medium px-1.5 lg:px-2 xl:px-2.5 py-1.5 transition-colors duration-200 border-b-2 flex-shrink-0 ${
               isActive
                 ? 'text-[#CE3B49] border-[#CE3B49]'
                 : 'text-gray-700 border-transparent hover:text-[#CE3B49] hover:border-[#FECACA]'

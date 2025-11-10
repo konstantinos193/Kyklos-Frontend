@@ -1,4 +1,4 @@
-import { ChevronRightIcon, StudentsIcon, BuildingIcon, AwardIcon, BookOpenIcon } from "@/components/icons";
+import { ChevronRightIcon, StudentsIcon, BuildingIcon } from "@/components/icons";
 import { HeroData } from "./types";
 
 export const heroData: HeroData = {
@@ -31,26 +31,14 @@ export const heroData: HeroData = {
   stats: [
     {
       icon: StudentsIcon,
-      value: "500+",
+      value: "3000+",
       label: "Μαθητές",
       color: "text-[#E7B109]"
     },
     {
       icon: BuildingIcon,
-      value: "25+",
+      value: "30+",
       label: "Έτη Εμπειρίας",
-      color: "text-[#CF3B49]"
-    },
-    {
-      icon: AwardIcon,
-      value: "95%",
-      label: "Επιτυχία",
-      color: "text-[#E7B109]"
-    },
-    {
-      icon: BookOpenIcon,
-      value: "8+",
-      label: "Επίπεδα Σπουδών",
       color: "text-[#CF3B49]"
     }
   ],

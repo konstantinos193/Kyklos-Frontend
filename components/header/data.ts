@@ -1,4 +1,5 @@
 import type { HeaderButton } from "./types";
+import { getGradeData } from "@/utils/grade-slug";
 
 export interface NavigationItem {
   label: string;
@@ -32,7 +33,11 @@ export const headerData: HeaderData = {
       href: "/about"
     },
     { 
-      label: "Επικαιρότητα", 
+      label: "Καθηγητές", 
+      href: "/teachers"
+    },
+    { 
+      label: "Εκπαιδευτικά Νέα", 
       href: "/current-affairs",
       isDropdown: true,
       dropdownItems: [
@@ -45,20 +50,10 @@ export const headerData: HeaderData = {
       label: "Πρόγραμμα Σπουδών", 
       href: "/curriculum",
       isDropdown: true,
-      dropdownItems: [
-        { label: "Μαθηματικά", href: "/curriculum/mathematics" },
-        { label: "Φυσική", href: "/curriculum/physics" },
-        { label: "Χημεία", href: "/curriculum/chemistry" },
-        { label: "Βιολογία", href: "/curriculum/biology" },
-        { label: "Άλγεβρα", href: "/curriculum/algebra" },
-        { label: "Γεωμετρία", href: "/curriculum/geometry" },
-        { label: "Αρχαία", href: "/curriculum/ancient-greek" },
-        { label: "Έκθεση - Λογοτεχνία", href: "/curriculum/greek-literature" },
-        { label: "Ιστορία", href: "/curriculum/history" },
-        { label: "Λατινικά", href: "/curriculum/latin" },
-        { label: "ΑΟΘ / Οικονομικά", href: "/curriculum/economics" },
-        { label: "Πληροφορική", href: "/curriculum/informatics" }
-      ]
+      dropdownItems: getGradeData().map(grade => ({
+        label: grade.label,
+        href: grade.href
+      }))
     },
     { 
       label: "Θέματα Πανελληνίων", 
@@ -76,7 +71,7 @@ export const headerData: HeaderData = {
       isDropdown: true,
       dropdownItems: [
         { label: "Ανακοινώσεις", href: "/news/announcements" },
-        { label: "Εκδηλώσεις", href: "/news/events" },
+        { label: "Εκδηλώσεις - Φωτογραφίες", href: "/news/events" },
         { label: "Σεμινάρια", href: "/news/seminars" }
       ]
     },
@@ -89,7 +84,7 @@ export const headerData: HeaderData = {
 
 // Configuration for responsive behavior
 export const headerConfig = {
-  pinnedLabels: ["Ποιοί Είμαστε", "Πρόγραμμα Σπουδών", "Επικοινωνία"],
+  pinnedLabels: ["Ποιοί Είμαστε", "Καθηγητές", "Πρόγραμμα Σπουδών", "Επικοινωνία"],
   maxVisibleByBreakpoint: {
     lg: 5,
     xl: 7,

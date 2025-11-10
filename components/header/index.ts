@@ -1,3 +1,4 @@
+export { Header } from "../header";
 export { HeaderLogo } from "./header-logo";
 export { HeaderNavigation } from "./header-navigation";
 export { HeaderButtons } from "./header-buttons";

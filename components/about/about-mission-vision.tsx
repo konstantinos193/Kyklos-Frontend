@@ -18,7 +18,7 @@ export function AboutMissionVision() {
 
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Mission */}
-            <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-3xl p-8 lg:p-10 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div className="bg-slate-200 rounded-3xl p-8 lg:p-10 shadow-lg hover:shadow-xl transition-shadow duration-300">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 bg-gradient-to-br from-[#E7B109] to-[#D97706] rounded-2xl flex items-center justify-center text-white shadow-lg">
                   <Target className="w-8 h-8" />
@@ -43,7 +43,7 @@ export function AboutMissionVision() {
             </div>
 
             {/* Vision */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 lg:p-10 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div className="bg-slate-200 rounded-3xl p-8 lg:p-10 shadow-lg hover:shadow-xl transition-shadow duration-300">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg">
                   <Eye className="w-8 h-8" />

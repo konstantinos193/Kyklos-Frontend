@@ -1,10 +1,73 @@
 import { MathematicsSections } from '@/components/curriculum/mathematics-sections';
-import { TeachersList } from '@/components/curriculum/teachers-list';
-import { mathematicsTeachers } from '@/components/curriculum/teachers-data';
+import { generateMetadata as generateSEOMetadata, generateWebPageSchema, generateBreadcrumbSchema, generateCourseSchema } from "@/lib/seo-utils";
+import { Metadata } from "next";
+
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Μαθηματικά | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+  description: "Άλγεβρα, Γεωμετρία, Ανάλυση — μεθοδική προετοιμασία και έμφαση στη λύση προβλημάτων. Προετοιμασία για Γυμνάσιο, Λύκειο και Πανελλαδικές εξετάσεις.",
+  keywords: [
+    "μαθηματικά άρτα",
+    "άλγεβρα άρτα",
+    "γεωμετρία άρτα",
+    "ανάλυση άρτα",
+    "μαθηματικά γυμνάσιο",
+    "μαθηματικά λύκειο",
+    "μαθηματικά πανελλαδικές",
+    "φροντιστήριο μαθηματικά",
+    "μαθηματικά φροντιστήριο άρτα",
+  ],
+  path: "/curriculum/mathematics",
+  type: "course",
+});
 
 export default function MathematicsPage() {
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Αρχική", url: "/" },
+    { name: "Πρόγραμμα Σπουδών", url: "/curriculum" },
+    { name: "Μαθηματικά", url: "/curriculum/mathematics" },
+  ]);
+
+  const webPageSchema = generateWebPageSchema({
+    name: "Μαθηματικά | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+    description: "Άλγεβρα, Γεωμετρία, Ανάλυση — μεθοδική προετοιμασία και έμφαση στη λύση προβλημάτων.",
+    url: "/curriculum/mathematics",
+    breadcrumb: [
+      { name: "Αρχική", url: "/" },
+      { name: "Πρόγραμμα Σπουδών", url: "/curriculum" },
+      { name: "Μαθηματικά", url: "/curriculum/mathematics" },
+    ],
+  });
+
+  const courseSchema = generateCourseSchema({
+    name: "Μαθηματικά - Γυμνάσιο & Λύκειο",
+    description: "Πλήρης προετοιμασία Μαθηματικών για Γυμνάσιο, Λύκειο και Πανελλαδικές εξετάσεις. Άλγεβρα, Γεωμετρία, Ανάλυση με μεθοδική προσέγγιση.",
+    provider: "ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+    educationalLevel: "Secondary Education",
+    teaches: ["Άλγεβρα", "Γεωμετρία", "Ανάλυση", "Τριγωνομετρία", "Στερεομετρία"],
+    url: "/curriculum/mathematics",
+  });
+
   return (
-    <main className="relative">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webPageSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(courseSchema),
+        }}
+      />
+      <main className="relative">
       <header className="border-b border-gray-200">
         <div className="px-4 sm:px-6 lg:px-8 py-10">
           <div className="max-w-6xl mx-auto">
@@ -21,16 +84,6 @@ export default function MathematicsPage() {
       <div className="px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <div className="mx-auto max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
           <div className="lg:col-span-8 space-y-8">
-            <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 lg:p-7 shadow-sm">
-              <div>
-                <h2 className="text-lg sm:text-xl font-semibold text-slate-900">Σύνοψη</h2>
-                <div className="mt-2 h-1 w-12 bg-gradient-to-r from-[#CF3B49] to-[#E7B109] rounded-full" />
-              </div>
-              <p className="mt-4 text-sm sm:text-base text-slate-700 leading-relaxed">
-                Το μάθημα καλύπτει θεμελιώδεις έννοιες και τεχνικές επίλυσης για όλες τις τάξεις. Δίνεται έμφαση στην κατανόηση, στη στρατηγική λύσεων και στην εξάσκηση με στοχευμένα θέματα.
-              </p>
-            </section>
-
             <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 lg:p-7 shadow-sm">
               <div>
                 <h2 className="text-lg sm:text-xl font-semibold text-slate-900">Πρόγραμμα Ωρών</h2>
@@ -91,7 +144,6 @@ export default function MathematicsPage() {
           </div>
 
           <aside className="lg:col-span-4 space-y-6 lg:space-y-7 lg:sticky lg:top-24 self-start">
-            <TeachersList title="Διδάσκοντες" teachers={mathematicsTeachers} />
             <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 lg:p-7 shadow-sm">
               <h3 className="text-base sm:text-lg font-semibold text-slate-900">Υλικό & Πηγές</h3>
               <ul className="mt-3 list-disc list-inside text-slate-700 space-y-1 text-sm sm:text-base">
@@ -116,6 +168,7 @@ export default function MathematicsPage() {
         </div>
       </div>
     </main>
+    </>
   );
 }
 

@@ -13,21 +13,21 @@ const yearContent: Record<string, { title: string; html: string }> = {
 };
 
 const categories = [
-  { label: 'Επιτυχόντες Έτος 2024-2025', href: '/curriculum/epityxontes-etos-2024-2025' },
-  { label: 'Επιτυχόντες Έτος 2023-2024', href: '/curriculum/epityxontes-etos-2023-2024' },
-  { label: 'Επιτυχόντες Έτος 2022-2023', href: '/curriculum/epityxontes-etos-2022-2023' },
-  { label: 'Επιτυχόντες Έτος 2021-2022', href: '/curriculum/epityxontes-etos-2021-2022' },
-  { label: 'Επιτυχόντες Έτος 2020-2021', href: '/curriculum/epityxontes-etos-2020-2021' },
-  { label: 'Επιτυχόντες Έτος 2019-2020', href: '/curriculum/epityxontes-etos-2019-2020' },
-  { label: 'Επιτυχόντες Έτος 2018-2019', href: '/curriculum/epityxontes-etos-2018-2019' },
-  { label: 'Επιτυχόντες Έτος 2017-2018', href: '/curriculum/epityxontes-etos-2017-2018' },
-  { label: 'Επιτυχόντες Έτος 2016-2017', href: '/curriculum/epityxontes-etos-2016-2017' },
-  { label: 'Επιτυχόντες Έτος 2015-2016', href: '/curriculum/epityxontes-etos-2015-2016' },
-  { label: 'Επιτυχόντες Έτος 2014-2015', href: '/curriculum/epityxontes-etos-2014-2015' },
-  { label: 'Επιτυχόντες Έτος 2013-2014', href: '/curriculum/epityxontes-etos-2013-2014' },
-  { label: 'Επιτυχόντες Έτος 2012-2013', href: '/curriculum/epityxontes-etos-2012-2013' },
-  { label: 'Επιτυχόντες Έτος 2011-2012', href: '/curriculum/epityxontes-etos-2011-2012' },
-  { label: 'Επιτυχόντες Έτος 2010-2011', href: '/curriculum/epityxontes-etos-2010-2011' },
+  { label: 'Επιτυχόντες Έτος 2024-2025', href: '/epityxontes/epityxontes-etos-2024-2025' },
+  { label: 'Επιτυχόντες Έτος 2023-2024', href: '/epityxontes/epityxontes-etos-2023-2024' },
+  { label: 'Επιτυχόντες Έτος 2022-2023', href: '/epityxontes/epityxontes-etos-2022-2023' },
+  { label: 'Επιτυχόντες Έτος 2021-2022', href: '/epityxontes/epityxontes-etos-2021-2022' },
+  { label: 'Επιτυχόντες Έτος 2020-2021', href: '/epityxontes/epityxontes-etos-2020-2021' },
+  { label: 'Επιτυχόντες Έτος 2019-2020', href: '/epityxontes/epityxontes-etos-2019-2020' },
+  { label: 'Επιτυχόντες Έτος 2018-2019', href: '/epityxontes/epityxontes-etos-2018-2019' },
+  { label: 'Επιτυχόντες Έτος 2017-2018', href: '/epityxontes/epityxontes-etos-2017-2018' },
+  { label: 'Επιτυχόντες Έτος 2016-2017', href: '/epityxontes/epityxontes-etos-2016-2017' },
+  { label: 'Επιτυχόντες Έτος 2015-2016', href: '/epityxontes/epityxontes-etos-2015-2016' },
+  { label: 'Επιτυχόντες Έτος 2014-2015', href: '/epityxontes/epityxontes-etos-2014-2015' },
+  { label: 'Επιτυχόντες Έτος 2013-2014', href: '/epityxontes/epityxontes-etos-2013-2014' },
+  { label: 'Επιτυχόντες Έτος 2012-2013', href: '/epityxontes/epityxontes-etos-2012-2013' },
+  { label: 'Επιτυχόντες Έτος 2011-2012', href: '/epityxontes/epityxontes-etos-2011-2012' },
+  { label: 'Επιτυχόντες Έτος 2010-2011', href: '/epityxontes/epityxontes-etos-2010-2011' },
 ];
 
 export default function Page({ params }: { params: { slug: string } }) {

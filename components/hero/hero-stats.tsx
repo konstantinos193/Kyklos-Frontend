@@ -8,8 +8,9 @@ interface HeroStatsProps {
 
 export function HeroStats({ stats }: HeroStatsProps) {
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-      {stats.map((stat, index) => {
+    <div className="flex justify-center">
+      <div className="grid grid-cols-2 lg:grid-cols-2 gap-8 lg:gap-12 max-w-2xl">
+        {stats.map((stat, index) => {
         const IconComponent = stat.icon;
         
         return (
@@ -33,6 +34,7 @@ export function HeroStats({ stats }: HeroStatsProps) {
           </div>
         );
       })}
+      </div>
     </div>
   );
 }

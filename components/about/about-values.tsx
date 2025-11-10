@@ -43,7 +43,7 @@ const values: Value[] = [
 
 export function AboutValues() {
   return (
-    <section className="relative py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-slate-50 to-slate-100">
+    <section className="relative py-16 sm:py-20 lg:py-24 bg-slate-200">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}

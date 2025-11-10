@@ -26,7 +26,7 @@ export function AboutFeatures({
   features = defaultFeatures
 }: AboutFeaturesProps) {
   return (
-    <section className="py-20 lg:py-24 bg-gradient-to-br from-slate-200 to-slate-100">
+    <section className="py-20 lg:py-24 bg-slate-200">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Left image */}
@@ -52,17 +52,6 @@ export function AboutFeatures({
           {/* Features content */}
           <div className="lg:col-span-7">
             <div className="space-y-8">
-              <div>
-                <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
-                  Γιατί να Επιλέξετε το <span className="text-[#CE3B49]">ΚΥΚΛΟΣ</span>;
-                </h2>
-                <div className="w-16 h-1 bg-gradient-to-r from-[#E7B109] via-[#CE3B49] to-[#D97706] rounded-full"></div>
-                <p className="mt-6 text-lg text-slate-600 leading-relaxed">
-                  Η προσέγγισή μας βασίζεται σε αποδεδειγμένες μεθόδους και σύγχρονα εργαλεία 
-                  για να εξασφαλίσουμε την επιτυχία κάθε μαθητή.
-                </p>
-              </div>
-
               {/* Features grid */}
               <div className="grid sm:grid-cols-2 gap-6">
                 {features.map((item, idx) => (

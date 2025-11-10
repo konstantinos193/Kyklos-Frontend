@@ -3,10 +3,74 @@ import { HoursSections } from '@/components/curriculum/hours-sections';
 import { physicsHours } from '@/components/curriculum/physics-hours-data';
 import { TeachersList } from '@/components/curriculum/teachers-list';
 import { physicsTeachers } from '@/components/curriculum/physics-teachers-data';
+import { generateMetadata as generateSEOMetadata, generateWebPageSchema, generateBreadcrumbSchema, generateCourseSchema } from "@/lib/seo-utils";
+import { Metadata } from "next";
+
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Φυσική | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+  description: "Μηχανική, Ηλεκτρομαγνητισμός, Κύματα — μεθοδική προετοιμασία και έμφαση στη λύση προβλημάτων. Προετοιμασία για Γυμνάσιο, Λύκειο και Πανελλαδικές εξετάσεις.",
+  keywords: [
+    "φυσική άρτα",
+    "φυσική γυμνάσιο",
+    "φυσική λύκειο",
+    "φυσική πανελλαδικές",
+    "μηχανική φυσική",
+    "ηλεκτρομαγνητισμός",
+    "κύματα φυσική",
+    "φροντιστήριο φυσική άρτα",
+  ],
+  path: "/curriculum/physics",
+  type: "course",
+});
 
 export default function PhysicsPage() {
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Αρχική", url: "/" },
+    { name: "Πρόγραμμα Σπουδών", url: "/curriculum" },
+    { name: "Φυσική", url: "/curriculum/physics" },
+  ]);
+
+  const webPageSchema = generateWebPageSchema({
+    name: "Φυσική | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+    description: "Μηχανική, Ηλεκτρομαγνητισμός, Κύματα — μεθοδική προετοιμασία και έμφαση στη λύση προβλημάτων.",
+    url: "/curriculum/physics",
+    breadcrumb: [
+      { name: "Αρχική", url: "/" },
+      { name: "Πρόγραμμα Σπουδών", url: "/curriculum" },
+      { name: "Φυσική", url: "/curriculum/physics" },
+    ],
+  });
+
+  const courseSchema = generateCourseSchema({
+    name: "Φυσική - Γυμνάσιο & Λύκειο",
+    description: "Πλήρης προετοιμασία Φυσικής για Γυμνάσιο, Λύκειο και Πανελλαδικές εξετάσεις. Μηχανική, Ηλεκτρομαγνητισμός, Κύματα με μεθοδική προσέγγιση.",
+    provider: "ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+    educationalLevel: "Secondary Education",
+    teaches: ["Μηχανική", "Ηλεκτρομαγνητισμός", "Κύματα", "Θερμοδυναμική", "Σύγχρονη Φυσική"],
+    url: "/curriculum/physics",
+  });
+
   return (
-    <main className="relative">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webPageSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(courseSchema),
+        }}
+      />
+      <main className="relative">
       <header className="border-b border-gray-200">
         <div className="px-4 sm:px-6 lg:px-8 py-10">
           <div className="max-w-6xl mx-auto">
@@ -119,5 +183,6 @@ export default function PhysicsPage() {
         </div>
       </div>
     </main>
+    </>
   );
 }

@@ -121,6 +121,48 @@ export const blogAPI = {
   },
 };
 
+export const newsAPI = {
+  // Get all news posts with caching
+  getPosts: async (params: {
+    page?: number;
+    limit?: number;
+    type?: 'announcement' | 'event' | 'seminar';
+    search?: string;
+    featured?: boolean;
+  } = {}) => {
+    const response = await getApiClient().get('/api/news', { params });
+    return response.data;
+  },
+
+  // Get single news post
+  getPost: async (id: string) => {
+    const response = await getApiClient().get(`/api/news/${id}`);
+    return response.data;
+  },
+
+  // Get news by type
+  getAnnouncements: async () => {
+    const response = await getApiClient().get('/api/news/announcements');
+    return response.data;
+  },
+
+  getEvents: async () => {
+    const response = await getApiClient().get('/api/news/events');
+    return response.data;
+  },
+
+  getSeminars: async () => {
+    const response = await getApiClient().get('/api/news/seminars');
+    return response.data;
+  },
+
+  // Get news types
+  getTypes: async () => {
+    const response = await getApiClient().get('/api/news/types');
+    return response.data;
+  },
+};
+
 export const newsletterAPI = {
   // Subscribe to newsletter
   subscribe: async (email: string, name?: string) => {

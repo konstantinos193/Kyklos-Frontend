@@ -77,7 +77,7 @@ export function ProgramsSection() {
   ].filter(Boolean).length;
 
   return (
-    <section id="programs" className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-slate-200 via-slate-100 to-slate-200">
+    <section id="programs" className="py-16 sm:py-20 lg:py-24 bg-slate-200">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
@@ -188,9 +188,6 @@ export function ProgramsSection() {
 
         {/* Features */}
         <div className="mt-12 sm:mt-16">
-          <h3 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
-            Γιατί να Επιλέξετε το ΚΥΚΛΟΣ;
-          </h3>
           <ProgramsFeatures features={programsData.features} />
         </div>
 

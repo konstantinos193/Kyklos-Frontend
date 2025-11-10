@@ -5,15 +5,15 @@ export const statisticsContent: StatisticsContent = {
   subtitle: "Μια άλλη διάσταση στη γνώση...",
   stats: [
     {
-      value: "13",
-      label: "Προγράμματα"
+      value: "15+",
+      label: "Καθηγητές"
     },
     {
-      value: "25+",
-      label: "Έμπειροι Καθηγητές"
+      value: "30+",
+      label: "Έτη Εμπειρίας"
     },
     {
-      value: "500+",
+      value: "3000+",
       label: "Υλικό Μαθητών"
     }
   ],

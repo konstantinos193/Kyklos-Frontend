@@ -4,13 +4,13 @@ export const footerData: FooterData = {
   logo: {
     text: "ΚΥΚΛΟΣ",
     symbol: "Φ",
-    description: "Προσφέρουμε ποιοτική εκπαίδευση εδώ και 25+ χρόνια. Η επιτυχία των μαθητών μας είναι η δική μας επιτυχία.",
+    description: "Προσφέρουμε ποιοτική εκπαίδευση από το 1991 και 30+ χρόνια. Η επιτυχία των μαθητών μας είναι η δική μας επιτυχία.",
     image: "/logo.png"
   },
   quickLinks: [
     { label: "Ποιοί Είμαστε", href: "/about" },
     { label: "Πρόγραμμα Σπουδών", href: "/curriculum" },
-    { label: "Επικαιρότητα", href: "/current-affairs" },
+    { label: "Εκπαιδευτικά Νέα", href: "/current-affairs" },
     { label: "Επιτυχόντες", href: "/epityxontes" },
     { label: "Θέματα Πανελληνίων", href: "/panhellenic" },
     { label: "Νέα - Εκδηλώσεις", href: "/news" },
