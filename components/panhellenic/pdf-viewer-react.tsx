@@ -5,6 +5,7 @@ import { PanhellenicFile } from '@/lib/panhellenic-data';
 import { useState, useEffect, useMemo } from 'react';
 import React from 'react';
 import dynamic from 'next/dynamic';
+import { normalizeCloudinaryPdfUrl, isCloudinaryUrl } from '@/lib/cloudinary-utils';
 
 // Configure PDF.js worker before importing components
 // Use the version that matches react-pdf's pdfjs-dist dependency
@@ -76,8 +77,35 @@ export function PdfViewerReact({ file, onClose }: PdfViewerReactProps) {
       pageRefs.current = {};
       // Reset manual zoom flag when file changes
       hasManualZoom.current = false;
+
+      // Set a timeout to detect if PDF fails to load (e.g., 401 errors)
+      // Iframe onError doesn't always fire for HTTP errors, so we use a timeout
+      const loadTimeout = setTimeout(() => {
+        setLoading((currentLoading) => {
+          if (currentLoading) {
+            // Still loading after timeout - might be an access issue
+            if (isCloudinaryUrl(file.url)) {
+              setError('Το PDF δεν φορτώνει. Ενδέχεται να μην είναι προσβάσιμο. Παρακαλώ δοκιμάστε να το ανοίξετε σε νέα καρτέλα ή να το ανεβάσετε ξανά.');
+            } else {
+              setError('Το PDF δεν φορτώνει. Παρακαλώ δοκιμάστε να το ανοίξετε σε νέα καρτέλα.');
+            }
+            return false;
+          }
+          return currentLoading;
+        });
+      }, 10000); // 10 second timeout
+
+      return () => {
+        clearTimeout(loadTimeout);
+      };
     }
   }, [file]);
+
+  // Normalize the PDF URL for Cloudinary files
+  const normalizedUrl = useMemo(() => {
+    if (!file?.url) return null;
+    return normalizeCloudinaryPdfUrl(file.url, file.id);
+  }, [file?.url, file?.id]);
 
   // Calculate optimal initial scale to fit PDF to window
   useEffect(() => {
@@ -159,7 +187,7 @@ export function PdfViewerReact({ file, onClose }: PdfViewerReactProps) {
 
   const handleOpenInNewTab = () => {
     if (file) {
-      window.open(file.url, '_blank');
+      window.open(normalizedUrl || file.url, '_blank');
     }
   };
 
@@ -275,12 +303,18 @@ export function PdfViewerReact({ file, onClose }: PdfViewerReactProps) {
                 }}
               >
                 <iframe
-                  src={`${file.url}#toolbar=0&navpanes=0&view=FitH`}
+                  src={normalizedUrl ? `${normalizedUrl}#toolbar=0&navpanes=0&view=FitH` : file.url}
                   className="w-full h-full border-0"
                   title={file.displayName}
                   onLoad={() => setLoading(false)}
-                  onError={() => {
-                    setError('Δεν ήταν δυνατή η προβολή του PDF');
+                  onError={(e) => {
+                    console.error('PDF iframe error:', e);
+                    // Check if it's a Cloudinary URL with 401 error
+                    if (isCloudinaryUrl(file.url)) {
+                      setError('Το PDF δεν είναι προσβάσιμο. Παρακαλώ διαγράψτε και ανεβάστε ξανά το αρχείο από τον πίνακα διαχείρισης.');
+                    } else {
+                      setError('Δεν ήταν δυνατή η προβολή του PDF');
+                    }
                     setLoading(false);
                   }}
                 />
@@ -318,7 +352,7 @@ export function PdfViewerReact({ file, onClose }: PdfViewerReactProps) {
             <div className="flex flex-col items-center py-8 px-4 sm:px-6 min-h-full">
               <div className="w-full max-w-6xl">
                 <Document
-                  file={file.url}
+                  file={normalizedUrl || file.url}
                   onLoadSuccess={onDocumentLoadSuccess}
                   onLoadError={onDocumentLoadError}
                   options={documentOptions}

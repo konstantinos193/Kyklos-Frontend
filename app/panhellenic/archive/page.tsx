@@ -22,7 +22,9 @@ export default function PanhellenicArchivePage() {
       
       // Start with hardcoded files
       const hardcodedFiles: PanhellenicFile[] = [];
-      hardcodedSubjectGroups.forEach(group => {
+      // Use Array.from to ensure proper iteration
+      const hardcodedGroups = Array.from(hardcodedSubjectGroups);
+      hardcodedGroups.forEach(group => {
         hardcodedFiles.push(...group.files);
       });
 
@@ -40,6 +42,7 @@ export default function PanhellenicArchivePage() {
               subject: file.subject,
               year: file.year,
               url: file.fileUrl,
+              id: file._id || file.id, // Include ID for proxy endpoint
             }));
         }
       } catch (apiError) {
