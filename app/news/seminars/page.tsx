@@ -2,7 +2,7 @@
 
 import { AboutBanner } from "@/components/about/about-banner";
 import { useSeminars } from "@/hooks/use-news";
-import { BlogCard } from "@/components/blog/blog-card";
+import { NewsCard } from "@/components/news/news-card";
 
 export default function SeminarsPage() {
   const { posts, isLoading } = useSeminars();
@@ -11,10 +11,6 @@ export default function SeminarsPage() {
     <main>
       <AboutBanner
         title="Σεμινάρια"
-        backgroundImage={
-          "https://placehold.co/1600x500/E7B109/FFFFFF?text=%CE%A3%CE%B5%CE%BC%CE%B9%CE%BD%CE%AC%CF%81%CE%B9%CE%B1"
-        }
-        overlayOpacity={0.35}
       />
 
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
@@ -31,19 +27,18 @@ export default function SeminarsPage() {
         ) : posts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.map((post: any, index: number) => (
-              <div key={post._id || index} className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <BlogCard 
-                  post={{
-                    ...post,
-                    category: 'Σεμινάριο',
-                    author: post.author?.name || 'ΚΥΚΛΟΣ',
-                    authorImage: post.author?.image || '/logo.png',
-                    image: post.image?.url || '/logo.png',
-                    slug: post.slug || post._id,
-                  }}
-                  index={index}
-                />
-              </div>
+              <NewsCard 
+                key={post._id || index}
+                post={{
+                  ...post,
+                  category: 'Σεμινάριο',
+                  author: post.author?.name || 'ΚΥΚΛΟΣ',
+                  authorImage: post.author?.image || '/logo.png',
+                  image: post.image?.url || '/logo.png',
+                  slug: post.slug || post._id,
+                }}
+                index={index}
+              />
             ))}
           </div>
         ) : (

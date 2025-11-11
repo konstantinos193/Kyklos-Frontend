@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { newsAPI } from '@/lib/api';
+import { newsAPI, adminAPI } from '@/lib/api';
 
 // SWR configuration for optimal performance
 const swrConfig = {
@@ -15,7 +15,7 @@ const swrConfig = {
 export function useNewsPosts(params: {
   page?: number;
   limit?: number;
-  type?: 'announcement' | 'event' | 'seminar';
+  type?: 'announcement' | 'event' | 'seminar' | 'education' | 'universities';
   search?: string;
   featured?: boolean;
 } = {}) {
@@ -114,6 +114,44 @@ export function useSeminars() {
   const { data, error, isLoading, mutate } = useSWR(
     '/api/news/seminars',
     () => newsAPI.getSeminars(),
+    {
+      ...swrConfig,
+      dedupingInterval: 300000,
+    }
+  );
+
+  return {
+    posts: data?.data || [],
+    isLoading,
+    isError: error,
+    mutate,
+    cached: data?.cached || false,
+  };
+}
+
+export function useEducationNews() {
+  const { data, error, isLoading, mutate } = useSWR(
+    '/api/news/education',
+    () => adminAPI.getEducationNews(),
+    {
+      ...swrConfig,
+      dedupingInterval: 300000,
+    }
+  );
+
+  return {
+    posts: data?.data || [],
+    isLoading,
+    isError: error,
+    mutate,
+    cached: data?.cached || false,
+  };
+}
+
+export function useUniversitiesNews() {
+  const { data, error, isLoading, mutate } = useSWR(
+    '/api/news/universities',
+    () => adminAPI.getUniversitiesNews(),
     {
       ...swrConfig,
       dedupingInterval: 300000,

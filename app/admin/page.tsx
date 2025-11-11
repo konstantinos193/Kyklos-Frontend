@@ -1,36 +1,31 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import EmailDashboard from '@/components/admin/email-dashboard';
-import BlogManagement from '@/components/admin/blog-management';
+import NewsManagement from '@/components/admin/news-management';
 import StatsOverview from '@/components/admin/stats-overview';
 import SettingsPanel from '@/components/admin/settings-panel';
 import { ServerStatus } from '@/components/admin/server-status';
 import StudentManagementDashboard from '@/components/admin/student-management-dashboard';
-import TeacherPermissionsDashboard from '@/components/admin/teacher-permissions-dashboard';
 import TeacherAccountsManagement from '@/components/admin/teacher-accounts-management';
 import TeacherExercisesManagement from '@/components/admin/teacher-exercises-management';
 import PanhellenicArchiveUpload from '@/components/admin/panhellenic-archive-upload';
 import { 
-  Mail, 
   FileText, 
   BarChart3, 
   Settings, 
   Users, 
   BookOpen,
-  TrendingUp,
   Shield,
   Bell,
   Database,
   LogOut,
-  UserCheck,
   Menu,
   X
 } from 'lucide-react';
 import { adminAPI } from '@/lib/api';
 import { getApiUrl } from '@/lib/api-url';
 
-type TabType = 'overview' | 'students' | 'teachers' | 'teacher-accounts' | 'exercises' | 'emails' | 'blog' | 'stats' | 'settings' | 'archive';
+type TabType = 'overview' | 'students' | 'teacher-accounts' | 'exercises' | 'news' | 'settings' | 'archive';
 
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
@@ -192,12 +187,9 @@ export default function AdminPanel() {
     { id: 'overview', label: 'Επισκόπηση', icon: BarChart3 },
     { id: 'students', label: 'Διαχείριση Μαθητών', icon: Users },
     { id: 'teacher-accounts', label: 'Λογαριασμοί Καθηγητών', icon: Shield },
-    { id: 'teachers', label: 'Δικαιώματα Καθηγητών', icon: UserCheck },
     { id: 'exercises', label: 'Ασκήσεις', icon: BookOpen },
     { id: 'archive', label: 'Αρχείο Πανελληνίων', icon: FileText },
-    { id: 'emails', label: 'Διαχείριση Email', icon: Mail },
-    { id: 'blog', label: 'Διαχείριση Blog', icon: FileText },
-    { id: 'stats', label: 'Αναλυτικά', icon: TrendingUp },
+    { id: 'news', label: 'Διαχείριση Νέα', icon: Bell },
     { id: 'settings', label: 'Ρυθμίσεις', icon: Settings }
   ];
 
@@ -301,12 +293,9 @@ export default function AdminPanel() {
             {activeTab === 'overview' && <StatsOverview stats={adminStats} />}
             {activeTab === 'students' && <StudentManagementDashboard />}
             {activeTab === 'teacher-accounts' && <TeacherAccountsManagement />}
-            {activeTab === 'teachers' && <TeacherPermissionsDashboard />}
             {activeTab === 'exercises' && <TeacherExercisesManagement />}
             {activeTab === 'archive' && <PanhellenicArchiveUpload />}
-            {activeTab === 'emails' && <EmailDashboard />}
-            {activeTab === 'blog' && <BlogManagement />}
-            {activeTab === 'stats' && <StatsOverview stats={adminStats} />}
+            {activeTab === 'news' && <NewsManagement />}
             {activeTab === 'settings' && <SettingsPanel />}
           </div>
         </div>

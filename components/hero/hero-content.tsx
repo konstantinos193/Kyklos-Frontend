@@ -21,25 +21,6 @@ export function HeroContent({ title, description }: HeroContentProps) {
           {title.subtitle}
         </p>
       </div>
-
-      {/* Description with highlights */}
-      <div className="max-w-4xl mx-auto">
-        <p className="text-base sm:text-lg md:text-xl text-slate-600 leading-relaxed text-center">
-          Για περισσότερα από 30 χρόνια, το Φροντιστήριο ΚΥΚΛΟΣ προσφέρει{" "}
-          <span className={description.highlights[0].color + ' ' + description.highlights[0].weight}>
-            {description.highlights[0].text}
-          </span>{" "}
-          με{" "}
-          <span className={description.highlights[1].color + ' ' + description.highlights[1].weight}>
-            {description.highlights[1].text}
-          </span>{" "}
-          και{" "}
-          <span className={description.highlights[2].color + ' ' + description.highlights[2].weight}>
-            {description.highlights[2].text}
-          </span>{" "}
-          για την ακαδημαϊκή σας επιτυχία.
-        </p>
-      </div>
     </div>
   );
 }

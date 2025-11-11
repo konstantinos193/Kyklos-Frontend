@@ -67,9 +67,33 @@ export function getAllGradeSlugs(): string[] {
 
 /**
  * Gets grade data with slug
+ * Returns grades starting from Α Γυμνασίου through all gymnasium and lyceum grades
  */
 export function getGradeData() {
-  const result = GRADES.map(grade => {
+  // Filter to only include gymnasium and lyceum grades
+  const filteredGrades = GRADES.filter(grade => 
+    grade.includes('Γυμνασίου') || grade.includes('Λυκείου')
+  );
+  
+  // Reorder: Α, Β, Γ for Gymnasium, then Α, Β, Γ for Lyceum
+  const orderedGrades = [
+    ...filteredGrades.filter(g => g.includes('Γυμνασίου')).sort((a, b) => {
+      // Sort gymnasium: Α, Β, Γ
+      const order = { 'Α': 1, 'Β': 2, 'Γ': 3 };
+      const aLetter = a.split(' ')[0];
+      const bLetter = b.split(' ')[0];
+      return (order[aLetter as keyof typeof order] || 0) - (order[bLetter as keyof typeof order] || 0);
+    }),
+    ...filteredGrades.filter(g => g.includes('Λυκείου')).sort((a, b) => {
+      // Sort lyceum: Α, Β, Γ
+      const order = { 'Α': 1, 'Β': 2, 'Γ': 3 };
+      const aLetter = a.split(' ')[0];
+      const bLetter = b.split(' ')[0];
+      return (order[aLetter as keyof typeof order] || 0) - (order[bLetter as keyof typeof order] || 0);
+    })
+  ];
+  
+  const result = orderedGrades.map(grade => {
     const slug = gradeToSlug(grade);
     // Ensure slug is not empty
     if (!slug || slug === '-' || slug.trim() === '' || slug.length === 0) {

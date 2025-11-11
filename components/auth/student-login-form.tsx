@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, User, Key, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { getApiUrl } from '@/lib/api-url';
+import TokenManager from '@/lib/token-manager';
 
 interface StudentLoginFormProps {
   onSuccess?: (student: any) => void;
@@ -64,16 +65,8 @@ export default function StudentLoginForm({ onSuccess, redirectTo }: StudentLogin
         });
 
         // IMPORTANT: Clear any admin tokens to prevent cross-contamination
-        localStorage.removeItem('adminToken');
-        localStorage.removeItem('adminInfo');
-        localStorage.removeItem('adminLoggedIn');
-        sessionStorage.removeItem('adminToken');
-        sessionStorage.removeItem('adminInfo');
-        sessionStorage.removeItem('adminLoggedIn');
-
-        // Store student data in localStorage or context
-        localStorage.setItem('student', JSON.stringify(data.student));
-        localStorage.setItem('studentToken', data.token);
+        TokenManager.clearAdminTokens();
+        TokenManager.setStudentToken(data.token, data.student);
 
         // Call success callback
         if (onSuccess) {

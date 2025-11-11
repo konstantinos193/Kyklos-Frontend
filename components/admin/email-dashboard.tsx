@@ -59,7 +59,15 @@ export function EmailDashboard() {
 
       // Fetch subscribers
       const subscribersResponse = await api.get(`/api/newsletter/subscribers?page=${currentPage}&limit=20`);
-      setSubscribers(subscribersResponse.data.data);
+      setSubscribers({
+        data: subscribersResponse.data.data || [],
+        pagination: subscribersResponse.data.pagination || {
+          page: currentPage,
+          limit: 20,
+          total: 0,
+          pages: 0
+        }
+      });
 
       // Check email service status
       const emailResponse = await api.get('/api/newsletter/verify');
@@ -67,6 +75,16 @@ export function EmailDashboard() {
 
     } catch (error) {
       console.error('Error fetching data:', error);
+      // Set safe defaults on error
+      setSubscribers({
+        data: [],
+        pagination: {
+          page: currentPage,
+          limit: 20,
+          total: 0,
+          pages: 0
+        }
+      });
     } finally {
       setLoading(false);
     }
@@ -293,7 +311,8 @@ export function EmailDashboard() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {subscribers.data.map((subscriber) => (
+                {subscribers.data && subscribers.data.length > 0 ? (
+                  subscribers.data.map((subscriber) => (
                   <tr key={subscriber._id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{subscriber.email}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{subscriber.name || '-'}</td>
@@ -311,7 +330,14 @@ export function EmailDashboard() {
                       </span>
                     </td>
                   </tr>
-                ))}
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">
+                      Δεν βρέθηκαν εγγεγραμμένοι
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

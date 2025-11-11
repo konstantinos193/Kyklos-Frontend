@@ -1,15 +1,16 @@
 "use client";
 
-import { useBlogPost } from "@/hooks/use-blog";
-import { useParams } from "next/navigation";
+import { useNewsPost } from "@/hooks/use-news";
+import { useParams, useRouter } from "next/navigation";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function BlogPostPage() {
+export default function NewsPostPage() {
   const params = useParams();
+  const router = useRouter();
   const slug = params?.slug as string;
-  const { post, isLoading, isError } = useBlogPost(slug);
+  const { post, isLoading, isError } = useNewsPost(slug);
 
   if (isError) {
     notFound();
@@ -20,9 +21,9 @@ export default function BlogPostPage() {
       <main className="min-h-screen bg-slate-50">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="animate-pulse">
-            <div className="h-10 sm:h-12 bg-gray-200 rounded mb-4"></div>
-            <div className="h-6 bg-gray-200 rounded w-3/4 mb-6 sm:mb-8"></div>
-            <div className="h-48 sm:h-64 md:h-96 bg-gray-200 rounded mb-6 sm:mb-8"></div>
+            <div className="h-12 bg-gray-200 rounded mb-4"></div>
+            <div className="h-6 bg-gray-200 rounded w-3/4 mb-8"></div>
+            <div className="h-64 sm:h-96 bg-gray-200 rounded mb-8"></div>
             <div className="space-y-4">
               <div className="h-4 bg-gray-200 rounded"></div>
               <div className="h-4 bg-gray-200 rounded"></div>
@@ -47,19 +48,53 @@ export default function BlogPostPage() {
     });
   };
 
+  const getCategoryLabel = (type: string) => {
+    switch (type) {
+      case 'announcement':
+        return 'Ανακοίνωση';
+      case 'event':
+        return 'Εκδήλωση';
+      case 'seminar':
+        return 'Σεμινάριο';
+      case 'education':
+        return 'Εκπαιδευτικά Νέα';
+      case 'universities':
+        return 'Πανεπιστήμια';
+      default:
+        return 'Νέα';
+    }
+  };
+
+  const getCategoryPath = (type: string) => {
+    switch (type) {
+      case 'announcement':
+        return '/news/announcements';
+      case 'event':
+        return '/news/events';
+      case 'seminar':
+        return '/news/seminars';
+      case 'education':
+        return '/current-affairs/education';
+      case 'universities':
+        return '/current-affairs/universities';
+      default:
+        return '/news';
+    }
+  };
+
   return (
     <main className="min-h-screen bg-slate-50">
       {/* Header */}
       <section className="bg-white border-b border-gray-200">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <Link 
-            href="/blog"
+            href={getCategoryPath(post.type)}
             className="inline-flex items-center gap-2 text-[#E7B109] hover:text-[#D97706] mb-4 sm:mb-6 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            <span className="text-sm sm:text-base">Επιστροφή στο Blog</span>
+            <span className="text-sm sm:text-base">Επιστροφή στα Νέα</span>
           </Link>
           
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
@@ -68,9 +103,9 @@ export default function BlogPostPage() {
           
           <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600">
             <span className="bg-[#E7B109] text-white px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap">
-              {post.category}
+              {getCategoryLabel(post.type)}
             </span>
-            <span className="whitespace-nowrap">{formatDate(post.publishDate)}</span>
+            <span className="whitespace-nowrap">{formatDate(post.publishDate || post.createdAt)}</span>
             {post.readTime && <span className="whitespace-nowrap">• {post.readTime}</span>}
           </div>
         </div>
@@ -104,7 +139,7 @@ export default function BlogPostPage() {
 
           {/* Main Content */}
           <div 
-            className="prose prose-sm sm:prose-base md:prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-[#E7B109] prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-img:rounded-lg prose-img:shadow-md prose-img:w-full prose-img:h-auto"
+            className="prose prose-sm sm:prose-base md:prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-[#E7B109] prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-img:rounded-lg prose-img:shadow-md"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 

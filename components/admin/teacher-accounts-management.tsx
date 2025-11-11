@@ -54,7 +54,7 @@ export default function TeacherAccountsManagement() {
     email: '',
     password: '',
     name: '',
-    role: 'teacher',
+    role: 'super_admin',
     isActive: true,
     specialization: '',
   });
@@ -157,7 +157,7 @@ export default function TeacherAccountsManagement() {
           email: '',
           password: '',
           name: '',
-          role: 'teacher',
+          role: 'super_admin',
           isActive: true,
           specialization: '',
         });
@@ -340,9 +340,10 @@ export default function TeacherAccountsManagement() {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
             >
               <option value="all">Όλοι</option>
-              <option value="teacher">Καθηγητής</option>
+              <option value="super_admin">Υπερ-Διαχειριστής</option>
               <option value="admin">Διαχειριστής</option>
               <option value="moderator">Συντονιστής</option>
+              <option value="teacher">Καθηγητής (Παλιό)</option>
             </select>
           </div>
 
@@ -648,15 +649,13 @@ export default function TeacherAccountsManagement() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Ρόλος</label>
-                <select
-                  value={newTeacher.role}
-                  onChange={(e) => setNewTeacher({ ...newTeacher, role: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
-                >
-                  <option value="teacher">Καθηγητής</option>
-                  <option value="admin">Διαχειριστής</option>
-                  <option value="moderator">Συντονιστής</option>
-                </select>
+                <input
+                  type="text"
+                  value="Υπερ-Διαχειριστής"
+                  disabled
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                />
+                <p className="text-xs text-gray-500 mt-1">Όλοι οι καθηγητές είναι αυτόματα Υπερ-Διαχειριστές</p>
               </div>
 
               <div>
@@ -777,15 +776,13 @@ export default function TeacherAccountsManagement() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Ρόλος</label>
-                <select
-                  value={selectedTeacher.role}
-                  onChange={(e) => setSelectedTeacher({ ...selectedTeacher, role: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
-                >
-                  <option value="teacher">Καθηγητής</option>
-                  <option value="admin">Διαχειριστής</option>
-                  <option value="moderator">Συντονιστής</option>
-                </select>
+                <input
+                  type="text"
+                  value={getRoleLabel(selectedTeacher.role)}
+                  disabled
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
+                />
+                <p className="text-xs text-gray-500 mt-1">Όλοι οι καθηγητές είναι αυτόματα Υπερ-Διαχειριστές</p>
               </div>
 
               <div>

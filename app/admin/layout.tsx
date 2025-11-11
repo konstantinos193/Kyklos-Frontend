@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { getApiUrl } from '@/lib/api-url';
 import { Toaster } from '@/components/ui/toaster';
+import TokenManager from '@/lib/token-manager';
 
 export default function AdminLayout({
   children,
@@ -26,51 +27,24 @@ export default function AdminLayout({
       }
 
       // IMPORTANT: Only check for admin tokens, clear any student tokens
-      const adminToken = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
-      const adminInfo = localStorage.getItem('adminInfo') || sessionStorage.getItem('adminInfo');
+      const adminToken = TokenManager.getAdminToken();
       
       // If student tokens exist, clear them - students shouldn't access admin routes
-      const studentToken = localStorage.getItem('studentToken') || sessionStorage.getItem('studentToken');
+      const studentToken = TokenManager.getStudentToken();
       if (studentToken) {
         console.warn('Student token detected in admin layout, clearing student session');
-        localStorage.removeItem('student');
-        localStorage.removeItem('studentToken');
-        sessionStorage.removeItem('student');
-        sessionStorage.removeItem('studentToken');
+        TokenManager.clearStudentTokens();
       }
       
-      if (adminToken && adminInfo) {
-        try {
-          // Verify token with backend - ensure it's actually an admin token
-          const response = await fetch(`${getApiUrl()}/api/admin/auth/verify`, {
-            headers: {
-              'Authorization': `Bearer ${adminToken}`,
-            },
-          });
-          
-          if (response.ok) {
-            setIsAuthenticated(true);
-          } else {
-            // Token is invalid, clear all storage and redirect
-            localStorage.removeItem('adminLoggedIn');
-            localStorage.removeItem('adminToken');
-            localStorage.removeItem('adminInfo');
-            sessionStorage.removeItem('adminLoggedIn');
-            sessionStorage.removeItem('adminToken');
-            sessionStorage.removeItem('adminInfo');
-            // Only redirect if not already on login page
-            if (!pathname?.includes('/admin/login')) {
-              window.location.replace('/admin/login');
-            }
-          }
-        } catch (error) {
-          // Network error, clear all storage and redirect
-          localStorage.removeItem('adminLoggedIn');
-          localStorage.removeItem('adminToken');
-          localStorage.removeItem('adminInfo');
-          sessionStorage.removeItem('adminLoggedIn');
-          sessionStorage.removeItem('adminToken');
-          sessionStorage.removeItem('adminInfo');
+      if (adminToken) {
+        // Use TokenManager's verify method which handles network errors gracefully
+        const isValid = await TokenManager.verifyAdminToken();
+        
+        if (isValid) {
+          setIsAuthenticated(true);
+        } else {
+          // Token is invalid, clear all storage and redirect
+          TokenManager.clearAdminTokens();
           // Only redirect if not already on login page
           if (!pathname?.includes('/admin/login')) {
             window.location.replace('/admin/login');

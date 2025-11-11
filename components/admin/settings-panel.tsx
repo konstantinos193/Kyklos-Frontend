@@ -70,8 +70,30 @@ export function SettingsPanel() {
     try {
       setLoading(true);
       const response = await adminAPI.getSettings();
-      if (response.success) {
-        setSettings(response.data);
+      if (response.success && response.data) {
+        // Merge API response with default settings to ensure all properties exist
+        setSettings(prev => ({
+          general: {
+            ...prev.general,
+            ...(response.data.general || {})
+          },
+          email: {
+            ...prev.email,
+            ...(response.data.email || {})
+          },
+          security: {
+            ...prev.security,
+            ...(response.data.security || {})
+          },
+          notifications: {
+            ...prev.notifications,
+            ...(response.data.notifications || {})
+          },
+          database: {
+            ...prev.database,
+            ...(response.data.database || {})
+          }
+        }));
       }
     } catch (error) {
       console.error('Error loading settings:', error);

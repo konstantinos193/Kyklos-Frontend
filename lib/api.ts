@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getApiUrl } from './api-url';
+import TokenManager from './token-manager';
 
 // Lazy initialization of API client to avoid build-time errors
 let apiClient: ReturnType<typeof axios.create> | null = null;
@@ -23,10 +24,16 @@ function getApiClient() {
   return apiClient;
 }
 
+// Track if we're currently refreshing a token to prevent multiple refresh attempts
+let isRefreshingAdmin = false;
+let isRefreshingStudent = false;
+let failedAdminQueue: Array<{ resolve: (value?: any) => void; reject: (reason?: any) => void }> = [];
+let failedStudentQueue: Array<{ resolve: (value?: any) => void; reject: (reason?: any) => void }> = [];
+
 function setupInterceptors(client: ReturnType<typeof axios.create>) {
   // Request interceptor for authentication and optimization
   client.interceptors.request.use(
-    (config) => {
+    async (config) => {
       // Add authentication token - check for both admin and student tokens
       if (typeof window !== 'undefined') {
         // Check if this is an admin API call or student API call
@@ -34,30 +41,47 @@ function setupInterceptors(client: ReturnType<typeof axios.create>) {
                           config.url?.includes('/api/teacher-permissions') ||
                           config.url?.includes('/api/exercises/teacher') ||
                           config.url?.includes('/api/exam-materials/admin') ||
-                          config.url?.includes('/api/panhellenic-archive');
+                          config.url?.includes('/api/panhellenic-archive') ||
+                          (config.url?.includes('/api/news') && ['post', 'put', 'delete'].includes(config.method?.toLowerCase() || ''));
         
         const isStudentAPI = config.url?.includes('/api/exercises/student') ||
                             (config.url?.includes('/api/exam-materials') && !config.url?.includes('/admin'));
         
-        if (isAdminAPI) {
-          // For admin API calls, use admin token
-          const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+        // Skip token refresh for refresh endpoints to avoid loops
+        const isRefreshEndpoint = config.url?.includes('/auth/refresh') || config.url?.includes('/student-refresh');
+        
+        if (isAdminAPI && !isRefreshEndpoint) {
+          // Check and refresh admin token if needed
+          const token = await TokenManager.checkAndRefreshAdminToken();
           if (token) {
             config.headers.Authorization = `Bearer ${token}`;
           }
-        } else if (isStudentAPI) {
-          // For student API calls, use student token
-          const token = localStorage.getItem('studentToken') || sessionStorage.getItem('studentToken');
+        } else if (isStudentAPI && !isRefreshEndpoint) {
+          // Check and refresh student token if needed
+          const token = await TokenManager.checkAndRefreshStudentToken();
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
+        } else if (!isRefreshEndpoint) {
+          // For other API calls, try admin token first, then student token
+          const adminToken = await TokenManager.checkAndRefreshAdminToken();
+          const studentToken = adminToken ? null : await TokenManager.checkAndRefreshStudentToken();
+          const token = adminToken || studentToken;
           if (token) {
             config.headers.Authorization = `Bearer ${token}`;
           }
         } else {
-          // For other API calls, try admin token first, then student token
-          const adminToken = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
-          const studentToken = localStorage.getItem('studentToken') || sessionStorage.getItem('studentToken');
-          const token = adminToken || studentToken;
-          if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+          // For refresh endpoints, use existing token without refresh check
+          if (isAdminAPI) {
+            const token = TokenManager.getAdminToken();
+            if (token) {
+              config.headers.Authorization = `Bearer ${token}`;
+            }
+          } else if (isStudentAPI) {
+            const token = TokenManager.getStudentToken();
+            if (token) {
+              config.headers.Authorization = `Bearer ${token}`;
+            }
           }
         }
       }
@@ -88,44 +112,135 @@ function setupInterceptors(client: ReturnType<typeof axios.create>) {
       
       return response;
     },
-    (error) => {
+    async (error) => {
       // Enhanced error handling
       if (error.response) {
         // Server responded with error status
         const { status, data } = error.response;
         const url = error.config?.url || '';
+        const originalRequest = error.config;
         
         if (status === 401) {
           console.error('Unauthorized:', data.message || 'Authentication required');
           
-          // Only redirect for admin API calls - let student components handle their own redirects
+          // Determine if this is an admin or student API call
           const isAdminAPI = url.includes('/api/admin/') || 
                            url.includes('/api/teacher-permissions') ||
                            url.includes('/api/exercises/teacher') ||
-                           url.includes('/api/exam-materials/admin');
+                           url.includes('/api/exam-materials/admin') ||
+                           url.includes('/api/panhellenic-archive') ||
+                           (url.includes('/api/news') && ['post', 'put', 'delete'].includes(originalRequest?.method?.toLowerCase() || ''));
           
-          if (typeof window !== 'undefined') {
+          const isStudentAPI = url.includes('/api/exercises/student') ||
+                              (url.includes('/api/exam-materials') && !url.includes('/admin'));
+          
+          // Skip refresh for refresh endpoints to avoid loops
+          const isRefreshEndpoint = url.includes('/auth/refresh') || url.includes('/student-refresh');
+          
+          if (typeof window !== 'undefined' && !isRefreshEndpoint) {
             // Don't redirect if we're already on a login page
             const currentPath = window.location.pathname;
             if (currentPath.includes('/login') || currentPath.includes('/student-login')) {
               return Promise.reject(error);
             }
             
-            if (isAdminAPI) {
-              // Clear admin tokens and redirect to admin login
-              localStorage.removeItem('adminToken');
-              localStorage.removeItem('adminInfo');
-              localStorage.removeItem('adminLoggedIn');
-              sessionStorage.removeItem('adminToken');
-              sessionStorage.removeItem('adminInfo');
-              sessionStorage.removeItem('adminLoggedIn');
-              // Only redirect if not already on admin login
+            // Try to refresh token
+            if (isAdminAPI && !isRefreshingAdmin) {
+              isRefreshingAdmin = true;
+              
+              try {
+                const newToken = await TokenManager.refreshAdminToken();
+                
+                if (newToken && originalRequest) {
+                  // Update the original request with new token
+                  originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                  
+                  // Resolve all queued requests
+                  failedAdminQueue.forEach(({ resolve }) => resolve());
+                  failedAdminQueue = [];
+                  
+                  // Retry the original request
+                  return client(originalRequest);
+                } else {
+                  // Refresh failed, clear tokens and redirect
+                  TokenManager.clearAdminTokens();
+                  if (!currentPath.includes('/admin/login')) {
+                    window.location.replace('/admin/login');
+                  }
+                }
+              } catch (refreshError) {
+                // Refresh failed, clear tokens and redirect
+                TokenManager.clearAdminTokens();
+                if (!currentPath.includes('/admin/login')) {
+                  window.location.replace('/admin/login');
+                }
+              } finally {
+                isRefreshingAdmin = false;
+              }
+            } else if (isStudentAPI && !isRefreshingStudent) {
+              isRefreshingStudent = true;
+              
+              try {
+                const newToken = await TokenManager.refreshStudentToken();
+                
+                if (newToken && originalRequest) {
+                  // Update the original request with new token
+                  originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                  
+                  // Resolve all queued requests
+                  failedStudentQueue.forEach(({ resolve }) => resolve());
+                  failedStudentQueue = [];
+                  
+                  // Retry the original request
+                  return client(originalRequest);
+                } else {
+                  // Refresh failed, clear tokens
+                  TokenManager.clearStudentTokens();
+                  // Don't redirect for student - let component handle it
+                }
+              } catch (refreshError) {
+                // Refresh failed, clear tokens
+                TokenManager.clearStudentTokens();
+                // Don't redirect for student - let component handle it
+              } finally {
+                isRefreshingStudent = false;
+              }
+            } else if (isAdminAPI && isRefreshingAdmin) {
+              // Queue this request to retry after refresh
+              return new Promise((resolve, reject) => {
+                failedAdminQueue.push({ resolve, reject });
+              }).then(() => {
+                if (originalRequest) {
+                  const token = TokenManager.getAdminToken();
+                  if (token) {
+                    originalRequest.headers.Authorization = `Bearer ${token}`;
+                  }
+                  return client(originalRequest);
+                }
+                return Promise.reject(error);
+              });
+            } else if (isStudentAPI && isRefreshingStudent) {
+              // Queue this request to retry after refresh
+              return new Promise((resolve, reject) => {
+                failedStudentQueue.push({ resolve, reject });
+              }).then(() => {
+                if (originalRequest) {
+                  const token = TokenManager.getStudentToken();
+                  if (token) {
+                    originalRequest.headers.Authorization = `Bearer ${token}`;
+                  }
+                  return client(originalRequest);
+                }
+                return Promise.reject(error);
+              });
+            } else if (isAdminAPI) {
+              // Refresh endpoint failed or already tried, clear tokens
+              TokenManager.clearAdminTokens();
               if (!currentPath.includes('/admin/login')) {
                 window.location.replace('/admin/login');
               }
             }
             // For student API calls, don't redirect - let the component handle it
-            // This prevents redirect loops and allows components to show error messages
           }
         } else if (status === 403) {
           console.error('Forbidden:', data.message || 'Access denied');
@@ -522,6 +637,94 @@ export const adminAPI = {
 
   getStudentExerciseById: async (id: string) => {
     const response = await getApiClient().get(`/api/exercises/student/${id}`);
+    return response.data;
+  },
+
+  // News API
+  getNewsPosts: async (params: {
+    page?: number;
+    limit?: number;
+    type?: 'announcement' | 'event' | 'seminar';
+    search?: string;
+    featured?: boolean;
+  } = {}) => {
+    const response = await getApiClient().get('/api/news', { params });
+    return response.data;
+  },
+
+  getNewsPost: async (id: string) => {
+    const response = await getApiClient().get(`/api/news/${id}`);
+    return response.data;
+  },
+
+  createNewsPost: async (newsData: {
+    title: string;
+    slug?: string;
+    excerpt: string;
+    content: string;
+    type: 'announcement' | 'event' | 'seminar' | 'education' | 'universities';
+    author: {
+      name: string;
+      image?: string;
+    };
+    image: {
+      url: string;
+      alt?: string;
+      caption?: string;
+    };
+    tags?: string[];
+    status?: string;
+    publishDate?: Date;
+    eventDate?: Date;
+    location?: string;
+    readTime?: string;
+    featured?: boolean;
+    seo?: {
+      metaTitle?: string;
+      metaDescription?: string;
+      keywords?: string[];
+    };
+  }) => {
+    const response = await getApiClient().post('/api/news', newsData);
+    return response.data;
+  },
+
+  updateNewsPost: async (id: string, newsData: any) => {
+    const response = await getApiClient().put(`/api/news/${id}`, newsData);
+    return response.data;
+  },
+
+  deleteNewsPost: async (id: string) => {
+    const response = await getApiClient().delete(`/api/news/${id}`);
+    return response.data;
+  },
+
+  getNewsTypes: async () => {
+    const response = await getApiClient().get('/api/news/types');
+    return response.data;
+  },
+
+  addNewsFiles: async (id: string, formData: FormData) => {
+    const response = await getApiClient().post(`/api/news/${id}/files`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  deleteNewsFile: async (id: string, filePublicId: string) => {
+    const response = await getApiClient().delete(`/api/news/${id}/files/${filePublicId}`);
+    return response.data;
+  },
+
+  getEducationNews: async () => {
+    const response = await getApiClient().get('/api/news/education');
+    return response.data;
+  },
+
+  getUniversitiesNews: async () => {
+    const response = await getApiClient().get('/api/news/universities');
     return response.data;
   }
 };

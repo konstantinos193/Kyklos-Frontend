@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Lock, Mail, Shield } from 'lucide-react';
 import { getApiUrl } from '@/lib/api-url';
+import TokenManager from '@/lib/token-manager';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -20,51 +21,33 @@ export default function AdminLogin() {
     const checkExistingAuth = async () => {
       try {
         // IMPORTANT: Only check for admin tokens, ignore student tokens
-        const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
-        const adminInfo = localStorage.getItem('adminInfo') || sessionStorage.getItem('adminInfo');
+        const token = TokenManager.getAdminToken();
         
         // If student tokens exist, clear them to prevent confusion
-        const studentToken = localStorage.getItem('studentToken') || sessionStorage.getItem('studentToken');
+        const studentToken = TokenManager.getStudentToken();
         if (studentToken) {
           // Student is logged in, they shouldn't be on admin login page
           // Clear student tokens if they somehow ended up here
-          localStorage.removeItem('student');
-          localStorage.removeItem('studentToken');
-          sessionStorage.removeItem('student');
-          sessionStorage.removeItem('studentToken');
+          TokenManager.clearStudentTokens();
         }
         
-        if (token && adminInfo) {
-          // Verify token with backend - ensure it's actually an admin token
-          const response = await fetch(`${getApiUrl()}/api/admin/auth/verify`, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
+        if (token) {
+          // Use TokenManager's verify method which handles network errors gracefully
+          const isValid = await TokenManager.verifyAdminToken();
           
-          if (response.ok) {
+          if (isValid) {
             // Token is valid, redirect to admin panel
             window.location.replace('/admin');
             return;
           } else {
             // Token is invalid, clear storage
-            localStorage.removeItem('adminToken');
-            localStorage.removeItem('adminInfo');
-            localStorage.removeItem('adminLoggedIn');
-            sessionStorage.removeItem('adminToken');
-            sessionStorage.removeItem('adminInfo');
-            sessionStorage.removeItem('adminLoggedIn');
+            TokenManager.clearAdminTokens();
           }
         }
       } catch (error) {
         console.error('Auth check error:', error);
         // Clear potentially corrupted data
-        localStorage.removeItem('adminToken');
-        localStorage.removeItem('adminInfo');
-        localStorage.removeItem('adminLoggedIn');
-        sessionStorage.removeItem('adminToken');
-        sessionStorage.removeItem('adminInfo');
-        sessionStorage.removeItem('adminLoggedIn');
+        TokenManager.clearAdminTokens();
       } finally {
         setIsChecking(false);
       }
@@ -105,12 +88,9 @@ export default function AdminLogin() {
         }
 
         // IMPORTANT: Clear any student tokens to prevent cross-contamination
-        localStorage.removeItem('student');
-        localStorage.removeItem('studentToken');
-        sessionStorage.removeItem('student');
-        sessionStorage.removeItem('studentToken');
+        TokenManager.clearStudentTokens();
 
-        // Store token based on remember me preference
+        // Store token using TokenManager
         const adminInfo = {
           email: adminData.email,
           name: adminData.name,
@@ -118,21 +98,7 @@ export default function AdminLogin() {
           loginTime: new Date().toISOString()
         };
 
-        if (rememberMe) {
-          // Store in localStorage for persistent login (survives browser restart)
-          localStorage.setItem('adminToken', data.token);
-          localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
-          localStorage.setItem('adminLoggedIn', 'true');
-        } else {
-          // Store in sessionStorage for session-only login (cleared on browser close)
-          sessionStorage.setItem('adminToken', data.token);
-          sessionStorage.setItem('adminInfo', JSON.stringify(adminInfo));
-          sessionStorage.setItem('adminLoggedIn', 'true');
-        }
-        
-        // Always store in sessionStorage as well for API client compatibility
-        sessionStorage.setItem('adminToken', data.token);
-        sessionStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+        TokenManager.setAdminToken(data.token, adminInfo, rememberMe);
         
         // Redirect to admin panel - use replace to prevent back button issues
         window.location.replace('/admin');

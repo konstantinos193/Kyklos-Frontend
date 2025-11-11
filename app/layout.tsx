@@ -183,7 +183,7 @@ export default function RootLayout({
     "@type": "EducationalOrganization",
     "name": "ΚΥΚΛΟΣ Εκπαίδευση",
     "alternateName": "Φροντιστήριο Κύκλος",
-    "description": "Εξειδικευμένο φροντιστήριο Ελληνικής Γλώσσας & Λογοτεχνίας. 25+ έτη εμπειρίας, 95% επιτυχία, 500+ μαθητές.",
+    "description": "Εξειδικευμένο φροντιστήριο Ελληνικής Γλώσσας & Λογοτεχνίας. 30+ έτη εμπειρίας, 95% επιτυχία, 500+ μαθητές.",
     "url": "https://kyklosedu.gr",
     "logo": "https://kyklosedu.gr/logo.png",
     "image": "https://kyklosedu.gr/logo.png",

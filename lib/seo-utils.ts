@@ -108,7 +108,7 @@ export function generateOrganizationSchema() {
     "@id": `${BASE_URL}#organization`,
     name: "ΚΥΚΛΟΣ Εκπαίδευση",
     alternateName: "Φροντιστήριο Κύκλος",
-    description: "Εξειδικευμένο φροντιστήριο Ελληνικής Γλώσσας & Λογοτεχνίας. 25+ έτη εμπειρίας, 95% επιτυχία, 500+ μαθητές.",
+    description: "Εξειδικευμένο φροντιστήριο Ελληνικής Γλώσσας & Λογοτεχνίας. 30+ έτη εμπειρίας, 95% επιτυχία, 500+ μαθητές.",
     url: BASE_URL,
     logo: `${BASE_URL}/logo.png`,
     image: `${BASE_URL}/logo.png`,
