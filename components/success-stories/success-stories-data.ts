@@ -15,7 +15,7 @@ export interface SuccessStory {
 export const successStories: SuccessStory[] = [
   {
     id: '1',
-    studentName: 'Μαρια Παπαδωπουλου',
+    studentName: 'Μαρία Παπαδοπούλου',
     university: 'Ιατρική Θεσσαλονίκης',
     ranking: '1η στον τομέα Υγείας',
     scores: [
@@ -30,7 +30,7 @@ export const successStories: SuccessStory[] = [
   },
   {
     id: '2',
-    studentName: 'Μαρια Παπαδωπουλου',
+    studentName: 'Μαρία Παπαδοπούλου',
     university: 'Ιατρική Θεσσαλονίκης',
     ranking: '1η στον τομέα Υγείας',
     scores: [],
@@ -40,7 +40,7 @@ export const successStories: SuccessStory[] = [
   },
   {
     id: '3',
-    studentName: 'Μαρια Παπαδωπουλου',
+    studentName: 'Μαρία Παπαδοπούλου',
     university: 'Ιατρική Θεσσαλονίκης',
     ranking: '1η στον τομέα Υγείας',
     scores: [],
@@ -50,7 +50,7 @@ export const successStories: SuccessStory[] = [
   },
   {
     id: '4',
-    studentName: 'Μαρια Παπαδωπουλου',
+    studentName: 'Μαρία Παπαδοπούλου',
     university: 'Ιατρική Θεσσαλονίκης',
     ranking: '1η στον τομέα Υγείας',
     scores: [],
@@ -60,7 +60,7 @@ export const successStories: SuccessStory[] = [
   },
   {
     id: '5',
-    studentName: 'Μαρια Παπαδωπουλου',
+    studentName: 'Μαρία Παπαδοπούλου',
     university: 'Ιατρική Θεσσαλονίκης',
     ranking: '1η στον τομέα Υγείας',
     scores: [],

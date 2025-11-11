@@ -57,13 +57,8 @@ export const headerData: HeaderData = {
     },
     { 
       label: "Θέματα Πανελληνίων", 
-      href: "/panhellenic",
-      isDropdown: true,
-      dropdownItems: [
-        { label: "Θέματα 2024", href: "/panhellenic/2024" },
-        { label: "Θέματα 2023", href: "/panhellenic/2023" },
-        { label: "Αρχείο Θεμάτων", href: "/panhellenic/archive" }
-      ]
+      href: "/panhellenic/archive",
+      isDropdown: false
     },
     { 
       label: "Νέα - Εκδηλώσεις", 

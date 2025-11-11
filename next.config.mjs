@@ -6,6 +6,12 @@ const nextConfig = {
   // experimental: {
   //   turbopackFileSystemCacheForDev: true, // Disabled due to Windows compatibility issues
   // },
+  webpack: (config) => {
+    config.resolve.alias.canvas = false;
+    // Copy PDF.js worker to public folder
+    config.plugins = config.plugins || [];
+    return config;
+  },
   images: {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
