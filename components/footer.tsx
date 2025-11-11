@@ -1,3 +1,6 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { FooterLogo } from "./footer/footer-logo";
 import { FooterLinks } from "./footer/footer-links";
 import { FooterContact } from "./footer/footer-contact";
@@ -7,6 +10,14 @@ import { ScrollToTop } from "./footer/scroll-to-top";
 import { footerData } from "./footer/data";
 
 export function Footer() {
+  const pathname = usePathname();
+  
+  // Hide footer only on admin pages (they have their own layout)
+  // Student pages will use the main footer
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <footer className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white overflow-hidden" role="contentinfo">
       {/* Background Elements */}

@@ -119,11 +119,12 @@ function StatsOverview({ stats }: { stats?: any }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Στατιστικά Επισκόπησης</h2>
-        <div className="flex items-center text-sm text-gray-500">
-          <Clock className="w-4 h-4 mr-2" />
-          Τελευταία ενημέρωση: {lastUpdate.toLocaleString('el-GR')}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Στατιστικά Επισκόπησης</h2>
+        <div className="flex items-center text-xs sm:text-sm text-gray-500">
+          <Clock className="w-4 h-4 mr-2 flex-shrink-0" />
+          <span className="hidden sm:inline">Τελευταία ενημέρωση: </span>
+          <span>{lastUpdate.toLocaleString('el-GR')}</span>
         </div>
       </div>
 

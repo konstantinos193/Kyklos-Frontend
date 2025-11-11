@@ -324,12 +324,12 @@ export default function TeacherPermissionsManagement({ onClose }: TeacherPermiss
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Διαχείριση Αδειών Καθηγητών</h2>
-          <p className="text-gray-600">Διαχείριση προσβάσεων καθηγητών στα υλικά εξετάσεων</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Διαχείριση Αδειών Καθηγητών</h2>
+          <p className="text-sm sm:text-base text-gray-600">Διαχείριση προσβάσεων καθηγητών σε ασκήσεις</p>
         </div>
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#E7B109] text-white rounded-lg hover:bg-[#D97706] transition-colors"
+          className="inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-[#E7B109] text-white rounded-lg hover:bg-[#D97706] transition-colors text-sm sm:text-base whitespace-nowrap"
         >
           <Plus className="w-4 h-4" />
           Νέα Άδεια
@@ -337,8 +337,8 @@ export default function TeacherPermissionsManagement({ onClose }: TeacherPermiss
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Αναζήτηση</label>
             <div className="relative">
@@ -370,13 +370,13 @@ export default function TeacherPermissionsManagement({ onClose }: TeacherPermiss
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Υλικό Εξέτασης</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Άσκηση</label>
             <select
               value={filterExamMaterial}
               onChange={(e) => setFilterExamMaterial(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
             >
-              <option value="">Όλα τα υλικά</option>
+              <option value="">Όλες οι ασκήσεις</option>
               {examMaterials.map((material) => (
                 <option key={material._id} value={material._id}>
                   {material.title}
@@ -404,26 +404,27 @@ export default function TeacherPermissionsManagement({ onClose }: TeacherPermiss
 
       {/* Permissions List */}
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Καθηγητής
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Υλικό Εξέτασης
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Άσκηση
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Τύπος Άδειας
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Κατάσταση
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Λήγει
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Ενέργειες
                 </th>
               </tr>
@@ -431,44 +432,44 @@ export default function TeacherPermissionsManagement({ onClose }: TeacherPermiss
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredPermissions.map((permission) => (
                 <tr key={permission._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 sm:px-6 py-4">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {permission.teacher.name}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-xs sm:text-sm text-gray-500">
                         {permission.teacher.email}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 sm:px-6 py-4">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
                         {permission.examMaterial.title}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-xs sm:text-sm text-gray-500">
                         {permission.examMaterial.subject} - {permission.examMaterial.grade}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPermissionTypeColor(permission.permissionType)}`}>
                       {getPermissionTypeText(permission.permissionType)}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       {permission.isActive ? (
                         <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
                       ) : (
                         <XCircle className="w-4 h-4 text-red-500 mr-2" />
                       )}
-                      <span className={`text-sm ${permission.isActive ? 'text-green-600' : 'text-red-600'}`}>
+                      <span className={`text-xs sm:text-sm ${permission.isActive ? 'text-green-600' : 'text-red-600'}`}>
                         {permission.isActive ? 'Ενεργή' : 'Ανενεργή'}
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                     {permission.expiresAt ? (
                       <div className="flex items-center">
                         {isExpired(permission.expiresAt) ? (
@@ -476,25 +477,27 @@ export default function TeacherPermissionsManagement({ onClose }: TeacherPermiss
                         ) : (
                           <Clock className="w-4 h-4 text-yellow-500 mr-2" />
                         )}
-                        <span className={`text-sm ${isExpired(permission.expiresAt) ? 'text-red-600' : 'text-gray-600'}`}>
+                        <span className={`text-xs sm:text-sm ${isExpired(permission.expiresAt) ? 'text-red-600' : 'text-gray-600'}`}>
                           {new Date(permission.expiresAt).toLocaleDateString('el-GR')}
                         </span>
                       </div>
                     ) : (
-                      <span className="text-sm text-gray-500">Δεν λήγει</span>
+                      <span className="text-xs sm:text-sm text-gray-500">Δεν λήγει</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2">
                       <button
                         onClick={() => openEditModal(permission)}
-                        className="text-[#E7B109] hover:text-[#D97706]"
+                        className="text-[#E7B109] hover:text-[#D97706] p-1"
+                        title="Επεξεργασία"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDeletePermission(permission._id)}
-                        className="text-red-600 hover:text-red-900"
+                        className="text-red-600 hover:text-red-900 p-1"
+                        title="Διαγραφή"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -505,13 +508,89 @@ export default function TeacherPermissionsManagement({ onClose }: TeacherPermiss
             </tbody>
           </table>
         </div>
+
+        {/* Mobile Card View */}
+        <div className="md:hidden divide-y divide-gray-200">
+          {filteredPermissions.length === 0 ? (
+            <div className="px-4 py-8 text-center text-gray-500">
+              Δεν βρέθηκαν άδειες
+            </div>
+          ) : (
+            filteredPermissions.map((permission) => (
+              <div key={permission._id} className="p-4 hover:bg-gray-50">
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-medium text-gray-900 mb-1">
+                      {permission.teacher.name}
+                    </h3>
+                    <p className="text-xs text-gray-500 mb-2">{permission.teacher.email}</p>
+                    <h4 className="text-sm font-semibold text-gray-800 mb-1">
+                      {permission.examMaterial.title}
+                    </h4>
+                    <p className="text-xs text-gray-600">
+                      {permission.examMaterial.subject} - {permission.examMaterial.grade}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPermissionTypeColor(permission.permissionType)}`}>
+                      {getPermissionTypeText(permission.permissionType)}
+                    </span>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => openEditModal(permission)}
+                        className="text-[#E7B109] hover:text-[#D97706] p-1"
+                        title="Επεξεργασία"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeletePermission(permission._id)}
+                        className="text-red-600 hover:text-red-900 p-1"
+                        title="Διαγραφή"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 text-xs">
+                  <div className="flex items-center">
+                    {permission.isActive ? (
+                      <CheckCircle className="w-3 h-3 text-green-500 mr-1" />
+                    ) : (
+                      <XCircle className="w-3 h-3 text-red-500 mr-1" />
+                    )}
+                    <span className={permission.isActive ? 'text-green-600' : 'text-red-600'}>
+                      {permission.isActive ? 'Ενεργή' : 'Ανενεργή'}
+                    </span>
+                  </div>
+                  {permission.expiresAt && (
+                    <div className="flex items-center">
+                      {isExpired(permission.expiresAt) ? (
+                        <AlertCircle className="w-3 h-3 text-red-500 mr-1" />
+                      ) : (
+                        <Clock className="w-3 h-3 text-yellow-500 mr-1" />
+                      )}
+                      <span className={isExpired(permission.expiresAt) ? 'text-red-600' : 'text-gray-600'}>
+                        {new Date(permission.expiresAt).toLocaleDateString('el-GR')}
+                      </span>
+                    </div>
+                  )}
+                  {!permission.expiresAt && (
+                    <span className="text-gray-500">Δεν λήγει</span>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       {/* Modal for creating/editing permissions */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-xl p-4 sm:p-6 w-full max-w-md max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
               {isCreating ? 'Νέα Άδεια' : 'Επεξεργασία Άδειας'}
             </h3>
             
@@ -533,13 +612,13 @@ export default function TeacherPermissionsManagement({ onClose }: TeacherPermiss
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Υλικό Εξέτασης</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Άσκηση</label>
                 <select
                   value={formData.examMaterialId}
                   onChange={(e) => setFormData({ ...formData, examMaterialId: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
                 >
-                  <option value="">Επιλέξτε υλικό</option>
+                  <option value="">Επιλέξτε άσκηση</option>
                   {examMaterials.map((material) => (
                     <option key={material._id} value={material._id}>
                       {material.title}
@@ -584,16 +663,16 @@ export default function TeacherPermissionsManagement({ onClose }: TeacherPermiss
               </div>
             </div>
 
-            <div className="flex justify-end space-x-3 mt-6">
+            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 mt-6">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
+                className="w-full sm:w-auto px-4 py-2 text-sm sm:text-base text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
               >
                 Ακύρωση
               </button>
               <button
                 onClick={isCreating ? handleCreatePermission : handleUpdatePermission}
-                className="px-4 py-2 bg-[#E7B109] text-white rounded-lg hover:bg-[#D97706] transition-colors"
+                className="w-full sm:w-auto px-4 py-2 text-sm sm:text-base bg-[#E7B109] text-white rounded-lg hover:bg-[#D97706] transition-colors"
               >
                 {isCreating ? 'Δημιουργία' : 'Ενημέρωση'}
               </button>

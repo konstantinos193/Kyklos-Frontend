@@ -15,10 +15,10 @@ export function ProgramsSection() {
       {/* Content */}
       <div className="container mx-auto container-padding relative z-10">
         {/* Header */}
-        <ProgramsHeader header={programsData.header} />
+        <ProgramsHeader title={programsData.title} subtitle={programsData.subtitle} />
 
         {/* Programs Grid */}
-        <ProgramsGrid programs={programsData.programs} />
+        <ProgramsGrid levels={programsData.levels} />
 
         {/* CTA */}
         <ProgramsCTA cta={programsData.cta} />

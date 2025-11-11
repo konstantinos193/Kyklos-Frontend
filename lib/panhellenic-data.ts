@@ -1,15 +1,16 @@
 import { getApiUrl } from './api-url';
+import { ArchiveSubject, SUBJECT_LABELS } from './panhellenic-subjects';
 
 export interface PanhellenicFile {
   fileName: string;
   displayName: string;
-  subject: 'math' | 'physics' | 'ximia';
+  subject: ArchiveSubject;
   year: number;
   url: string;
 }
 
 export interface SubjectGroup {
-  subject: 'math' | 'physics' | 'ximia';
+  subject: ArchiveSubject;
   displayName: string;
   files: PanhellenicFile[];
 }
@@ -96,17 +97,17 @@ const ximiaFiles: PanhellenicFile[] = [
 export const subjectGroups: SubjectGroup[] = [
   {
     subject: 'math',
-    displayName: 'Μαθηματικά',
+    displayName: SUBJECT_LABELS.math,
     files: mathFiles.sort((a, b) => b.year - a.year),
   },
   {
     subject: 'physics',
-    displayName: 'Φυσική',
+    displayName: SUBJECT_LABELS.physics,
     files: physicsFiles.sort((a, b) => b.year - a.year),
   },
   {
     subject: 'ximia',
-    displayName: 'Χημεία',
+    displayName: SUBJECT_LABELS.ximia,
     files: ximiaFiles.sort((a, b) => b.year - a.year),
   },
 ];

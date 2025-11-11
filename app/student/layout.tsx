@@ -2,24 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import Link from 'next/link';
-import { 
-  LayoutDashboard, 
-  BookOpen, 
-  User, 
-  LogOut,
-  Award,
-  FileText
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 
 interface Student {
-  _id: string;
+  _id?: string;
+  id?: string;
   firstName: string;
   lastName: string;
-  grade: string;
-  accessLevel: 'basic' | 'premium' | 'vip';
+  grade?: string;
+  accessLevel?: 'basic' | 'premium' | 'vip';
 }
 
 export default function StudentLayout({
@@ -33,48 +23,63 @@ export default function StudentLayout({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const studentData = localStorage.getItem('student');
-    const studentToken = localStorage.getItem('studentToken');
+    const checkAuth = () => {
+      // IMPORTANT: Clear any admin tokens - students shouldn't have admin access
+      const adminToken = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+      if (adminToken) {
+        console.warn('Admin token detected in student layout, clearing admin session');
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminInfo');
+        localStorage.removeItem('adminLoggedIn');
+        sessionStorage.removeItem('adminToken');
+        sessionStorage.removeItem('adminInfo');
+        sessionStorage.removeItem('adminLoggedIn');
+      }
 
-    if (!studentData || !studentToken) {
-      router.push('/student-login');
-      return;
-    }
+      const studentData = localStorage.getItem('student');
+      const studentToken = localStorage.getItem('studentToken');
 
-    try {
-      const parsedStudent = JSON.parse(studentData);
-      setStudent(parsedStudent);
-    } catch (error) {
-      console.error('Error parsing student data:', error);
-      router.push('/student-login');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [router]);
+      console.log('Student layout auth check:', {
+        hasStudentData: !!studentData,
+        hasStudentToken: !!studentToken,
+        pathname: pathname
+      });
 
-  const handleLogout = () => {
-    localStorage.removeItem('student');
-    localStorage.removeItem('studentToken');
-    router.push('/');
-  };
+      if (!studentData || !studentToken) {
+        console.warn('Missing student data or token, redirecting to login');
+        // Only redirect if not already on login page
+        if (!pathname.includes('/student-login') && !pathname.includes('/login')) {
+          window.location.replace('/student-login');
+        }
+        return;
+      }
 
-  const getAccessLevelColor = (level: string) => {
-    switch (level) {
-      case 'basic': return 'text-blue-600 bg-blue-100';
-      case 'premium': return 'text-purple-600 bg-purple-100';
-      case 'vip': return 'text-yellow-600 bg-yellow-100';
-      default: return 'text-gray-600 bg-gray-100';
-    }
-  };
+      try {
+        const parsedStudent = JSON.parse(studentData);
+        // Verify it's actually student data
+        if (!parsedStudent.firstName || !parsedStudent.lastName) {
+          console.error('Invalid student data structure:', parsedStudent);
+          throw new Error('Invalid student data structure');
+        }
+        console.log('Student data valid, setting student');
+        setStudent(parsedStudent);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error parsing student data:', error);
+        // Clear invalid data
+        localStorage.removeItem('student');
+        localStorage.removeItem('studentToken');
+        // Only redirect if not already on login page
+        if (!pathname.includes('/student-login') && !pathname.includes('/login')) {
+          window.location.replace('/student-login');
+        }
+        setIsLoading(false);
+      }
+    };
 
-  const getAccessLevelText = (level: string) => {
-    switch (level) {
-      case 'basic': return 'Βασικό';
-      case 'premium': return 'Premium';
-      case 'vip': return 'VIP';
-      default: return 'Άγνωστο';
-    }
-  };
+    checkAuth();
+  }, [router, pathname]);
+
 
   if (isLoading) {
     return (
@@ -91,112 +96,9 @@ export default function StudentLayout({
     return null;
   }
 
-  const navigation = [
-    {
-      name: 'Πίνακας',
-      href: '/student/dashboard',
-      icon: LayoutDashboard,
-    },
-    {
-      name: 'Υλικά Εξετάσεων',
-      href: '/student/exam-materials',
-      icon: FileText,
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-8">
-              {/* Logo/Title */}
-              <Link href="/student/dashboard" className="flex items-center gap-2">
-                <BookOpen className="w-6 h-6 text-[#E7B109]" />
-                <span className="text-xl font-bold text-gray-900">ΚΥΚΛΟΣ</span>
-              </Link>
-
-              {/* Navigation */}
-              <nav className="hidden md:flex gap-1">
-                {navigation.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = pathname === item.href;
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={cn(
-                        'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-                        isActive
-                          ? 'bg-[#E7B109] text-white'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      )}
-                    >
-                      <Icon className="w-4 h-4" />
-                      {item.name}
-                    </Link>
-                  );
-                })}
-              </nav>
-            </div>
-
-            {/* User Info */}
-            <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center gap-3">
-                <div className="text-right">
-                  <div className="text-sm font-medium text-gray-900">
-                    {student.firstName} {student.lastName}
-                  </div>
-                  <div className="text-xs text-gray-500">{student.grade}</div>
-                </div>
-                <div className={`px-3 py-1 rounded-full text-xs font-medium ${getAccessLevelColor(student.accessLevel)}`}>
-                  <div className="flex items-center gap-1">
-                    <Award className="w-3 h-3" />
-                    {getAccessLevelText(student.accessLevel)}
-                  </div>
-                </div>
-              </div>
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                <LogOut className="w-4 h-4" />
-                <span className="hidden sm:inline">Αποσύνδεση</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        <div className="md:hidden border-t bg-white">
-          <nav className="flex gap-1 p-2">
-            {navigation.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    'flex flex-1 items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                    isActive
-                      ? 'bg-[#E7B109] text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  )}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{item.name}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-      </header>
-
-      {/* Main Content */}
+      {/* Main Content - Header is now provided by the root layout */}
       <main>{children}</main>
     </div>
   );

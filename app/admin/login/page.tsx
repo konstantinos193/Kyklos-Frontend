@@ -19,12 +19,23 @@ export default function AdminLogin() {
   useEffect(() => {
     const checkExistingAuth = async () => {
       try {
-        // Check both localStorage and sessionStorage for token
+        // IMPORTANT: Only check for admin tokens, ignore student tokens
         const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
         const adminInfo = localStorage.getItem('adminInfo') || sessionStorage.getItem('adminInfo');
         
+        // If student tokens exist, clear them to prevent confusion
+        const studentToken = localStorage.getItem('studentToken') || sessionStorage.getItem('studentToken');
+        if (studentToken) {
+          // Student is logged in, they shouldn't be on admin login page
+          // Clear student tokens if they somehow ended up here
+          localStorage.removeItem('student');
+          localStorage.removeItem('studentToken');
+          sessionStorage.removeItem('student');
+          sessionStorage.removeItem('studentToken');
+        }
+        
         if (token && adminInfo) {
-          // Verify token with backend
+          // Verify token with backend - ensure it's actually an admin token
           const response = await fetch(`${getApiUrl()}/api/admin/auth/verify`, {
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -33,14 +44,16 @@ export default function AdminLogin() {
           
           if (response.ok) {
             // Token is valid, redirect to admin panel
-            router.push('/admin');
+            window.location.replace('/admin');
             return;
           } else {
             // Token is invalid, clear storage
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminInfo');
+            localStorage.removeItem('adminLoggedIn');
             sessionStorage.removeItem('adminToken');
             sessionStorage.removeItem('adminInfo');
+            sessionStorage.removeItem('adminLoggedIn');
           }
         }
       } catch (error) {
@@ -48,8 +61,10 @@ export default function AdminLogin() {
         // Clear potentially corrupted data
         localStorage.removeItem('adminToken');
         localStorage.removeItem('adminInfo');
+        localStorage.removeItem('adminLoggedIn');
         sessionStorage.removeItem('adminToken');
         sessionStorage.removeItem('adminInfo');
+        sessionStorage.removeItem('adminLoggedIn');
       } finally {
         setIsChecking(false);
       }
@@ -89,6 +104,12 @@ export default function AdminLogin() {
           return;
         }
 
+        // IMPORTANT: Clear any student tokens to prevent cross-contamination
+        localStorage.removeItem('student');
+        localStorage.removeItem('studentToken');
+        sessionStorage.removeItem('student');
+        sessionStorage.removeItem('studentToken');
+
         // Store token based on remember me preference
         const adminInfo = {
           email: adminData.email,
@@ -113,8 +134,8 @@ export default function AdminLogin() {
         sessionStorage.setItem('adminToken', data.token);
         sessionStorage.setItem('adminInfo', JSON.stringify(adminInfo));
         
-        // Redirect to admin panel
-        router.push('/admin');
+        // Redirect to admin panel - use replace to prevent back button issues
+        window.location.replace('/admin');
       } else {
         setError(data.message || 'Login failed');
       }
@@ -131,27 +152,27 @@ export default function AdminLogin() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E7B109] mx-auto mb-4"></div>
-          <p className="text-gray-600">Checking authentication...</p>
+          <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-[#E7B109] mx-auto mb-4"></div>
+          <p className="text-sm sm:text-base text-gray-600">Checking authentication...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4 sm:p-6">
       <div className="max-w-md w-full">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#E7B109] rounded-full mb-4">
-            <Shield className="w-8 h-8 text-white" />
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-[#E7B109] rounded-full mb-3 sm:mb-4">
+            <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Panel</h1>
-          <p className="text-gray-600">Συνδεθείτε για να διαχειριστείτε το σύστημα</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Admin Panel</h1>
+          <p className="text-sm sm:text-base text-gray-600">Συνδεθείτε για να διαχειριστείτε το σύστημα</p>
         </div>
 
         {/* Login Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
@@ -235,8 +256,8 @@ export default function AdminLogin() {
           </form>
 
           {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Demo Credentials:</h3>
+          <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gray-50 rounded-lg">
+            <h3 className="text-xs sm:text-sm font-medium text-gray-700 mb-2">Demo Credentials:</h3>
             <div className="text-xs text-gray-600 space-y-1">
               <p><strong>Email:</strong> grkyklos-@hotmail.gr</p>
               <p><strong>Password:</strong> admin123</p>
@@ -245,13 +266,6 @@ export default function AdminLogin() {
               Note: Make sure the admin user exists in your database. If not, run the seeder script.
             </p>
           </div>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center mt-8">
-          <p className="text-sm text-gray-500">
-            © 2024 ΚΥΚΛΟΣ Φροντιστήριο. All rights reserved.
-          </p>
         </div>
       </div>
     </div>

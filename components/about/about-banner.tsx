@@ -31,7 +31,7 @@ export function AboutBanner({ title, backgroundImage = "/placeholder.jpg", overl
             </h1>
             <div className="mt-4 h-1 w-20 bg-gradient-to-r from-[#CF3B49] to-[#E7B109] rounded-full" />
             <p className="mt-4 text-sm sm:text-base text-white/80 max-w-2xl">
-              Εξειδικευμένη εκπαίδευση στην Ελληνική Γλώσσα & Λογοτεχνία. 25+ έτη εμπειρίας,
+              Εξειδικευμένη εκπαίδευση στην Ελληνική Γλώσσα & Λογοτεχνία. 30+ έτη εμπειρίας,
               95% επιτυχία, προσωπική προσέγγιση για κάθε μαθητή.
             </p>
           </div>

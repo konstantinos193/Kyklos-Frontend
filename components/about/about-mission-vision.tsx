@@ -10,8 +10,8 @@ export function AboutMissionVision() {
           {/* Header */}
           <div className="text-center mb-12 lg:mb-16">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
-              Η <span className="text-[#E7B109]">Αποστολή</span> και η{" "}
-              <span className="text-[#CE3B49]">Όραμα</span> μας
+              Η <span className="text-[#E7B109]">Αποστολή</span> και το{" "}
+              <span className="text-[#CE3B49]">Όραμά</span> μας
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-[#E7B109] via-[#CE3B49] to-[#D97706] rounded-full mx-auto"></div>
           </div>

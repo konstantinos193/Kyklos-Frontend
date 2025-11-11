@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { getApiUrl } from '@/lib/api-url';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -13,17 +13,35 @@ export default function AdminLayout({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     // Check if admin is logged in
     const checkAuth = async () => {
-      // Check both localStorage and sessionStorage for token
+      // IMPORTANT: Don't check auth if we're on the login page - let the login page handle it
+      if (pathname?.includes('/admin/login')) {
+        setIsLoading(false);
+        setIsAuthenticated(false);
+        return;
+      }
+
+      // IMPORTANT: Only check for admin tokens, clear any student tokens
       const adminToken = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
       const adminInfo = localStorage.getItem('adminInfo') || sessionStorage.getItem('adminInfo');
       
+      // If student tokens exist, clear them - students shouldn't access admin routes
+      const studentToken = localStorage.getItem('studentToken') || sessionStorage.getItem('studentToken');
+      if (studentToken) {
+        console.warn('Student token detected in admin layout, clearing student session');
+        localStorage.removeItem('student');
+        localStorage.removeItem('studentToken');
+        sessionStorage.removeItem('student');
+        sessionStorage.removeItem('studentToken');
+      }
+      
       if (adminToken && adminInfo) {
         try {
-          // Verify token with backend
+          // Verify token with backend - ensure it's actually an admin token
           const response = await fetch(`${getApiUrl()}/api/admin/auth/verify`, {
             headers: {
               'Authorization': `Bearer ${adminToken}`,
@@ -40,7 +58,10 @@ export default function AdminLayout({
             sessionStorage.removeItem('adminLoggedIn');
             sessionStorage.removeItem('adminToken');
             sessionStorage.removeItem('adminInfo');
-            router.push('/admin/login');
+            // Only redirect if not already on login page
+            if (!pathname?.includes('/admin/login')) {
+              window.location.replace('/admin/login');
+            }
           }
         } catch (error) {
           // Network error, clear all storage and redirect
@@ -50,16 +71,22 @@ export default function AdminLayout({
           sessionStorage.removeItem('adminLoggedIn');
           sessionStorage.removeItem('adminToken');
           sessionStorage.removeItem('adminInfo');
-          router.push('/admin/login');
+          // Only redirect if not already on login page
+          if (!pathname?.includes('/admin/login')) {
+            window.location.replace('/admin/login');
+          }
         }
       } else {
-        router.push('/admin/login');
+        // No token found, but only redirect if not already on login page
+        if (!pathname?.includes('/admin/login')) {
+          window.location.replace('/admin/login');
+        }
       }
       setIsLoading(false);
     };
 
     checkAuth();
-  }, [router]);
+  }, [router, pathname]);
 
   if (isLoading) {
     return (

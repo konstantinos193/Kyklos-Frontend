@@ -81,6 +81,10 @@ export default function StudentManagementDashboard() {
   });
   const [addingStudent, setAddingStudent] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [modalSuccessMessage, setModalSuccessMessage] = useState<string>('');
+  const [modalErrorMessage, setModalErrorMessage] = useState<string>('');
   const [showSubjectAccessModal, setShowSubjectAccessModal] = useState(false);
   const [selectedStudentForAccess, setSelectedStudentForAccess] = useState<Student | null>(null);
   const [availableSubjects, setAvailableSubjects] = useState<string[]>([]);
@@ -136,41 +140,62 @@ export default function StudentManagementDashboard() {
       
       const response = await adminAPI.getStudents();
 
-      if (response.success) {
+      // Handle response structure: { data: [...], pagination: {...} }
+      // The API returns response.data which contains { data: [...], pagination: {...} }
+      // So the students array is at response.data.data
+      const studentsData = (response.data && response.data.data && Array.isArray(response.data.data))
+        ? response.data.data
+        : (response.data && Array.isArray(response.data))
+        ? response.data
+        : (Array.isArray(response) ? response : []);
+      
+      if (Array.isArray(studentsData)) {
         // Transform API data to match component interface
-        const students: Student[] = response.data.students.map((student: any) => ({
-          id: student._id,
-          studentId: student.uniqueKey,
-          name: `${student.firstName} ${student.lastName}`,
-          firstName: student.firstName,
-          lastName: student.lastName,
-          email: student.email,
-          phone: student.phone,
-          grade: student.grade,
-          subjects: student.subjects || [],
-          enrollmentDate: new Date(student.registrationDate).toLocaleDateString('el-GR'),
-          lastActivity: student.lastLogin ? new Date(student.lastLogin).toLocaleDateString('el-GR') : 'Ποτέ',
-          status: student.status || 'active',
-          progress: 0, // Not available in current API
-          totalHours: 0, // Not available in current API
-          nextClass: 'Δεν έχει προγραμματιστεί', // Not available in current API
-          accessLevel: 'basic', // Not available in current API
-          examAccess: [], // Not available in current API
-          createdBy: 'admin', // Not available in current API
-          notes: student.notes || ''
-        }));
+        const students: Student[] = studentsData.map((student: any) => {
+          const registrationDate = student.registrationDate ? new Date(student.registrationDate) : null;
+          const lastLoginDate = student.lastLogin ? new Date(student.lastLogin) : null;
+          
+          return {
+            id: student._id,
+            studentId: student.uniqueKey || '',
+            name: `${student.firstName || ''} ${student.lastName || ''}`.trim(),
+            firstName: student.firstName || '',
+            lastName: student.lastName || '',
+            email: student.email || '',
+            phone: student.phone || '',
+            grade: student.grade || '',
+            subjects: student.subjects || [],
+            enrollmentDate: registrationDate ? registrationDate.toLocaleDateString('el-GR') : '',
+            lastActivity: lastLoginDate ? lastLoginDate.toLocaleDateString('el-GR') : 'Ποτέ',
+            status: student.status || 'active',
+            progress: 0, // Not available in current API
+            totalHours: 0, // Not available in current API
+            nextClass: 'Δεν έχει προγραμματιστεί', // Not available in current API
+            accessLevel: 'basic', // Not available in current API
+            examAccess: [], // Not available in current API
+            createdBy: 'admin', // Not available in current API
+            notes: student.notes || '',
+            // Store original date for calculations
+            _registrationDate: registrationDate
+          };
+        });
 
         setStudents(students);
         setFilteredStudents(students);
         
-        // Calculate stats
+        // Calculate stats using original dates
         const activeStudents = students.filter(s => s.status === 'active').length;
         const inactiveStudents = students.filter(s => s.status === 'inactive').length;
         const newThisMonth = students.filter(s => {
-          const enrollmentDate = new Date(s.enrollmentDate);
-          const now = new Date();
-          const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-          return enrollmentDate >= thirtyDaysAgo;
+          const registrationDate = (s as any)._registrationDate;
+          if (!registrationDate) return false;
+          try {
+            const now = new Date();
+            const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+            return registrationDate >= thirtyDaysAgo;
+          } catch {
+            return false;
+          }
         }).length;
 
         setStats({
@@ -181,7 +206,7 @@ export default function StudentManagementDashboard() {
           averageProgress: 0 // Not available in current API
         });
       } else {
-        console.error('Error loading students:', response.message);
+        console.error('Error loading students: Invalid response format', response);
         // Set empty data on error
         setStudents([]);
         setFilteredStudents([]);
@@ -405,12 +430,25 @@ export default function StudentManagementDashboard() {
       const response = await adminAPI.createStudent(studentData);
       
       if (response.success) {
+        const createdStudent = response.data;
+        const uniqueKey = createdStudent?.uniqueKey || '';
+        const studentName = `${createdStudent?.firstName || ''} ${createdStudent?.lastName || ''}`.trim();
+        
+        const successMsg = uniqueKey 
+          ? `Μαθητής ${studentName} προστέθηκε επιτυχώς! Κωδικός πρόσβασης: ${uniqueKey}`
+          : `Μαθητής ${studentName} προστέθηκε επιτυχώς!`;
+        
+        setModalSuccessMessage(successMsg);
+        setModalErrorMessage('');
+        setSuccessMessage(successMsg);
+        setErrorMessage('');
         toast({
           title: "Επιτυχία!",
-          description: "Μαθητής προστέθηκε επιτυχώς!",
+          description: uniqueKey 
+            ? `Μαθητής προστέθηκε! Κωδικός: ${uniqueKey}`
+            : "Μαθητής προστέθηκε επιτυχώς!",
           variant: "success",
         });
-        setShowAddStudentModal(false);
         setFieldErrors({});
         setNewStudent({
           firstName: '',
@@ -426,16 +464,28 @@ export default function StudentManagementDashboard() {
           notes: ''
         });
         loadStudents(); // Reload the list
+        
+        // Close modal after 1.5 seconds to show success message
+        setTimeout(() => {
+          setShowAddStudentModal(false);
+          setModalSuccessMessage('');
+        }, 1500);
+        setTimeout(() => setSuccessMessage(''), 5000);
       } else {
         // Show detailed error messages from backend
         const errorMsg = response.errors 
           ? response.errors.map((err: any) => `${err.param || 'Field'}: ${err.msg || err.message}`).join(', ')
           : response.message || 'Σφάλμα κατά την προσθήκη μαθητή';
+        setModalErrorMessage(`Σφάλμα: ${errorMsg}`);
+        setModalSuccessMessage('');
+        setErrorMessage(`Σφάλμα: ${errorMsg}`);
+        setSuccessMessage('');
         toast({
           title: "Σφάλμα",
           description: `Σφάλμα κατά την προσθήκη μαθητή: ${errorMsg}`,
           variant: "destructive"
         });
+        setTimeout(() => setErrorMessage(''), 5000);
       }
     } catch (error: any) {
       // Show backend validation errors if available
@@ -466,17 +516,28 @@ export default function StudentManagementDashboard() {
           errorMsg = errorData.message || 'Σφάλμα κατά την προσθήκη μαθητή';
         }
         
+        setModalErrorMessage(`Σφάλμα: ${errorMsg}`);
+        setModalSuccessMessage('');
+        setErrorMessage(`Σφάλμα: ${errorMsg}`);
+        setSuccessMessage('');
         toast({
           title: "Σφάλμα",
           description: `Σφάλμα κατά την προσθήκη μαθητή: ${errorMsg}`,
           variant: "destructive"
         });
+        setTimeout(() => setErrorMessage(''), 5000);
       } else {
+        const errorMsg = error.message || 'Δεν ήταν δυνατή η σύνδεση με τον διακομιστή';
+        setModalErrorMessage(`Σφάλμα: ${errorMsg}`);
+        setModalSuccessMessage('');
+        setErrorMessage(`Σφάλμα: ${errorMsg}`);
+        setSuccessMessage('');
         toast({
           title: "Σφάλμα",
-          description: `Σφάλμα κατά την προσθήκη μαθητή: ${error.message || 'Δεν ήταν δυνατή η σύνδεση με τον διακομιστή'}`,
+          description: `Σφάλμα κατά την προσθήκη μαθητή: ${errorMsg}`,
           variant: "destructive"
         });
+        setTimeout(() => setErrorMessage(''), 5000);
       }
     } finally {
       setAddingStudent(false);
@@ -711,16 +772,55 @@ export default function StudentManagementDashboard() {
 
   return (
     <div className="space-y-6">
+      {/* Success/Error Messages */}
+      {successMessage && (
+        <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <CheckCircle className="w-5 h-5" />
+            <span>{successMessage}</span>
+          </div>
+          <button
+            onClick={() => setSuccessMessage('')}
+            className="text-green-600 hover:text-green-800"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      )}
+      {errorMessage && (
+        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-5 h-5" />
+            <span>{errorMessage}</span>
+          </div>
+          <button
+            onClick={() => setErrorMessage('')}
+            className="text-red-600 hover:text-red-800"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      )}
+
       {/* Simple Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Μαθητές</h2>
-          <p className="text-gray-600">Διαχείριση μαθητών και πρόσβασης σε εξετάσεις</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Μαθητές</h2>
+          <p className="text-sm sm:text-base text-gray-600">Διαχείριση μαθητών και πρόσβασης σε εξετάσεις</p>
         </div>
         <div className="flex gap-3">
           <button 
-            onClick={() => setShowAddStudentModal(true)}
-            className="bg-[#E7B109] text-white px-4 py-2 rounded-lg hover:bg-[#D97706] transition-colors"
+            onClick={() => {
+              setShowAddStudentModal(true);
+              setModalSuccessMessage('');
+              setModalErrorMessage('');
+              setFieldErrors({});
+            }}
+            className="bg-[#E7B109] text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-[#D97706] transition-colors text-sm sm:text-base whitespace-nowrap"
           >
             + Προσθήκη Μαθητή
           </button>
@@ -728,7 +828,7 @@ export default function StudentManagementDashboard() {
       </div>
 
       {/* Simple Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white p-4 rounded-lg border">
           <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
           <div className="text-sm text-gray-600">Συνολικοί Μαθητές</div>
@@ -745,18 +845,18 @@ export default function StudentManagementDashboard() {
 
       {/* Simple Search */}
       <div className="bg-white p-4 rounded-lg border">
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <input
             type="text"
             placeholder="Αναζήτηση μαθητών..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent text-sm sm:text-base"
           />
           <select
             value={filterGrade}
             onChange={(e) => setFilterGrade(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent text-sm sm:text-base"
           >
             <option value="all">Όλες οι τάξεις</option>
             <option value="Α' Λυκείου">Α' Λυκείου</option>
@@ -766,7 +866,7 @@ export default function StudentManagementDashboard() {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E7B109] focus:border-transparent text-sm sm:text-base"
           >
             <option value="all">Όλες οι καταστάσεις</option>
             <option value="active">Ενεργός</option>
@@ -778,18 +878,19 @@ export default function StudentManagementDashboard() {
       {/* Students Table */}
       <div className="bg-white rounded-lg border overflow-hidden">
         <div className="px-4 py-3 border-b bg-gray-50">
-          <div className="flex items-center justify-between">
-            <h3 className="font-medium text-gray-900">Μαθητές ({filteredStudents.length})</h3>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <h3 className="font-medium text-gray-900 text-sm sm:text-base">Μαθητές ({filteredStudents.length})</h3>
             <button 
               onClick={handleOpenBulkAccess}
-              className="text-sm text-blue-600 hover:text-blue-800"
+              className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 self-start sm:self-auto"
             >
               Μαζική Πρόσβαση
             </button>
           </div>
         </div>
         
-        <div className="overflow-x-auto">
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
@@ -876,11 +977,85 @@ export default function StudentManagementDashboard() {
           </table>
         </div>
 
+        {/* Mobile Card View */}
+        <div className="md:hidden divide-y divide-gray-200">
+          {filteredStudents.map((student) => (
+            <div key={student.id} className="p-4 hover:bg-gray-50">
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="text-sm font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded truncate">
+                      {student.studentId}
+                    </div>
+                    <button
+                      onClick={() => copyKeyToClipboard(student.studentId)}
+                      className="p-1 text-gray-500 hover:text-[#E7B109] hover:bg-gray-100 rounded transition-colors flex-shrink-0"
+                      title="Αντιγραφή κωδικού"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <div className="text-sm font-medium text-gray-900 truncate">{student.name}</div>
+                  <div className="text-xs text-gray-500 truncate">{student.email}</div>
+                </div>
+                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium flex-shrink-0 ${getStatusColor(student.status)}`}>
+                  {getStatusText(student.status)}
+                </span>
+              </div>
+              <div className="space-y-2">
+                <div className="text-xs text-gray-600">
+                  <span className="font-medium">Τάξη:</span> {student.grade}
+                </div>
+                <div>
+                  <div className="text-xs font-medium text-gray-600 mb-1">Μαθήματα:</div>
+                  <div className="flex flex-wrap gap-1">
+                    {(student.subjects || []).slice(0, 3).map((subject, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                      >
+                        {subject}
+                      </span>
+                    ))}
+                    {(student.subjects || []).length > 3 && (
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                        +{(student.subjects || []).length - 3}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex gap-2 pt-2">
+                  <button
+                    onClick={() => handleOpenSubjectAccess(student)}
+                    className="flex-1 text-xs px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    Μαθήματα
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedStudent(student);
+                      setShowModal(true);
+                    }}
+                    className="flex-1 text-xs px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    Προβολή
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
         {filteredStudents.length === 0 && (
           <div className="text-center py-8">
             <div className="text-gray-500 mb-4">Δεν βρέθηκαν μαθητές</div>
             <button 
-              onClick={() => setShowAddStudentModal(true)}
+              onClick={() => {
+                setShowAddStudentModal(true);
+                setModalSuccessMessage('');
+                setModalErrorMessage('');
+                setFieldErrors({});
+              }}
               className="bg-[#E7B109] text-white px-4 py-2 rounded-lg hover:bg-[#D97706] transition-colors"
             >
               Προσθήκη Πρώτου Μαθητή
@@ -891,8 +1066,8 @@ export default function StudentManagementDashboard() {
 
       {/* Student Details Modal */}
       {showModal && selectedStudent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">Στοιχεία Μαθητή</h3>
@@ -998,7 +1173,7 @@ export default function StudentManagementDashboard() {
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-medium text-gray-500 mb-2">Πρόσβαση σε Υλικά Εξετάσεων</h4>
+                  <h4 className="text-sm font-medium text-gray-500 mb-2">Πρόσβαση σε Ασκήσεις</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedStudent.examAccess.map((access, index) => (
                       <span
@@ -1112,13 +1287,18 @@ export default function StudentManagementDashboard() {
 
       {/* Add Student Modal */}
       {showAddStudentModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-gray-900">Προσθήκη Νέου Μαθητή</h3>
                 <button
-                  onClick={() => setShowAddStudentModal(false)}
+                  onClick={() => {
+                    setShowAddStudentModal(false);
+                    setModalSuccessMessage('');
+                    setModalErrorMessage('');
+                    setFieldErrors({});
+                  }}
                   className="text-gray-400 hover:text-gray-600"
                 >
                   <span className="sr-only">Κλείσιμο</span>
@@ -1127,6 +1307,20 @@ export default function StudentManagementDashboard() {
                   </svg>
                 </button>
               </div>
+
+              {/* Modal Success/Error Messages */}
+              {modalSuccessMessage && (
+                <div className="mb-4 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                  <span className="font-medium">{modalSuccessMessage}</span>
+                </div>
+              )}
+              {modalErrorMessage && (
+                <div className="mb-4 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                  <span className="font-medium">{modalErrorMessage}</span>
+                </div>
+              )}
 
               <form onSubmit={handleAddStudent} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1429,6 +1623,8 @@ export default function StudentManagementDashboard() {
                     onClick={() => {
                       setShowAddStudentModal(false);
                       setFieldErrors({});
+                      setModalSuccessMessage('');
+                      setModalErrorMessage('');
                     }}
                     className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                   >
@@ -1450,8 +1646,8 @@ export default function StudentManagementDashboard() {
 
       {/* Subject Access Management Modal */}
       {showSubjectAccessModal && selectedStudentForAccess && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
@@ -1493,7 +1689,7 @@ export default function StudentManagementDashboard() {
                 </div>
 
                 {/* Subjects Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {availableSubjects.map((subject) => (
                     <div
                       key={subject}
@@ -1563,8 +1759,8 @@ export default function StudentManagementDashboard() {
 
       {/* Bulk Access Management Modal */}
       {showBulkAccessModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-6xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
@@ -1584,7 +1780,7 @@ export default function StudentManagementDashboard() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
                 {/* Students Selection */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">

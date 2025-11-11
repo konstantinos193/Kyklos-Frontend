@@ -30,6 +30,9 @@ export interface ProgramCTA {
 export interface ProgramData {
   title: string;
   subtitle: string;
+  background: {
+    gradient: string;
+  };
   levels: ProgramLevel[];
   features: ProgramFeature[];
   cta: ProgramCTA;

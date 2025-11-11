@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { MenuIcon, CloseIcon } from "@/components/icons";
 import { NavigationItem, HeaderButton } from "./types";
 import { HeaderDropdown } from "./header-dropdown";
+import { User, LogOut } from "lucide-react";
 
 interface HeaderMobileMenuProps {
   navigation: NavigationItem[];
@@ -24,8 +25,44 @@ export function HeaderMobileMenu({
   onToggle 
 }: HeaderMobileMenuProps) {
   const [activeSection, setActiveSection] = useState("");
+  const [student, setStudent] = useState<any>(null);
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    const checkStudentLogin = () => {
+      const studentData = typeof window !== 'undefined' ? localStorage.getItem('student') : null;
+      const studentToken = typeof window !== 'undefined' ? localStorage.getItem('studentToken') : null;
+      
+      if (studentData && studentToken) {
+        try {
+          const parsedStudent = JSON.parse(studentData);
+          setStudent(parsedStudent);
+        } catch (error) {
+          console.error('Error parsing student data:', error);
+          setStudent(null);
+        }
+      } else {
+        setStudent(null);
+      }
+    };
+
+    checkStudentLogin();
+    
+    // Listen for storage changes
+    window.addEventListener('storage', checkStudentLogin);
+    const handleAuthChange = () => checkStudentLogin();
+    window.addEventListener('auth-change', handleAuthChange);
+    
+    // Polling as fallback
+    const intervalId = setInterval(checkStudentLogin, 2000);
+
+    return () => {
+      window.removeEventListener('storage', checkStudentLogin);
+      window.removeEventListener('auth-change', handleAuthChange);
+      clearInterval(intervalId);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -222,27 +259,61 @@ export function HeaderMobileMenu({
                 
                 {/* Mobile Buttons */}
                 <div className="flex flex-col gap-3 mt-6 pt-6 border-t border-gray-200">
-                  {buttons.map((button, index) => (
-                    <Button
-                      key={index}
-                      variant={button.variant}
-                      onClick={(e) => handleButtonClick(button, e)}
-                      onTouchStart={(e) => {
-                        // Windows touch optimization
-                        e.currentTarget.style.opacity = '0.9';
-                      }}
-                      onTouchEnd={(e) => {
-                        e.currentTarget.style.opacity = '1';
-                      }}
-                      className={`w-full touch-manipulation ${
-                        button.variant === "outline"
-                          ? "border-[#0047AB] text-[#0047AB] hover:bg-[#0047AB] hover:text-white active:bg-[#0047AB]/90"
-                          : "bg-gradient-to-r from-[#CE3B49] to-[#FF6B6B] text-white hover:from-[#B91C1C] hover:to-[#CE3B49] active:opacity-90"
-                      } transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#CE3B49] focus:ring-offset-2`}
-                    >
-                      {button.label}
-                    </Button>
-                  ))}
+                  {student ? (
+                    <>
+                      <Link
+                        href="/student/dashboard"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleNavClick('/student/dashboard', e);
+                        }}
+                        className="w-full"
+                      >
+                        <Button
+                          variant="default"
+                          className="w-full bg-gradient-to-r from-[#CE3B49] to-[#FF6B6B] text-white hover:from-[#B91C1C] hover:to-[#CE3B49] active:opacity-90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#CE3B49] focus:ring-offset-2 touch-manipulation flex items-center justify-center gap-2"
+                        >
+                          <User className="w-4 h-4" />
+                          <span>{student.firstName} {student.lastName}</span>
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="outline"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          localStorage.removeItem('student');
+                          localStorage.removeItem('studentToken');
+                          handleNavClick('/', e);
+                        }}
+                        className="w-full border-[#CE3B49] text-[#CE3B49] hover:bg-[#CE3B49] hover:text-white active:bg-[#CE3B49]/90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#CE3B49] focus:ring-offset-2 touch-manipulation flex items-center justify-center gap-2"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Αποσύνδεση</span>
+                      </Button>
+                    </>
+                  ) : (
+                    buttons.map((button, index) => (
+                      <Button
+                        key={index}
+                        variant={button.variant}
+                        onClick={(e) => handleButtonClick(button, e)}
+                        onTouchStart={(e) => {
+                          // Windows touch optimization
+                          e.currentTarget.style.opacity = '0.9';
+                        }}
+                        onTouchEnd={(e) => {
+                          e.currentTarget.style.opacity = '1';
+                        }}
+                        className={`w-full touch-manipulation ${
+                          button.variant === "outline"
+                            ? "border-[#0047AB] text-[#0047AB] hover:bg-[#0047AB] hover:text-white active:bg-[#0047AB]/90"
+                            : "bg-gradient-to-r from-[#CE3B49] to-[#FF6B6B] text-white hover:from-[#B91C1C] hover:to-[#CE3B49] active:opacity-90"
+                        } transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#CE3B49] focus:ring-offset-2`}
+                      >
+                        {button.label}
+                      </Button>
+                    ))
+                  )}
                 </div>
               </nav>
             </div>

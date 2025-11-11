@@ -27,11 +27,38 @@ function setupInterceptors(client: ReturnType<typeof axios.create>) {
   // Request interceptor for authentication and optimization
   client.interceptors.request.use(
     (config) => {
-      // Add authentication token
+      // Add authentication token - check for both admin and student tokens
       if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
+        // Check if this is an admin API call or student API call
+        const isAdminAPI = config.url?.includes('/api/admin/') || 
+                          config.url?.includes('/api/teacher-permissions') ||
+                          config.url?.includes('/api/exercises/teacher') ||
+                          config.url?.includes('/api/exam-materials/admin') ||
+                          config.url?.includes('/api/panhellenic-archive');
+        
+        const isStudentAPI = config.url?.includes('/api/exercises/student') ||
+                            (config.url?.includes('/api/exam-materials') && !config.url?.includes('/admin'));
+        
+        if (isAdminAPI) {
+          // For admin API calls, use admin token
+          const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
+        } else if (isStudentAPI) {
+          // For student API calls, use student token
+          const token = localStorage.getItem('studentToken') || sessionStorage.getItem('studentToken');
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
+        } else {
+          // For other API calls, try admin token first, then student token
+          const adminToken = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+          const studentToken = localStorage.getItem('studentToken') || sessionStorage.getItem('studentToken');
+          const token = adminToken || studentToken;
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          }
         }
       }
       
@@ -66,16 +93,39 @@ function setupInterceptors(client: ReturnType<typeof axios.create>) {
       if (error.response) {
         // Server responded with error status
         const { status, data } = error.response;
+        const url = error.config?.url || '';
         
         if (status === 401) {
           console.error('Unauthorized:', data.message || 'Authentication required');
-          // Only clear tokens and redirect if it's not a stats call
-          if (!error.config?.url?.includes('/admin/stats')) {
-            if (typeof window !== 'undefined') {
-              localStorage.removeItem('adminToken');
-              sessionStorage.removeItem('adminToken');
-              window.location.href = '/admin/login';
+          
+          // Only redirect for admin API calls - let student components handle their own redirects
+          const isAdminAPI = url.includes('/api/admin/') || 
+                           url.includes('/api/teacher-permissions') ||
+                           url.includes('/api/exercises/teacher') ||
+                           url.includes('/api/exam-materials/admin');
+          
+          if (typeof window !== 'undefined') {
+            // Don't redirect if we're already on a login page
+            const currentPath = window.location.pathname;
+            if (currentPath.includes('/login') || currentPath.includes('/student-login')) {
+              return Promise.reject(error);
             }
+            
+            if (isAdminAPI) {
+              // Clear admin tokens and redirect to admin login
+              localStorage.removeItem('adminToken');
+              localStorage.removeItem('adminInfo');
+              localStorage.removeItem('adminLoggedIn');
+              sessionStorage.removeItem('adminToken');
+              sessionStorage.removeItem('adminInfo');
+              sessionStorage.removeItem('adminLoggedIn');
+              // Only redirect if not already on admin login
+              if (!currentPath.includes('/admin/login')) {
+                window.location.replace('/admin/login');
+              }
+            }
+            // For student API calls, don't redirect - let the component handle it
+            // This prevents redirect loops and allows components to show error messages
           }
         } else if (status === 403) {
           console.error('Forbidden:', data.message || 'Access denied');
@@ -309,6 +359,169 @@ export const adminAPI = {
     grade?: string;
   } = {}) => {
     const response = await getApiClient().get('/api/exam-materials/admin', { params });
+    return response.data;
+  },
+
+  // Panhellenic Archive API
+  getArchiveFiles: async (params: {
+    subject?: 'math' | 'physics' | 'ximia' | 'biology' | 'greek-literature' | 'ancient-greek' | 'history' | 'latin' | 'economics' | 'informatics' | 'algebra' | 'geometry';
+    year?: number;
+  } = {}) => {
+    const response = await getApiClient().get('/api/panhellenic-archive', { params });
+    return response.data;
+  },
+
+  uploadArchiveFile: async (file: File, data: {
+    displayName: string;
+    subject: 'math' | 'physics' | 'ximia' | 'biology' | 'greek-literature' | 'ancient-greek' | 'history' | 'latin' | 'economics' | 'informatics' | 'algebra' | 'geometry';
+    year: number;
+    description?: string;
+  }) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('displayName', data.displayName);
+    formData.append('subject', data.subject);
+    formData.append('year', data.year.toString());
+    if (data.description) {
+      formData.append('description', data.description);
+    }
+
+    const response = await getApiClient().post('/api/panhellenic-archive', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  updateArchiveFile: async (id: string, data: {
+    displayName?: string;
+    subject?: 'math' | 'physics' | 'ximia' | 'biology' | 'greek-literature' | 'ancient-greek' | 'history' | 'latin' | 'economics' | 'informatics' | 'algebra' | 'geometry';
+    year?: number;
+    description?: string;
+  }) => {
+    const response = await getApiClient().put(`/api/panhellenic-archive/${id}`, data);
+    return response.data;
+  },
+
+  deleteArchiveFile: async (id: string) => {
+    const response = await getApiClient().delete(`/api/panhellenic-archive/${id}`);
+    return response.data;
+  },
+
+  toggleArchiveFileActive: async (id: string) => {
+    const response = await getApiClient().put(`/api/panhellenic-archive/${id}/toggle-active`);
+    return response.data;
+  },
+
+  // Teacher Admin Accounts Management
+  getTeacherAdmins: async (params: {
+    page?: number;
+    limit?: number;
+    role?: string;
+    search?: string;
+  } = {}) => {
+    const response = await getApiClient().get('/api/admin/admins', { params });
+    return response.data;
+  },
+
+  getTeacherAdminById: async (id: string) => {
+    const response = await getApiClient().get(`/api/admin/admins/${id}`);
+    return response.data;
+  },
+
+  createTeacherAdmin: async (adminData: {
+    email: string;
+    password: string;
+    name: string;
+    role?: string;
+    isActive?: boolean;
+    permissions?: any;
+  }) => {
+    const response = await getApiClient().post('/api/admin/admins', adminData);
+    return response.data;
+  },
+
+  updateTeacherAdmin: async (id: string, adminData: {
+    email?: string;
+    password?: string;
+    name?: string;
+    role?: string;
+    isActive?: boolean;
+    permissions?: any;
+  }) => {
+    const response = await getApiClient().put(`/api/admin/admins/${id}`, adminData);
+    return response.data;
+  },
+
+  deleteTeacherAdmin: async (id: string) => {
+    const response = await getApiClient().delete(`/api/admin/admins/${id}`);
+    return response.data;
+  },
+
+  // Exercises API (Teacher)
+  getTeacherExercises: async (params: {
+    page?: number;
+    limit?: number;
+    subject?: string;
+    grade?: string;
+  } = {}) => {
+    const response = await getApiClient().get('/api/exercises/teacher', { params });
+    return response.data;
+  },
+
+  createExercise: async (formData: FormData) => {
+    const response = await getApiClient().post('/api/exercises/teacher', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  updateExercise: async (id: string, exerciseData: {
+    title?: string;
+    description?: string;
+    subject?: string;
+    grade?: string;
+    textContent?: string;
+    isActive?: boolean;
+  }) => {
+    const response = await getApiClient().put(`/api/exercises/teacher/${id}`, exerciseData);
+    return response.data;
+  },
+
+  deleteExercise: async (id: string) => {
+    const response = await getApiClient().delete(`/api/exercises/teacher/${id}`);
+    return response.data;
+  },
+
+  addFilesToExercise: async (id: string, formData: FormData) => {
+    const response = await getApiClient().post(`/api/exercises/teacher/${id}/files`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  deleteFileFromExercise: async (id: string, filePublicId: string) => {
+    const response = await getApiClient().delete(`/api/exercises/teacher/${id}/files/${filePublicId}`);
+    return response.data;
+  },
+
+  // Exercises API (Student)
+  getStudentExercises: async (params: {
+    page?: number;
+    limit?: number;
+    subject?: string;
+  } = {}) => {
+    const response = await getApiClient().get('/api/exercises/student', { params });
+    return response.data;
+  },
+
+  getStudentExerciseById: async (id: string) => {
+    const response = await getApiClient().get(`/api/exercises/student/${id}`);
     return response.data;
   }
 };

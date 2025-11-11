@@ -25,7 +25,7 @@ export function HeroContent({ title, description }: HeroContentProps) {
       {/* Description with highlights */}
       <div className="max-w-4xl mx-auto">
         <p className="text-base sm:text-lg md:text-xl text-slate-600 leading-relaxed text-center">
-          Για περισσότερα από 25 χρόνια, το ΚΥΚΛΟΣ Φροντιστήριο προσφέρει{" "}
+          Για περισσότερα από 30 χρόνια, το Φροντιστήριο ΚΥΚΛΟΣ προσφέρει{" "}
           <span className={description.highlights[0].color + ' ' + description.highlights[0].weight}>
             {description.highlights[0].text}
           </span>{" "}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { HeaderTop } from "./header/header-top";
 import { HeaderLogo } from "./header/header-logo";
@@ -12,9 +13,16 @@ import { HeaderButtons } from "./header/header-buttons";
 import { HeaderMobileMenu } from "./header/header-mobile-menu";
 
 export function Header() {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showAnnouncement, setShowAnnouncement] = useState(true);
+
+  // Hide header only on admin pages (they have their own header)
+  // Student pages will use the main header with student info
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   useEffect(() => {
     const handleScroll = () => {

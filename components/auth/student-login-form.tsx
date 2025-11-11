@@ -63,6 +63,14 @@ export default function StudentLoginForm({ onSuccess, redirectTo }: StudentLogin
           description: `${data.student.firstName} ${data.student.lastName}`,
         });
 
+        // IMPORTANT: Clear any admin tokens to prevent cross-contamination
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminInfo');
+        localStorage.removeItem('adminLoggedIn');
+        sessionStorage.removeItem('adminToken');
+        sessionStorage.removeItem('adminInfo');
+        sessionStorage.removeItem('adminLoggedIn');
+
         // Store student data in localStorage or context
         localStorage.setItem('student', JSON.stringify(data.student));
         localStorage.setItem('studentToken', data.token);
@@ -72,12 +80,12 @@ export default function StudentLoginForm({ onSuccess, redirectTo }: StudentLogin
           onSuccess(data.student);
         }
 
-        // Redirect if specified
+        // Redirect if specified - use window.location.replace to prevent back button issues
         if (redirectTo) {
-          window.location.href = redirectTo;
+          window.location.replace(redirectTo);
         } else {
           // Default redirect to student dashboard
-          window.location.href = '/student/dashboard';
+          window.location.replace('/student/dashboard');
         }
       } else {
         setError(data.message || 'Μη έγκυρος κωδικός μαθητή. Ελέγξτε και δοκιμάστε ξανά.');
@@ -99,16 +107,16 @@ export default function StudentLoginForm({ onSuccess, redirectTo }: StudentLogin
   // examples removed per request
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8">
         <div className="text-center">
-          <div className="mx-auto h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
-            <User className="h-6 w-6 text-blue-600" />
+          <div className="mx-auto h-10 w-10 sm:h-12 sm:w-12 bg-blue-100 rounded-full flex items-center justify-center">
+            <User className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
           </div>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-4 sm:mt-6 text-2xl sm:text-3xl font-extrabold text-gray-900">
             Σύνδεση Μαθητή
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-xs sm:text-sm text-gray-600">
             Εισαγάγετε τον κωδικό μαθητή για πρόσβαση στον λογαριασμό σας
           </p>
         </div>
