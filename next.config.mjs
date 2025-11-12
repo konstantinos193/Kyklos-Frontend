@@ -1,13 +1,26 @@
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const canvasStubPath = path.join(__dirname, 'lib', 'stubs', 'canvas.ts')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  turbopack: {
+    resolveAlias: {
+      canvas: canvasStubPath,
+    },
+  },
   // experimental: {
   //   turbopackFileSystemCacheForDev: true, // Disabled due to Windows compatibility issues
   // },
   webpack: (config) => {
-    config.resolve.alias.canvas = false;
+    config.resolve.alias = config.resolve.alias || {}
+    config.resolve.alias.canvas = canvasStubPath
     // Copy PDF.js worker to public folder
     config.plugins = config.plugins || [];
     return config;
