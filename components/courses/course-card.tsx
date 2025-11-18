@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Course } from "./types";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { formatHours } from "@/utils/format-hours";
 
 interface CourseCardProps {
   course: Course;
@@ -67,8 +68,7 @@ export function CourseCard({ course }: CourseCardProps) {
                         </div>
                       </div>
                       <div className="flex items-center gap-1">
-                        <span className="text-base font-bold text-gray-800">{subject.hours}</span>
-                        <span className="text-xs text-gray-600">ώρες/εβδ</span>
+                        <span className="text-base font-bold text-gray-800">{formatHours(subject.hours)}</span>
                       </div>
                     </div>
                   ))}

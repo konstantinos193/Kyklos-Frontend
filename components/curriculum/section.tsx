@@ -1,4 +1,5 @@
 import { CurriculumSection } from "./data";
+import { formatHours } from "@/utils/format-hours";
 
 export function CurriculumSectionView({ section }: { section: CurriculumSection }) {
   return (
@@ -23,7 +24,7 @@ export function CurriculumSectionView({ section }: { section: CurriculumSection 
                   <li key={i} className="flex items-center justify-between py-2 first:pt-0 last:pb-0">
                     <span className="text-sm sm:text-base text-slate-800">{s.name}</span>
                     <span className="inline-flex items-center gap-1 rounded-full bg-[#CE3B49]/10 px-2.5 py-1 text-[11px] sm:text-xs font-medium text-[#B91C1C]">
-                      {s.hours} ώρες
+                      {formatHours(s.hours)}
                     </span>
                   </li>
                 ))}

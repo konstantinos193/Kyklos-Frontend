@@ -1,4 +1,5 @@
 import { mathCurriculum, MathCurriculum } from './mathematics-data';
+import { formatHours } from '@/utils/format-hours';
 
 export function MathematicsSections({ data = mathCurriculum }: { data?: MathCurriculum[] }) {
   return (
@@ -14,7 +15,7 @@ export function MathematicsSections({ data = mathCurriculum }: { data?: MathCurr
                   {sec.items.map((it, idx) => (
                     <li key={idx} className="flex items-center justify-between">
                       <span>{it.label}{it.note ? ` — ${it.note}` : ''}</span>
-                      <span className="font-semibold tabular-nums">{it.hours} ώρες</span>
+                      <span className="font-semibold tabular-nums">{formatHours(it.hours)}</span>
                     </li>
                   ))}
                 </ul>

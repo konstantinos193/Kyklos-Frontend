@@ -10,16 +10,17 @@ export const coursesContent: CoursesContent = {
       title: "Γ' Λυκείου",
       category: "lykeioy",
       categoryLabel: "#Λυκείου",
-      duration: "14 ώρες έως 18 ώρες",
+      duration: "24 ώρες",
       applyText: "ΘΕΤ - ΤΕΧΝ - ΘΕΩΡ",
       applyHref: "/contact",
       moreHref: "/curriculum",
       subjects: [
-        { name: "Μαθηματικά", hours: 4, icon: "📐" },
-        { name: "Φυσική", hours: 3, icon: "⚡" },
-        { name: "Χημεία", hours: 2, icon: "🧪" },
-        { name: "Ελληνική Γλώσσα", hours: 3, icon: "📚" },
-        { name: "Αρχαία", hours: 2, icon: "🏛️" }
+        { name: "Μαθηματικά", hours: 6, icon: "📐" },
+        { name: "Φυσική", hours: 6, icon: "⚡" },
+        { name: "Χημεία", hours: 4, icon: "🧪" },
+        { name: "Νεοελληνική Γλώσσα", hours: 2, icon: "📚" },
+        { name: "ΑΕΠΠ", hours: 3, icon: "💻" },
+        { name: "ΑΟΘ", hours: 3, icon: "📊" }
       ]
     },
     {
@@ -27,15 +28,17 @@ export const coursesContent: CoursesContent = {
       title: "Β' Λυκείου",
       category: "lykeioy",
       categoryLabel: "#Λυκείου",
-      duration: "9 ώρες έως 14 ώρες",
+      duration: "17 ώρες",
       applyText: "ΘΕΤ - ΤΕΧΝ - ΘΕΩΡ",
       applyHref: "/contact",
       moreHref: "/curriculum",
       subjects: [
-        { name: "Μαθηματικά", hours: 3, icon: "📐" },
-        { name: "Φυσική", hours: 2, icon: "⚡" },
-        { name: "Χημεία", hours: 2, icon: "🧪" },
-        { name: "Ελληνική Γλώσσα", hours: 2, icon: "📚" }
+        { name: "Μαθηματικά", hours: 6, icon: "📐" },
+        { name: "Φυσική", hours: 4, icon: "⚡" },
+        { name: "Χημεία", hours: 3, icon: "🧪" },
+        { name: "Νεοελληνική Γλώσσα", hours: 2, icon: "📚" },
+        { name: "ΑΕΠΠ", hours: 1, icon: "💻" },
+        { name: "ΑΟΘ", hours: 1, icon: "📊" }
       ]
     },
     {
@@ -47,11 +50,10 @@ export const coursesContent: CoursesContent = {
       applyHref: "/contact",
       moreHref: "/curriculum",
       subjects: [
-        { name: "Μαθηματικά", hours: 3, icon: "📐" },
-        { name: "Φυσική", hours: 2, icon: "⚡" },
+        { name: "Μαθηματικά", hours: 5, icon: "📐" },
+        { name: "Φυσική", hours: 3, icon: "⚡" },
         { name: "Χημεία", hours: 2, icon: "🧪" },
-        { name: "Βιολογία", hours: 2, icon: "🧬" },
-        { name: "Ελληνική Γλώσσα", hours: 3, icon: "📚" },
+        { name: "Νεοελληνική Γλώσσα", hours: 2, icon: "📚" },
         { name: "Αρχαία", hours: 2, icon: "🏛️" }
       ]
     },
@@ -61,14 +63,14 @@ export const coursesContent: CoursesContent = {
       title: "Γ' Γυμνασίου",
       category: "gymnasioy",
       categoryLabel: "#Γυμνασίου",
-      duration: "9 ώρες",
+      duration: "8 ώρες",
       applyHref: "/contact",
       moreHref: "/curriculum",
       subjects: [
         { name: "Μαθηματικά", hours: 3, icon: "📐" },
         { name: "Φυσική", hours: 2, icon: "⚡" },
-        { name: "Χημεία", hours: 2, icon: "🧪" },
-        { name: "Ελληνική Γλώσσα", hours: 2, icon: "📚" }
+        { name: "Χημεία", hours: 1, icon: "🧪" },
+        { name: "Φυλλολογικά", hours: 2, icon: "📚" }
       ]
     },
     {
@@ -76,14 +78,14 @@ export const coursesContent: CoursesContent = {
       title: "Β' Γυμνασίου",
       category: "gymnasioy",
       categoryLabel: "#Γυμνασίου",
-      duration: "9 ώρες",
+      duration: "8 ώρες",
       applyHref: "/contact",
       moreHref: "/curriculum",
       subjects: [
         { name: "Μαθηματικά", hours: 3, icon: "📐" },
         { name: "Φυσική", hours: 2, icon: "⚡" },
-        { name: "Χημεία", hours: 2, icon: "🧪" },
-        { name: "Ελληνική Γλώσσα", hours: 2, icon: "📚" }
+        { name: "Χημεία", hours: 1, icon: "🧪" },
+        { name: "Φυλλολογικά", hours: 2, icon: "📚" }
       ]
     },
     {
@@ -91,13 +93,12 @@ export const coursesContent: CoursesContent = {
       title: "Α' Γυμνασίου",
       category: "gymnasioy",
       categoryLabel: "#Γυμνασίου",
-      duration: "6 ώρες",
+      duration: "5 ώρες",
       applyHref: "/contact",
       moreHref: "/curriculum",
       subjects: [
-        { name: "Μαθηματικά", hours: 2, icon: "📐" },
-        { name: "Φυσική", hours: 2, icon: "⚡" },
-        { name: "Ελληνική Γλώσσα", hours: 2, icon: "📚" }
+        { name: "Μαθηματικά", hours: 3, icon: "📐" },
+        { name: "Φυλλολογικά", hours: 2, icon: "📚" }
       ]
     },
     // ΕΠΑΛ (bottom)
@@ -106,14 +107,12 @@ export const coursesContent: CoursesContent = {
       title: "Γ' Λυκείου",
       category: "epal",
       categoryLabel: "#ΕΠΑΛ",
-      duration: "9 ώρες",
+      duration: "5 ώρες",
       applyHref: "/contact",
       moreHref: "/curriculum",
       subjects: [
         { name: "Μαθηματικά", hours: 3, icon: "📐" },
-        { name: "Φυσική", hours: 2, icon: "⚡" },
-        { name: "Ελληνική Γλώσσα", hours: 2, icon: "📚" },
-        { name: "ΑΟΘ", hours: 2, icon: "📊" }
+        { name: "Νεοελληνική Γλώσσα", hours: 2, icon: "📚" }
       ]
     },
     {
@@ -121,14 +120,12 @@ export const coursesContent: CoursesContent = {
       title: "Β' Λυκείου",
       category: "epal",
       categoryLabel: "#ΕΠΑΛ",
-      duration: "9 ώρες",
+      duration: "5 ώρες",
       applyHref: "/contact",
       moreHref: "/curriculum",
       subjects: [
         { name: "Μαθηματικά", hours: 3, icon: "📐" },
-        { name: "Φυσική", hours: 2, icon: "⚡" },
-        { name: "Ελληνική Γλώσσα", hours: 2, icon: "📚" },
-        { name: "ΑΟΘ", hours: 2, icon: "📊" }
+        { name: "Νεοελληνική Γλώσσα", hours: 2, icon: "📚" }
       ]
     },
     {
@@ -136,13 +133,12 @@ export const coursesContent: CoursesContent = {
       title: "Α' Λυκείου",
       category: "epal",
       categoryLabel: "#ΕΠΑΛ",
-      duration: "6 ώρες",
+      duration: "4 ώρες",
       applyHref: "/contact",
       moreHref: "/curriculum",
       subjects: [
         { name: "Μαθηματικά", hours: 2, icon: "📐" },
-        { name: "Φυσική", hours: 2, icon: "⚡" },
-        { name: "Ελληνική Γλώσσα", hours: 2, icon: "📚" }
+        { name: "Νεοελληνική Γλώσσα", hours: 2, icon: "📚" }
       ]
     }
   ]

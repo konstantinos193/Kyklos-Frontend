@@ -1,4 +1,5 @@
 import { HoursCurriculum } from './hours-types';
+import { formatHours } from '@/utils/format-hours';
 
 export function HoursSections({ data }: { data: HoursCurriculum }) {
   return (
@@ -17,7 +18,7 @@ export function HoursSections({ data }: { data: HoursCurriculum }) {
                         {it.label}
                         {it.note ? ` — ${it.note}` : ''}
                       </span>
-                      <span className="font-semibold tabular-nums">{it.hours} ώρες</span>
+                      <span className="font-semibold tabular-nums">{formatHours(it.hours)}</span>
                     </li>
                   ))}
                 </ul>

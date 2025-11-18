@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Course } from "@/components/courses/types";
+import { formatHours } from "@/utils/format-hours";
 
 interface GradeCardProps {
   course: Course;
@@ -65,7 +66,7 @@ export function GradeCard({ course, animationDelay = 0 }: GradeCardProps) {
                             <span className="text-sm text-gray-800">{subject.name}</span>
                           </div>
                           <span className="text-sm font-semibold text-gray-700">
-                            {subject.hours} ώρες
+                            {formatHours(subject.hours)}
                           </span>
                         </div>
                       ))}

@@ -41,10 +41,7 @@ export function SubjectCard({ href, title, description, icon = "book", imageUrl 
 
         {/* Body */}
         <div className="p-4 sm:p-5">
-          {description && (
-            <p className="text-xs sm:text-sm text-slate-600 line-clamp-2 leading-relaxed">{description}</p>
-          )}
-          <div className="mt-4 flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <span className="text-[11px] sm:text-xs font-medium text-slate-500">Περισσότερα</span>
             <span className="rounded-full px-3 py-1 text-[10px] sm:text-xs font-semibold text-white bg-gradient-to-r from-[#CE3B49] to-[#FF6B6B] group-hover:from-[#B91C1C] group-hover:to-[#CE3B49]">Προβολή</span>
           </div>
