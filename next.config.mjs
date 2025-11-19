@@ -10,6 +10,14 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/favicon.ico',
+        destination: '/logo.png',
+      },
+    ]
+  },
   turbopack: {
     resolveAlias: {
       canvas: canvasStubPath,
