@@ -477,7 +477,7 @@ export const students2015: Student[] = [
   { lastName: 'ΦΛΩΡΟΥ', firstName: 'ΑΙΚΑΤΕΡΙΝΗ', schoolTitle: 'ΜΗΧ.ΗΛ. ΥΠ.ΚΑΙ ΠΛΗΡΟΦΟΡΙΚΗΣ ΠΑΤΡΑ' },
   { lastName: 'ΦΟΥΝΤΑ', firstName: 'ΕΛΕΥΘΕΡΙΑ', schoolTitle: 'ΜΗΧΑΝΙΚΩΝ ΕΠΙΣΤΗΜΗΣ ΥΛΙΚΩΝ ΙΩΑΝΝΙΝΑ' },
   { lastName: 'ΧΟΥΛΙΑΡΑ', firstName: 'ΑΙΚΑΤΕΡΙΝΗ', schoolTitle: 'ΝΟΣΗΛΕΥΤΙΚΗΣ ΣΠΑΡΤΗ' },
-  { lastName: 'ΣΙΚΟΥ', firstName: 'ΑΓΓΕΛΙΚΗ', schoolTitle: 'ΧΗΜΙΚΩΝ ΜΗΧΑΝΙΚΩΝ ΘΕΣΣΑΛΟΝΙΚΗ' },
+  { lastName: 'ΧΡΥΣΙΚΟΥ', firstName: 'ΑΓΓΕΛΙΚΗ', schoolTitle: 'ΧΗΜΙΚΩΝ ΜΗΧΑΝΙΚΩΝ ΘΕΣΣΑΛΟΝΙΚΗ' },
 ];
 
 // 2016 data - extracted from image description
