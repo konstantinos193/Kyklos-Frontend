@@ -38,14 +38,6 @@ export function GradeCard({ course, animationDelay = 0 }: GradeCardProps) {
             {course.title}
           </h4>
 
-          {/* Hours Display */}
-          <div className="mb-4 text-center">
-            <div className="inline-flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full">
-              <span className="text-2xl font-bold text-gray-800">{course.duration}</span>
-              <span className="text-gray-600 font-medium">Ώρες/Εβδομάδα</span>
-            </div>
-          </div>
-
           {/* Subjects Accordion */}
           {course.subjects && course.subjects.length > 0 && (
             <div className="mb-4">
