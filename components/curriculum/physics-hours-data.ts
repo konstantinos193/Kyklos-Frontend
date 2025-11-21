@@ -5,7 +5,7 @@ export const physicsHours: HoursCurriculum = [
     groupTitle: 'Γυμνάσιο',
     sections: [
       { title: "Β' Γυμνασίου", items: [ { label: 'Φυσική', hours: 1 } ] },
-      { title: "Γ' Γυμνασίου", items: [ { label: 'Φυσική', hours: 2 } ] },
+      { title: "Γ' Γυμνασίου", items: [ { label: 'Φυσική', hours: 4 } ] },
     ],
   },
   {

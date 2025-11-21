@@ -36,7 +36,7 @@ export const curriculumSections: CurriculumSection[] = [
         title: "Γ' Γυμνασίου",
         subjects: [
           { name: "Μαθηματικά", hours: 3 },
-          { name: "Φυσική", hours: 2 },
+          { name: "Φυσική", hours: 4 },
           { name: "Χημεία", hours: 1 },
           { name: "Φιλολογία", hours: 3 },
         ],

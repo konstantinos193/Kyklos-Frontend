@@ -68,9 +68,9 @@ export const coursesContent: CoursesContent = {
       moreHref: "/curriculum",
       subjects: [
         { name: "Μαθηματικά", hours: 3, icon: "📐" },
-        { name: "Φυσική", hours: 2, icon: "⚡" },
+        { name: "Φυσική", hours: 4, icon: "⚡" },
         { name: "Χημεία", hours: 1, icon: "🧪" },
-        { name: "Φυλλολογικά", hours: 2, icon: "📚" }
+        { name: "Φιλολογικά", hours: 2, icon: "📚" }
       ]
     },
     {
@@ -85,7 +85,7 @@ export const coursesContent: CoursesContent = {
         { name: "Μαθηματικά", hours: 3, icon: "📐" },
         { name: "Φυσική", hours: 2, icon: "⚡" },
         { name: "Χημεία", hours: 1, icon: "🧪" },
-        { name: "Φυλλολογικά", hours: 2, icon: "📚" }
+        { name: "Φιλολογικά", hours: 2, icon: "📚" }
       ]
     },
     {
@@ -98,7 +98,7 @@ export const coursesContent: CoursesContent = {
       moreHref: "/curriculum",
       subjects: [
         { name: "Μαθηματικά", hours: 3, icon: "📐" },
-        { name: "Φυλλολογικά", hours: 2, icon: "📚" }
+        { name: "Φιλολογικά", hours: 2, icon: "📚" }
       ]
     },
     // ΕΠΑΛ (bottom)
