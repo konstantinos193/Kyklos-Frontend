@@ -150,13 +150,6 @@ export const metadata: Metadata = {
     apple: [
       { url: "/logo.png", sizes: "180x180", type: "image/png" },
     ],
-    other: [
-      {
-        rel: "mask-icon",
-        url: "/logo.png",
-        color: "#1e40af",
-      },
-    ],
     shortcut: "/logo.png",
   },
   manifest: "/manifest.json",

@@ -4,9 +4,6 @@ export interface Student {
   schoolTitle: string;
 }
 
-// ============================================================================
-// ΕΠΙΤΥΧΟΝΤΕΣ ΕΤΟΣ 2011-2012
-// ============================================================================
 export const students2011: Student[] = [
   { lastName: 'ΑΓΓΕΛΗΣ', firstName: 'ΠΑΝΤΕΛΗΣ', schoolTitle: 'ΛΟΓΙΣΤΙΚΗΣ ΤΕΙ ΚΡΗΤΗΣ(ΗΡΑΚΛΕΙΟ)' },
   { lastName: 'ΑΘΑΝΑΣΙΟΥ', firstName: 'ΛΑΜΠΡΙΝΗ', schoolTitle: 'ΦΙΛΟΛΟΓΙΑΣ ΙΩΑΝΝΙΝΩΝ' },
@@ -37,7 +34,7 @@ export const students2011: Student[] = [
   { lastName: 'ΚΑΤΣΑΡΟΥ', firstName: 'ΑΙΚΑΤΕΡΙΝΗ', schoolTitle: 'ΕΦΑΡΜ.ΠΛΗΡ.&ΠΟΛΥΜΕΣ. ΤΕΙ ΚΡΗΤΗΣ(ΗΡΑΚΛΕΙΟ)' },
   { lastName: 'ΚΛΑΦΟΥΝΗΣ', firstName: 'ΝΙΚΟΛΑΟΣ', schoolTitle: 'ΓΕΩΠΟΝΙΑΣ ΘΕΣ/ΝΙΚΗΣ' },
   { lastName: 'ΚΟΛΙΟΥΛΗΣ', firstName: 'ΚΩΝ/ΝΟΣ', schoolTitle: 'ΦΥΣΙΚΗΣ ΙΩΑΝΝΙΩΝ' },
-  { lastName: 'ΚΟΛΙΟΥΛΗΣ', firstName: 'ΣΠΥΡΙΔΩΝ', schoolTitle: 'ΜΑΘΗΑΜΤΙΚΩΝ ΙΩΑΝΝΙΝΩΝ' },
+  { lastName: 'ΚΟΛΙΟΥΛΗΣ', firstName: 'ΣΠΥΡΙΔΩΝ', schoolTitle: 'ΜΑΘΗΜΑΤΙΚΩΝ ΙΩΑΝΝΙΝΩΝ' },
   { lastName: 'ΚΟΛΟΚΥΘΑΣ', firstName: 'ΒΑΣΙΛΕΙΟΣ', schoolTitle: 'ΠΛΗΡΟΦΟΡΙΚΗΣ ΙΟΝΙΟΥ (ΚΕΡΚΥΡΑ)' },
   { lastName: 'ΚΟΜΠΟΓΙΑΝΝΗΣ', firstName: 'ΑΛΕΞΑΝΔΡΟΣ', schoolTitle: 'ΛΟΓΙΣΤΙΚΗΣ ΤΕΙ ΗΠΕΙΡΟΥ (ΠΡΕΒΕΖΑ)' },
   { lastName: 'ΚΟΤΣΙΑΥΤΗΣ', firstName: 'ΚΩΝ/ΝΟΣ', schoolTitle: 'ΤΟΠΟΓΡΑΦΙΑΣ ΤΕΙ ΑΘΗΝΑΣ' },
@@ -98,9 +95,7 @@ export const students2011: Student[] = [
   { lastName: 'ΧΡΗΣΤΟΠΑΝΟΣ', firstName: 'ΣΕΡΓΙΟΣ', schoolTitle: 'ΓΕΩΠΟΝΙΑΣ ΘΕΣ/ΝΙΚΗΣ' },
 ];
 
-// ============================================================================
-// ΕΠΙΤΥΧΟΝΤΕΣ ΕΤΟΣ 2012-2013
-// ============================================================================
+// Continue with 2012-2016 data...
 export const students2012: Student[] = [
   { lastName: 'ΑΘΑΝΑΣΟΠΟΥΛΟΣ', firstName: 'ΚΩΝΣΤΑΝΤΙΝΟΣ', schoolTitle: 'ΑΣΤΥΦΥΛΑΚΩΝ' },
   { lastName: 'ΑΡΑΒΑΝΗ', firstName: 'ΒΑΣΙΛΙΚΗ', schoolTitle: 'ΔΙΑΧ/ΣΗΣ ΠΕΡ/ΝΤΟΣ & ΦΥΣΙΚΩΝ ΠΟΡΩΝ ΔΥΤ.ΕΛΛΑΔΑΣ (ΑΓΡΙΝΙΟ)' },
@@ -207,7 +202,7 @@ export const students2012: Student[] = [
   { lastName: 'ΤΣΟΦΥΛΛΑΣ', firstName: 'ΠΕΤΡΟΣ', schoolTitle: 'ΙΣΤΟΡΙΑΣ & ΑΡΧΑΙΟΛΟΓΙΑΣ ΙΩΑΝΝΙΝΩΝ' },
   { lastName: 'ΤΥΡΟΛΟΓΟΣ', firstName: 'ΑΛΕΞΙΟΣ', schoolTitle: 'ΜΗΧΑΝΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ ΔΥΤ. ΜΑΚΕΔΟΝΙΑΣ (ΚΟΖΑΝΗ) ΠΟΛΥΤ 2011' },
   { lastName: 'ΦΑΚΟΥ', firstName: 'ΜΑΡΙΚΑ', schoolTitle: 'ΔΗΜΟΣΙΟΓΡΑΦΙΑΣ & ΜΕΣΩΝ ΜΑΖΙΚΗΣ ΕΠΙΚΟΙΝΩΝΙΑΣ ΘΕΣ/ΝΙΚΗΣ ΚΟΙΝ. ΚΡΙΤ.' },
-  { lastName: 'ΦΕΛΕΚΗΣ', firstName: 'ΧΡΗΣΤΟΣ', schoolTitle: 'ΖΩΙΚΗΣ ΠΑΡΑΓΩΓΗΣ ΤΕΙ ΗΠΕΙΡΟΥ (APTA)' },
+  { lastName: 'ΦΕΛΕΚΗΣ', firstName: 'ΧΡΗΣΤΟΣ', schoolTitle: 'ΖΩΙΚΗΣ ΠΑΡΑΓΩΓΗΣ ΤΕΙ ΗΠΕΙΡΟΥ (ΑΡΤΑ)' },
   { lastName: 'ΦΡΑΓΚΑΤΣΗ', firstName: 'ΘΕΟΔΩΡΑ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΘΕΣ/ΝΙΚΗΣ' },
   { lastName: 'ΦΡΑΓΚΑΤΣΗ', firstName: 'ΦΩΤΕΙΝΗ', schoolTitle: 'ΟΡΓΑΝΩΣΗΣ & ΔΙΟΙΚΗΣΗΣ ΕΠΙΧΕΙΡΗΣΕΩΝ ΜΑΚΕΔΟΝΙΑΣ (ΘΕΣ/ΝΙΚΗ)' },
   { lastName: 'ΦΩΤΑΚΗ', firstName: 'ΒΑΣΙΛΙΚΗ', schoolTitle: 'ΦΥΣΙΚΗΣ ΙΩΑΝΝΙΝΩΝ' },
@@ -218,9 +213,6 @@ export const students2012: Student[] = [
   { lastName: 'ΨΩΜΑ', firstName: 'ΟΥΡΑΝΙΑ', schoolTitle: 'ΙΑΤΡΙΚΗΣ ΙΩΑΝΝΙΝΩΝ' },
 ];
 
-// ============================================================================
-// ΕΠΙΤΥΧΟΝΤΕΣ ΕΤΟΣ 2013-2014
-// ============================================================================
 export const students2013: Student[] = [
   { lastName: 'ΒΑΔΙΒΟΥΛΗΣ', firstName: 'ΘΕΟΧΑΡΗΣ', schoolTitle: 'ΓΕΩΠΟΝΙΑΣ ΒΟΛΟΥ' },
   { lastName: 'ΒΑΡΕΛΗΣ', firstName: 'ΒΑΣΙΛΕΙΟΣ', schoolTitle: 'ΜΗΧΑΝΙΚΩΝ ΗΛΕΚΤΡ. ΥΠΟΛ. ΠΑΤΡΑ' },
@@ -308,9 +300,6 @@ export const students2013: Student[] = [
   { lastName: 'ΤΣΙΜΠΕΡΗ', firstName: 'ΑΡΤΕΜΙΣ', schoolTitle: 'ΦΥΣΙΚΟ ΘΕΣΣΑΛΟΝΙΚΗΣ' },
 ];
 
-// ============================================================================
-// ΕΠΙΤΥΧΟΝΤΕΣ ΕΤΟΣ 2014-2015
-// ============================================================================
 export const students2014: Student[] = [
   { lastName: 'ΑΝΑΣΤΑΣΟΠΟΥΛΟΥ', firstName: 'ΑΝΑΣΤΑΣΙΑ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΗΣ ΕΠΙΣΤΗΜΗΣ ΑΘΗΝΑΣ' },
   { lastName: 'ΑΝΤΩΝΙΟΥ', firstName: 'ΒΑΣΙΛΙΚΗ', schoolTitle: 'ΦΥΣΙΚΗΣ ΙΩΑΝΝΙΝΩΝ' },
@@ -402,20 +391,17 @@ export const students2014: Student[] = [
   { lastName: 'ΧΡΗΣΤΟΥ', firstName: 'ΚΛΑΟΥΝΤΙΑ', schoolTitle: 'ΔΙΟΙΚΗΣΗΣ ΕΠΙΧΕΙΡΗΣΕΩΝ ΚΟΖΑΝΗΣ' },
 ];
 
-// ============================================================================
-// ΕΠΙΤΥΧΟΝΤΕΣ ΕΤΟΣ 2015-2016
-// ============================================================================
 export const students2015: Student[] = [
   { lastName: 'ΑΘΑΝΑΣΙΑΔΗ', firstName: 'ΛΑΜΠΡΙΝΗ', schoolTitle: 'ΜΗΧΑΝΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ ΚΟΖΑΝΗ' },
   { lastName: 'ΑΝΑΣΤΑΣΙΟΥ', firstName: 'ΙΩΑΝΝΑ', schoolTitle: 'ΕΚΠΑΙΔ. & ΚΟΙΝΩΝΙΚΗΣ ΠΟΛΙΤΙΚΗΣ ΘΕΣΣΑΛΟΝΙΚΗ' },
   { lastName: 'ΑΝΤΩΝΙΟΥ', firstName: 'ΒΑΣΙΛΙΚΗ', schoolTitle: 'ΧΗΜΕΙΑΣ ΙΩΑΝΝΙΝΑ' },
   { lastName: 'ΑΣΠΡΟΠΟΤΑΜΙΤΗ', firstName: 'ΙΩΑΝΝΑ', schoolTitle: 'ΜΑΘΗΜΑΤΙΚΩΝ ΕΦΑΡΜ ΜΑΘΗΜΑΤΙΚΩΝ ΗΡΑΚΛΕΙΟ' },
   { lastName: 'ΒΑΡΗΣ', firstName: 'ΛΑΜΠΡΟΣ', schoolTitle: 'ΔΙΟΙΚΕΙΤΙΚΗΣ ΕΠΙΣΤΗΜΗΣ Η ΤΕΧΝΟΛΟΓΙΑΣ ΑΘΗΝΑ' },
-  { lastName: 'ΒΑΣΙΛΑΚΙ', firstName: 'ΕΙΡΗΝΗ', schoolTitle: 'ΝΟΣΗΛΕΥΤΙΚΗΣ ΠΑΤΡΑ' },
+  { lastName: 'ΒΑΣΙΛΑΚΗ', firstName: 'ΕΙΡΗΝΗ', schoolTitle: 'ΝΟΣΗΛΕΥΤΙΚΗΣ ΠΑΤΡΑ' },
   { lastName: 'ΒΕΝΤΙΣΤΑ', firstName: 'ΕΥΑΓΓΕΛΙΑ', schoolTitle: 'ΜΗΧΑΝΟΛΟΓΩΝ & ΑΕΡΟΝΑΥΠΗΓΩΝ ΜΗΧΑΝΙΚΩΝ ΠΑΤΡΑ' },
   { lastName: 'ΒΕΤΣΙΟΥ', firstName: 'ΧΡΙΣΤΙΝΑ', schoolTitle: 'ΠΟΛΙΤΙΚΩΝ ΜΗΧΑΝΙΚΩΝ ΓΕ ΠΑΤΡΑ' },
   { lastName: 'ΒΛΑΧΟΥ', firstName: 'ΕΥΑ', schoolTitle: 'ΦΥΣΙΚΗΣ ΠΑΤΡΑ' },
-  { lastName: 'ΒΟΥΒΑΛΙΣ', firstName: 'ΔΗΜΗΤΡΙΟΣ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΙΩΑΝΝΙΝΑ' },
+  { lastName: 'ΒΟΥΒΑΛΗΣ', firstName: 'ΔΗΜΗΤΡΙΟΣ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΙΩΑΝΝΙΝΑ' },
   { lastName: 'ΓΕΩΡΓΑΚΗ', firstName: 'ΜΑΡΙΑ', schoolTitle: 'ΓΕΩΛΟΓΙΑΣ ΠΑΤΡΑ' },
   { lastName: 'ΓΕΩΡΓΑΚΟΠΟΥΛΟΥ', firstName: 'ΙΩΑΝΝΑ', schoolTitle: 'ΔΙΑΤΡΟΦΗΣ & ΔΙΑΙΤΟΛΟΓΙΑΣ ΚΑΡΔΙΤΣΑ' },
   { lastName: 'ΓΕΩΡΓΙΟΥ', firstName: 'ΑΛΕΞΑΝΔΡΑ', schoolTitle: 'ΚΤΗΝΙΑΤΡΙΚΗΣ ΚΑΡΔΙΤΣΑ' },
@@ -424,10 +410,10 @@ export const students2015: Student[] = [
   { lastName: 'ΓΚΟΛΟΜΑΖΟΥ', firstName: 'ΣΤΑΜΑΤΙΑ-ΝΙ', schoolTitle: 'ΜΑΘΗΜΑΤΙΚΩΝ&ΕΦΑΡΜ.ΜΑΘΗΜΑΤΙΚΩΝ ΗΡΑΚΛΕΙΟ' },
   { lastName: 'ΓΚΟΤΟΒΟΥ', firstName: 'ΙΛΙΑΔΑ ΝΑΤΑΛΙΑ', schoolTitle: 'ΠΛΗΡΟΦΟΡΙΚΗΣ ΘΕΣΣΑΛΟΝΙΚΗ' },
   { lastName: 'ΓΚΟΥΛΙΑΡΑΣ', firstName: 'ΚΩΝΣΤΑΝΤΙΝΟΣ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ ΘΕΣΣΑΛΟΝΙΚΗ' },
-  { lastName: 'ΠΟΥΣΙΑΣ', firstName: 'ΓΕΩΡΓΙΟΣ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΑΘΗΝΑ' },
-  { lastName: 'ΔΕΡΗΙΛΗΣ', firstName: 'ΓΕΩΡΓΙΟΣ', schoolTitle: 'ΛΟΓΙΣΤΙΚΗΣ & ΧΡΗΜΑΤΟΟΙΚΟΝΟΜΙΚΗΣ ΠΡΕΒΕZA' },
+  { lastName: 'ΓΟΥΣΙΑΣ', firstName: 'ΓΕΩΡΓΙΟΣ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΑΘΗΝΑ' },
+  { lastName: 'ΔΕΡΓΙΛΗΣ', firstName: 'ΓΕΩΡΓΙΟΣ', schoolTitle: 'ΛΟΓΙΣΤΙΚΗΣ & ΧΡΗΜΑΤΟΟΙΚΟΝΟΜΙΚΗΣ ΠΡΕΒΕΖΑ' },
   { lastName: 'ΔΗΜΟΣ', firstName: 'ΛΑΜΠΡΟΣ', schoolTitle: 'ΧΡΗΜΑΤΟΟΙΚΟΝΟΜΙΚΗΣ & ΤΡΑΠΕΖΙΚΗΣ ΔΙΟΙΚΗΤΙΚΗΣ ΠΕΙΡΑΙΑ' },
-  { lastName: 'ΔΙΑΚΟΓΙΑΝΝΗ', firstName: 'ΑΓΓΕΛΙΚΗ', schoolTitle: 'ΛΟΓΙΣΤΙΚΗΣ ΕΧΡΗΜΑΤΟΟΙΚΟΝΟΜΙΚΗΣ ΠΡΕΒΕΖΑΣ' },
+  { lastName: 'ΔΙΑΚΟΓΙΑΝΝΗ', firstName: 'ΑΓΓΕΛΙΚΗ', schoolTitle: 'ΛΟΓΙΣΤΙΚΗΣ & ΧΡΗΜΑΤΟΟΙΚΟΝΟΜΙΚΗΣ ΠΡΕΒΕΖΑΣ' },
   { lastName: 'ΔΡΑΚΟΥ', firstName: 'ΧΡΙΣΤΙΝΑ', schoolTitle: 'ΔΙΟΙΚΗΣΗΣ ΕΠΙΧΕΙΡΗΣΕΩΝ ΠΑΤΡΑ' },
   { lastName: 'ΔΡΑΚΟΥ', firstName: 'ΧΡΥΣΟΥΛΑ', schoolTitle: 'ΓΕΩΠΟΝΙΑΣ ΑΡΤΑΣ' },
   { lastName: 'ΕΥΘΥΜΙΟΥ', firstName: 'ΝΙΚΟΛΑΟΣ', schoolTitle: 'ΛΟΓΙΣΤΙΚΗΣ & ΧΡΗΜΑΤΟΟΙΚΟΝΟΜΙΚΗΣ ΘΕΣΣΑΛΟΝΙΚΗ' },
@@ -453,7 +439,7 @@ export const students2015: Student[] = [
   { lastName: 'ΛΥΚΑ', firstName: 'ΝΙΟΣΗ', schoolTitle: 'ΒΙΟΛΟΓΙΚΩΝ ΕΦΑΡΜΟΓΩΝΑ ΤΕΧΝΟΛΟΓΩΝ ΙΩΑΝΝΙΝΑ' },
   { lastName: 'ΛΥΚΚΑΣ', firstName: 'ΗΛΙΑΣ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ ΤΕ ΧΑΛΚΙΔΑ' },
   { lastName: 'ΜΑΡΟΣ', firstName: 'ΑΛΕΞΑΝΔΡΟΣ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΘΕΣΣΑΛΟΝΙΚΗ' },
-  { lastName: 'ΜΕΝΤΗ', firstName: 'ΑΛΕΞ', schoolTitle: 'ΔΙΟΙΚΗΣΗΣ ΕΠΙΧΕΙΡΗΣΕΩΝ ΛΕΥΚΑΔΑ' },
+  { lastName: 'ΜΕΙΝΤΗ', firstName: 'ΑΛΕΞ', schoolTitle: 'ΔΙΟΙΚΗΣΗΣ ΕΠΙΧΕΙΡΗΣΕΩΝ ΛΕΥΚΑΔΑ' },
   { lastName: 'ΜΗΤΣΙΟΥ', firstName: 'ΒΑΣΙΛΙΚΗ-ΘΕΟΔΩΡΑ', schoolTitle: 'ΛΟΓΙΣΤΙΚΗΣ & ΧΡΗΜΑΤΟΟΙΚΟΝΟΜΙΚΗΣ ΠΡΕΒΕΖΑ' },
   { lastName: 'ΜΙΝΟΥ', firstName: 'ΕΛΕΝΗ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΒΟΛΟΣ' },
   { lastName: 'ΜΟΥΣΑΒΕΡΕ', firstName: 'ΑΓΓΕΛΙΚΗ', schoolTitle: 'ΑΡΧΙΤΕΚΤΟΝΩΝ ΜΗΧΑΝΙΚΩΝ ΧΑΝΙΑ' },
@@ -467,9 +453,9 @@ export const students2015: Student[] = [
   { lastName: 'ΜΠΡΑΝΙΚΑΣ', firstName: 'ΝΙΚΟΛΑΟΣ', schoolTitle: 'ΜΗΧ. ΗΛ.ΥΠ.ΠΛΗΡΟΦΟΡΙΚΗΣ ΠΑΤΡΑ' },
   { lastName: 'ΝΤΑΒΡΗΣ', firstName: 'ΟΝΟΥΦΡΙΟΣ', schoolTitle: 'ΜΗΧ. ΠΛΗΡΟΦΟΡΙΑΚΩΝ ΕΠΙΚΟΙΝΩΝΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ ΣΑΜΟΣ' },
   { lastName: 'ΟΙΚΟΝΟΜΟΥ', firstName: 'ΣΤΕΛΛΑ-ΜΑΥΡΕΤΑ', schoolTitle: 'ΛΟΓΙΣΤΙΚΗΣ ΚΑΙ ΧΡΗΜΑΤΟΟΙΚΟΝΟΜΙΚΗΣ ΑΘΗΝΑ' },
-  { lastName: 'ΠΑΠΑΒΑΙΤΕΛΗΣ', firstName: 'ΛΑΜΠΡΟΣ', schoolTitle: 'ΜΟΝΙΜΩΝ ΥΠΑΞΙΩΜΑΤΙΚΩΝ ΝΑΥΤΙΚΟΥ Σ.Μ.Υ.Ν.' },
+  { lastName: 'ΠΑΠΑΒΑΓΓΕΛΗΣ', firstName: 'ΛΑΜΠΡΟΣ', schoolTitle: 'ΜΟΝΙΜΩΝ ΥΠΑΞΙΩΜΑΤΙΚΩΝ ΝΑΥΤΙΚΟΥ Σ.Μ.Υ.Ν.' },
   { lastName: 'ΠΑΠΑΛΕΞΗ', firstName: 'ΧΡΙΣΤΙΝΑ', schoolTitle: 'ΔΙΑΤΡΟΦΗΣ ΚΑΙ ΔΙΑΙΤΟΛΟΓΙΑΣ ΚΑΡΔΙΤΣΑ' },
-  { lastName: 'ΠΑΠΑΝΙΚΟΛΑΟΥ', firstName: 'ΒΑΣΙΛΕΙΟΣ', schoolTitle: 'ΙΣΤΟΡΙΑΣΗ ΑΡΧΑΙΟΛΟΓΙΑΣ ΙΩΑΝΝΙΝΑ' },
+  { lastName: 'ΠΑΠΑΝΙΚΟΛΑΟΥ', firstName: 'ΒΑΣΙΛΕΙΟΣ', schoolTitle: 'ΙΣΤΟΡΙΑΣ & ΑΡΧΑΙΟΛΟΓΙΑΣ ΙΩΑΝΝΙΝΑ' },
   { lastName: 'ΠΑΠΠΑ', firstName: 'ΑΓΓΕΛΙΚΗ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΩΝ ΜΗΧ. ΜΗΧΑΝΙΚΩΝ ΥΠΟΛΟΓΙΣΤΩΝ ΒΟΛΟΣ' },
   { lastName: 'ΠΑΡΑΣΚΕΥΑΚΗ', firstName: 'ΕΥΑΓΓΕΛΙΑ', schoolTitle: 'ΔΙΟΙΚΗΣΗ ΕΠΙΧΕΙΡΗΣΕΩΝ ΠΑΤΡΑ' },
   { lastName: 'ΠΑΡΑΣΚΕΥΑΚΗ', firstName: 'ΕΙΡΗΝΗ', schoolTitle: 'ΠΟΛΙΤΙΚΩΝ ΜΗΧΑΝΙΚΩΝ ΤΕ ΠΑΤΡΑ' },
@@ -478,7 +464,7 @@ export const students2015: Student[] = [
   { lastName: 'ΣΙΟΓΚΑ', firstName: 'ΖΩΗ', schoolTitle: 'ΕΠΙΣΤΗΜΗΣ ΦΥΣ ΑΓΩΓΗΣΑ ΑΘΛΗΤΙΣΜΟΥ ΘΕΣΣΑΛΟΝΙΚΗ' },
   { lastName: 'ΣΙΟΓΚΑΣ', firstName: 'ΕΥΑΓΓΕΛΟΣ', schoolTitle: 'ΠΛΗΡΟΦΟΡΙΚΗΣ ΘΕΣΣΑΛΟΝΙΚΗ' },
   { lastName: 'ΣΚΕΝΤΟΥ', firstName: 'ΠΑΡΑΣΚΕΥΗ-', schoolTitle: 'ΜΥΡ.ΠΡΟΓΡΑΜΜΑ ΔΙΑΧΕΙΡΙΣΗΣ ΕΚΚΛΗΣΙΑΣΤΙΚΩΝ ΚΕΙΜΗΛΙΩΝ ΑΘΗΝΑΣ' },
-  { lastName: 'ΣΤΑΣΙΝΟΣ', firstName: 'ΛΑΜΠΡΟΣ-', schoolTitle: 'ΜΑΡΙΟΣΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΑΘΗΝΑ' },
+  { lastName: 'ΣΤΑΣΙΝΟΣ', firstName: 'ΛΑΜΠΡΟΣ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΑΘΗΝΑ' },
   { lastName: 'ΣΤΑΣΙΝΟΥ', firstName: 'ΟΛΓΑ', schoolTitle: 'ΝΟΣΗΛΕΥΤΙΚΗ ΙΩΑΝΝΙΝΩΝ' },
   { lastName: 'ΣΤΑΥΡΟΣ', firstName: 'ΝΙΚΟΛΑΟΣ', schoolTitle: 'ΜΗΧΑΝΙΚΩΝ ΠΛΗΡΟΦΟΡΙΚΗΣ ΤΕ ΑΡΤΑΣ' },
   { lastName: 'ΣΥΓΙΖΗΣ', firstName: 'ΑΛΕΞΑΝΔΡΟΣ', schoolTitle: 'ΠΟΝΤΙΚΩΝ ΜΗΧΑΝΙΚΩΝ ΒΟΛΟΣ' },
@@ -491,12 +477,10 @@ export const students2015: Student[] = [
   { lastName: 'ΦΛΩΡΟΥ', firstName: 'ΑΙΚΑΤΕΡΙΝΗ', schoolTitle: 'ΜΗΧ.ΗΛ. ΥΠ.ΚΑΙ ΠΛΗΡΟΦΟΡΙΚΗΣ ΠΑΤΡΑ' },
   { lastName: 'ΦΟΥΝΤΑ', firstName: 'ΕΛΕΥΘΕΡΙΑ', schoolTitle: 'ΜΗΧΑΝΙΚΩΝ ΕΠΙΣΤΗΜΗΣ ΥΛΙΚΩΝ ΙΩΑΝΝΙΝΑ' },
   { lastName: 'ΧΟΥΛΙΑΡΑ', firstName: 'ΑΙΚΑΤΕΡΙΝΗ', schoolTitle: 'ΝΟΣΗΛΕΥΤΙΚΗΣ ΣΠΑΡΤΗ' },
-  { lastName: 'ΣΙΚΟΥ', firstName: 'ΑΓΓΕΛΙΚΗ', schoolTitle: 'ΧΗΜΙΚΩΝ ΜΗΧΑΝΙΚΩΝ ΘΕΣΣΑΛΟΝΙΚΗ' },
+  { lastName: 'ΧΡΥΣΙΚΟΥ', firstName: 'ΑΓΓΕΛΙΚΗ', schoolTitle: 'ΧΗΜΙΚΩΝ ΜΗΧΑΝΙΚΩΝ ΘΕΣΣΑΛΟΝΙΚΗ' },
 ];
 
-// ============================================================================
-// ΕΠΙΤΥΧΟΝΤΕΣ ΕΤΟΣ 2016-2017
-// ============================================================================
+// 2016 data - extracted from image description
 export const students2016: Student[] = [
   { lastName: 'ΑΣΠΡΟΥΔΗ', firstName: 'ΛΑΜΠΡΙΝΗ', schoolTitle: 'ΜΗΧ.ΟΡΥΚΤΩΝ ΠΟΡΩΝ ΧΑΝΙΑ' },
   { lastName: 'ΒΑΣΙΛΕΙΟΥ', firstName: 'ΑΓΓΕΛΙΚΗ', schoolTitle: 'ΜΗΧ.ΤΕΧΝΟΛΟΓΙΑΣ ΠΕΤΡΕΛΑΙΟΥ & ΦΥΣΙΚΟΥ ΑΕΡΙΟΥ' },
@@ -521,7 +505,7 @@ export const students2016: Student[] = [
   { lastName: 'ΚΑΡΑΓΕΩΡΓΟΣ', firstName: 'ΚΩΝΣΤΑΝΤΙΝΟΣ', schoolTitle: 'ΜΑΘΗΜΑΤΙΚΩΝ & ΕΦΑΡΜΟΣΜΕΝΩΝ ΜΑΘΗΜΑΤΙΚΩΝ ΗΡΑΚΛΕΙΟ' },
   { lastName: 'ΚΑΡΑΚΩΣΤΑ', firstName: 'ΑΦΡΟΔΙΤΗ', schoolTitle: 'ΧΗΜΙΚΩΝ ΜΗΧΑΝΙΚΩΝ ΠΑΤΡΑ' },
   { lastName: 'ΚΑΡΑΜΠΕΛΑΣ', firstName: 'ΕΥΑΓΓΕΛΟΣ', schoolTitle: 'ΔΙΟΙΚΗΣΗ ΕΠΙΧΕΙΡΗΣΕΩΝ ΛΕΥΚΑΔΑ' },
-  { lastName: 'ΚΑΤΣΟΥΛΑΣ', firstName: 'ΑΓΓΕΛΟΣ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ & ΜΗΧΑΝΙΚΩΝ ΥΠΟΛΟΠΣΤΩΝ ΑΘΗΝΑ' },
+  { lastName: 'ΚΑΤΣΟΥΛΑΣ', firstName: 'ΑΓΓΕΛΟΣ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ & ΜΗΧΑΝΙΚΩΝ ΥΠΟΛΟΓΙΣΤΩΝ ΑΘΗΝΑ' },
   { lastName: 'ΚΟΠΑΝΤΗ', firstName: 'ΚΩΝΣΤΑΝΤΙΝΑ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΩΝ ΜΗΧ.& ΜΗΧ.ΥΠΟΛΟΓΙΣΤΩΝ ΒΟΛΟΣ' },
   { lastName: 'ΚΟΝΙΑΡΗ', firstName: 'ΠΑΝΑΓΙΩΤΑ', schoolTitle: 'ΠΟΛΙΤΙΚΩΝ ΜΗΧΑΝΙΚΩΝ ΤΕ ΘΕΣΣΑΛΟΝΙΚΗ' },
   { lastName: 'ΚΟΡΔΑΛΗ', firstName: 'ΒΑΣΙΛΙΚΗ', schoolTitle: 'ΑΡΧΙΤΕΚΤΟΝΩΝ ΜΗΧΑΝΙΚΩΝ ΙΩΑΝΝΙΝΑ' },
@@ -535,7 +519,7 @@ export const students2016: Student[] = [
   { lastName: 'ΜΑΡΓΩΝΗ', firstName: 'ΑΡΤΕΜΙΣ', schoolTitle: 'ΧΗΜΕΙΑΣ ΑΘΗΝΑ' },
   { lastName: 'ΜΠΙΣΚΑΝΑΚΗ', firstName: 'ΒΑΣΙΛΙΚΗ', schoolTitle: 'ΦΙΛΟΛΟΓΙΑΣ ΘΕΣΣΑΛΟΝΙΚΗ' },
   { lastName: 'ΜΠΟΥΚΑ', firstName: 'ΕΛΕΝΗ', schoolTitle: 'ΜΗΧΑΝΙΚΩΝ ΥΠΟΛΟΓΙΣΤΩΝ&ΠΛΗΡΟΦΟΡΙΚΗΣ ΙΩΑΝΝΙΝΑ' },
-  { lastName: 'ΝΑΚΑΣ', firstName: 'ΚΩΝΣΤΑΝΤΙΝΟΣ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ & ΤΕΧΝΟΛΟΓΙΑΣ ΥΠΟΛΟΠΣΤΩΝ ΠΑΤΡΑ' },
+  { lastName: 'ΝΑΚΑΣ', firstName: 'ΚΩΝΣΤΑΝΤΙΝΟΣ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ & ΤΕΧΝΟΛΟΓΙΑΣ ΥΠΟΛΟΓΙΣΤΩΝ ΠΑΤΡΑ' },
   { lastName: 'ΠΑΠΑΒΑΓΓΕΛΗΣ', firstName: 'ΠΑΝΑΓΙΩΤΗΣ', schoolTitle: 'ΜΗΧΑΝΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ ΤΕ ΧΑΛΚΙΔΑ' },
   { lastName: 'ΠΑΠΑΓΙΑΝΝΗ', firstName: 'ΣΤΑΥΡΟΥΛΑ', schoolTitle: 'ΛΟΓΙΣΤΙΚΗΣ&ΧΡΗΜΑΤΟΟΙΚΟΝΟΜΙΚΗΣ ΚΟΖΑΝΗ' },
   { lastName: 'ΠΑΠΑΓΙΑΝΝΗ', firstName: 'ΜΑΡΙΑ', schoolTitle: 'ΔΙΟΙΚΗΣΗΣ ΕΠΙΧΕΙΡΗΣΕΩΝ ΚΟΖΑΝΗ' },
@@ -559,93 +543,11 @@ export const students2016: Student[] = [
   { lastName: 'ΤΖΟΥΒΙΣΤΑ', firstName: 'ΜΑΡΙΑ', schoolTitle: 'ΔΙΕΘΝΩΝ & ΕΥΡΩΠΑΪΚΩΝ ΣΠΟΥΔΩΝ ΑΘΗΝΑ' },
   { lastName: 'ΤΖΟΥΚΑΣ', firstName: 'ΔΗΜΗΤΡΙΟΣ', schoolTitle: 'ΜΗΧΑΝΙΚΩΝ ΑΥΤΟΜΑΤΙΣΜΟΥ ΤΕ ΧΑΛΚΙΔΑ' },
   { lastName: 'ΤΣΑΚΟΥΜΗΣ', firstName: 'ΒΑΣΙΛΕΙΟΣ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΩΝ ΜΗΧ. & ΤΕΧΝΟΛΟΓΙΑΣ ΥΠΟΛΟΓΙΣΤΩΝ ΠΑΤΡΑ' },
-  { lastName: 'ΤΣΑΛΑΠΑΤΗΣ', firstName: 'ΑΛΕΞΑΝΔΡΟΣ', schoolTitle: 'ΕΠΙΣΤΗΜΩΝ ΤΗΣ ΘΑΛΑΣΣΑΣΜΥΤΙΛΗΝΗ' },
+  { lastName: 'ΤΣΑΛΑΠΑΤΗΣ', firstName: 'ΑΛΕΞΑΝΔΡΟΣ', schoolTitle: 'ΕΠΙΣΤΗΜΩΝ ΤΗΣ ΘΑΛΑΣΣΑΣ ΜΥΤΙΛΗΝΗ' },
   { lastName: 'ΤΣΙΚΟΥ', firstName: 'ΗΛΙΑ', schoolTitle: 'ΠΛΑΣΤΙΚΩΝ ΤΕΧΝΩΝ & ΕΠΙΣΤΗΜΩΝ ΤΗΣ ΤΕΧΝΗΣ ΙΩΑΝΝΙΝΑ' },
   { lastName: 'ΦΩΤΙΑΔΗΣ', firstName: 'ΟΡΕΣΤΗΣ', schoolTitle: 'ΜΗΧΑΝΙΚΩΝ ΠΛΗΡΟΦΟΡΙΚΗΣ ΤΕ ΘΕΣΣΑΛΟΝΙΚΗ' },
   { lastName: 'ΧΑΡΑΛΑΜΠΗ', firstName: 'ΔΑΝΑΗ-ΔΗΜΗΤΡΑ', schoolTitle: 'ΑΡΧΙΤΕΚΤΟΝΩΝ ΜΗΧΑΝΙΚΩΝ ΑΘΗΝΑ' },
   { lastName: 'ΧΟΥΛΙΑΡΑ', firstName: 'ΑΙΚΑΤΕΡΙΝΗ', schoolTitle: 'ΝΟΣΗΛΕΥΤΙΚΗΣ ΑΘΗΝΑ' },
   { lastName: 'ΧΟΥΛΙΑΡΑΣ', firstName: 'ΑΠΟΣΤΟΛΟΣ', schoolTitle: 'ΔΙΟΙΚΗΣΗΣ ΤΟΥΡΙΣΤΙΚΩΝ ΕΠΙΧΕΙΡΗΣΕΩΝ ΚΑΙ ΕΠΙΧΕΙΡΗΣΕΩΝ ΦΙΛΟΞΕΝΙΑΣ ΑΘΗΝΑ' },
   { lastName: 'ΧΡΗΣΤΑΚΗ', firstName: 'ΔΗΜΗΤΡΑ', schoolTitle: 'ΙΣΤΟΡΙΑΣ & ΑΡΧΑΙΟΛΟΓΙΑΣ ΡΕΘΥΜΝΟ' },
-];
-
-// ============================================================================
-// ΕΠΙΤΥΧΟΝΤΕΣ ΕΤΟΣ 2002-2003
-// ============================================================================
-export const students2002: Student[] = [
-  { lastName: 'ΑΘΑΝΑΣΙΑΔΟΥ', firstName: 'ΦΩΤ.', schoolTitle: 'ΕΚΠ/ΣΗΣ ΑΓΩΓΗΣ ΠΡ/ΚΗΣ ΗΛΙΚΙΑΣ ΑΘΗΝΑ' },
-  { lastName: 'ΒΑΒΟΥΛΙΩΤΗΣ', firstName: 'ΖΑΧΑΡΙΑΣ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΙΑΣ ΤΕΙ ΛΑΜΙΑΣ' },
-  { lastName: 'ΒΑΡΒΑΡΟΓΛΟΥ', firstName: 'ΝΙΚΟΛΑΟΣ', schoolTitle: 'ΧΗΜΙΚΩΝ ΜΗΧΑΝΙΚΩΝ Ε.Μ.Π' },
-  { lastName: 'ΒΑΣΙΛΕΙΟΥ', firstName: 'ΣΟΦΙΑ', schoolTitle: 'ΑΙΣΘΗΤΙΚΗΣ ΤΕΙ ΑΘΗΝΑ' },
-  { lastName: 'ΒΑΣΙΛΗ', firstName: 'ΜΥΡΤΩ', schoolTitle: 'ΝΟΜΙΚΗ ΘΕΣΣΑΛΟΝΙΚΗΣ' },
-  { lastName: 'ΒΛΑΧΟΥ', firstName: 'ΖΩΗ', schoolTitle: 'ΠΑΙΔΑΓΩΓΙΚΟ ΔΗΜ/ΚΗΣ ΕΚΠ/ΣΗΣ ΡΕΘΥΜΝΟ' },
-  { lastName: 'ΓΕΡΑΛΗΣ', firstName: 'ΝΙΚΟΛΑΟΣ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΙΑΣ ΤΕΙ ΛΑΜΙΑΣ' },
-  { lastName: 'ΓΕΡΟΝΤΙΤΗΣ', firstName: 'ΚΩΝ/ΝΟΣ', schoolTitle: 'ΒΙΟΛΟΓΙΑΣ ΑΘΗΝΑ' },
-  { lastName: 'ΓΕΩΡΓΑΡΑΣ', firstName: 'ΕΛΕΥΘΕΡΙΟΣ', schoolTitle: 'ΕΦΑΡΜΟΣΜΕΝΗΣ ΠΛΗΡΟΦΟΡΙΚΗΣ-ΠΟΛΥΜΕΣΩΝ ΤΕΙ ΗΡΑΚΛΕΙΟ' },
-  { lastName: 'ΓΙΑΜΜΑ', firstName: 'ΣΤΥΛΙΑΝΗ', schoolTitle: 'ΙΣΤΟΡΙΑΣ -ΑΡΧΑΙΟΛΟΓΙΑΣ ΙΩΑΝΝΙΝΩΝ' },
-  { lastName: 'ΔΑΓΡΙΤΖΙΚΟΣ', firstName: 'ΠΑΝΑΓΙΩΤΗΣ', schoolTitle: 'ΗΛΕΚΤΡΟΝΙΚΩΝ ΜΗΧΑΝΙΚΩΝ -ΜΗΧΑΝΙΚΩΝ ΥΠΟΛΟΓΙΣΤΩΝ ΧΑΝΙΑ' },
-  { lastName: 'ΔΑΜΠΑΝΗΣ', firstName: 'ΓΕΩΡΓΙΟΣ', schoolTitle: 'ΜΗΧΑΝΙΚΩΝ -ΤΕΧΝΟΛΟΓΙΑΣ ΥΠΟΛΟΓΙΣΤΩΝ ΠΑΤΡΑΣ' },
-  { lastName: 'ΔΗΜΗΤΡΑΚΟΠΟΥΛΟΣ', firstName: 'ΝΕΚΤΑΡΙΟΣ', schoolTitle: 'ΠΛΗΡΟΦΟΡΙΚΗΣ ΠΕΙΡΑΙΑ' },
-  { lastName: 'ΔΗΜΗΤΡΙΟΥ', firstName: 'ΚΩΝ/ΝΟΣ', schoolTitle: 'ΥΠΟΛΟΓΙΣΤΩΝ ΗΡΑΚΛΕΙΟΥ' },
-  { lastName: 'ΔΗΜΟΥ', firstName: 'ΚΩΝ/ΝΟΣ', schoolTitle: 'ΕΠΙΣΤΗΜΩΝ ΤΗΣ ΘΑΛΑΣΣΑΣ ΜΥΤΙΛΙΝΗ' },
-  { lastName: 'ΔΙΑΜΑΝΤΙΔΗΣ', firstName: 'ΔΗΜΗΤΡΙΟΣ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΩΝ-ΜΗΧΑΝΙΚΩΝ ΥΠΟΛΟΓΙΣΤΩΝ ΠΑΤΡΑΣ' },
-  { lastName: 'ΖΑΜΠΑΚΛΗ', firstName: 'ΕΛΕΝΑ', schoolTitle: 'ΔΙΕΘΝΩΝ ΟΙΚΟΝΟΜΙΚΩΝ ΣΧΕΣΕΩΝ -ΑΝΑΠΤΥΞΗΣ ΚΟΜΟΤΙΝΗ' },
-  { lastName: 'ΖΩΓΡΑΦΟΥ', firstName: 'ΑΛΕΞΑΝΔΡΑ', schoolTitle: 'ΟΡΓΑΝ. ΔΙΟΙΚ.ΕΠΙΧΕΙΡ. ΟΙΚΟΝΟΜΙΚΟ ΠΑΝΕΠΙΣΤΗΜΙΟ ΠΕΙΡΑΙΑ' },
-  { lastName: 'ΘΕΟΔΩΡΟΠΟΥΛΟΥ', firstName: 'ΔΙΟΝΥΣΙΑ', schoolTitle: 'ΜΑΙΕΥΤΙΚΗΣ ΤΕΙ ΘΕΣ/ΝΙΚΗ' },
-  { lastName: 'ΚΑΡΒΟΥΝΙΑΡΗ', firstName: 'ΠΑΝΑΓΙΩΤΑ', schoolTitle: 'ΙΑΤΡΙΚΗ ΘΕΣΣΑΛΟΝΙΚΗΣ' },
-  { lastName: 'ΚΑΡΛΕΤΣΟΣ', firstName: 'ΓΕΩΡΓΙΟΣ', schoolTitle: 'ΓΕΩΠΛΗΡΟΦΟΡΙΚΗΣ ΤΟΠΟΓΡΑΦΙΑΣ ΤΕΙ ΣΕΡΡΩΝ' },
-  { lastName: 'ΚΟΛΟΥΤΣΟΣ', firstName: 'ΔΗΜΟΣΘΕΝΗΣ', schoolTitle: 'ΓΕΩΤΕΧΝΟΛΟΠΑΣ ΚΟΖΑΝΗΣ' },
-  { lastName: 'ΚΟΤΡΟΓΙΑΝΝΗΣ', firstName: 'ΙΩΑΝΝΗΣ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΕΣ ΕΠΙΣΤΗΜΕΣ ΓΙΑΝΝΕΝΑ' },
-  { lastName: 'ΚΟΥΡΝΗΣ', firstName: 'ΜΑΡΙΟΣ', schoolTitle: 'ΟΔΟΝΤΙΑΤΡΙΚΗ ΑΘΗΝΑΣ' },
-  { lastName: 'ΚΡΗΤΙΚΟΥ', firstName: 'ΖΗΝΟΒΙΑ', schoolTitle: 'ΦΙΛΟΛΟΓΙΑΣ ΑΘΗΝΑΣ' },
-  { lastName: 'ΛΑΖΑΡΙΔΗΣ', firstName: 'ΛΟΥΚΑΣ', schoolTitle: 'ΜΗΧΑΝΟΛΟΓΙΑΣ ΤΕΙ ΠΕΙΡΑΙΑ' },
-  { lastName: 'ΛΟΥΠΑΚΗ', firstName: 'ΑΝΘΟΥΛΑ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΠΑΤΡΑΣ' },
-  { lastName: 'ΜΑΘΙΟΠΟΥΛΟΣ', firstName: 'ΚΩΣΤΑΣ', schoolTitle: 'ΓΕΩΡ/ΚΩΝ ΜΗΧ. ΑΡΔΕΥΣΕΩΝ ΤΕΙ ΛΑΡΙΣΑΣ' },
-  { lastName: 'ΜΑΚΡΗΣ', firstName: 'ΑΝΑΣΤΑΣΙΟΣ', schoolTitle: 'ΚΤΗΝΙΑΤΡΙΚΟ ΣΣΑΣ ΘΕΣ/ΚΗΣ' },
-  { lastName: 'ΜΑΛΙΣΟΒΑ', firstName: 'ΚΑΤΕΡΙΝΑ', schoolTitle: 'ΜΗΧΑΝΙΚΩΝ ΣΧΕΔΙΑΣΗΣ ΠΡΟΪΟΝΤΩΝ -ΣΥΣΤΗΜΑΤΩΝ (ΣΥΡΟΣ)' },
-  { lastName: 'ΜΑΝΟΣ', firstName: 'ΓΑΒΡΙΗΛ', schoolTitle: 'ΠΛΗΡΟΦ. ΟΙΚΟΝ.ΤΕΙ ΛΕΥΚΑΔΑΣ' },
-  { lastName: 'ΜΗΤΡΟΠΕΤΡΟΣ', firstName: 'ΕΛΕΥΘΕΡΙΟΣ', schoolTitle: 'ΦΥΣΙΚΗ ΑΘΗΝΑΣ' },
-  { lastName: 'ΜΙΧΕΛΗ', firstName: 'ΜΑΡΙΑ', schoolTitle: 'ΔΙΑΙΤ.ΔΙΑΤΡΟΦΗΣ ΧΑΡΟΚΟΠΟΙΟΥ ΑΘΗΝΑ' },
-  { lastName: 'ΜΠΑΟΣ', firstName: 'ΕΥΑΓΓΕΛΟΣ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΟ ΠΑΝΕΠΙΣΤΗΜΙΟ ΑΘΗΝΩΝ' },
-  { lastName: 'ΜΠΑΣΟΥΚΟΥ', firstName: 'ΖΩΗ', schoolTitle: 'ΓΕΩΡΓΙΚΗΣ ΕΚΜΕΤΑΛΛΕΥΣΗΣ ΤΕΙ ΘΕΣ/ΝΙΚΗΣ' },
-  { lastName: 'ΜΠΟΥΓΑΣ', firstName: 'ΧΡΗΣΤΟΣ', schoolTitle: 'ΜΑΘΗΜΑΤΙΚΩΝ ΑΘΗΝΑΣ' },
-  { lastName: 'ΜΠΟΥΛΟΥΓΟΥΡΗ', firstName: 'ΣΤΑΜΑΤΙΑ', schoolTitle: 'ΑΓΓΛΙΚΗΣ ΦΙΛΟΛΟΓΙΑΣ ΑΘΗΝΑ' },
-  { lastName: 'ΜΠΟΥΛΟΥΚΟΣ', firstName: 'ΓΕΩΡΠΟΣ', schoolTitle: 'ΔΙΟΙΚΗΣΗΣ ΜΟΝΑΔΩΝ ΥΓΕΙΑΣ -ΠΡΟΝΟΙΑΣ ΤΕΙ ΚΑΛΑΜΑΤΑΣ' },
-  { lastName: 'ΜΥΡΚΟΥ', firstName: 'ΑΙΚΑΤΕΡΙΝΗ', schoolTitle: 'ΦΙΛΟΛΟΓΙΑΣ ΑΘΗΝΑ' },
-  { lastName: 'ΝΙΚΟΛΟΥΣΟΥ', firstName: 'ΖΑΧΑΡΟΥΛΑ', schoolTitle: 'ΕΠΙΣΤΗΜΗΣ -ΤΕΧΝΟΛΟΓΙΑΣ ΥΛΙΚΩΝ ΙΩΑΝΝΙΝΩΝ' },
-  { lastName: 'ΝΙΚΟΣΛΑΒΙΝΟΣ', firstName: 'ΘΩΜΑΣ', schoolTitle: 'ΑΥΤΟΜΑΤΙΣΜΟΥ ΤΕΙ ΧΑΛΚΙΔΑΣ' },
-  { lastName: 'ΝΟΝΑ', firstName: 'ΜΑΡΙΑ', schoolTitle: 'ΦΙΛΟΛΟΓΙΑΣ ΑΘΗΝΑΣ' },
-  { lastName: 'ΝΤΟΥΜΑΝΗΣ', firstName: 'ΑΘΑΝΑΣΙΟΣ', schoolTitle: 'ΠΛΗΡΟΦΟΡΙΚΗΣ ΤΕΙ ΘΕΣΣΑΛΟΝΙΚΗΣ' },
-  { lastName: 'ΝΤΡΕΚΗΣ', firstName: 'ΚΩΝ/ΝΟΣ', schoolTitle: 'ΛΟΓΙΣΤΙΚΗΣ ΤΕΙ ΚΟΖΑΝΗΣ' },
-  { lastName: 'ΠΑΛΑΜΟΥΡΔΑΣ', firstName: 'ΚΩΝ/ΝΟΣ', schoolTitle: 'ΜΑΘΗΜΑΤΙΚΟ ΑΘΗΝΩΝ' },
-  { lastName: 'ΠΑΛΑΣΚΑ', firstName: 'ΗΡΑΚΛΕΙΑ', schoolTitle: 'ΜΗΧΑΝΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ Α.Π.ΘΕΣΣΑΛΟΝΙΚΗΣ' },
-  { lastName: 'ΠΑΠΑΒΑΣΙΛΕΙΟΥ', firstName: 'ΒΑΣΙΛΙΚΗ', schoolTitle: 'ΠΟΛ. ΔΟΜ. ΕΡΓΩΝ ΤΕΙ ΗΡΑΚΛΕΙΟ' },
-  { lastName: 'ΠΑΠΑΓΕΩΡΓΙΟΥ', firstName: 'ΝΙΚΟΛΑΟΣ', schoolTitle: 'ΕΠΙΣΤΗΜΗΣ -ΤΕΧΝΟΛΟΓΙΑΣ ΥΠΟΛΟΓΙΣΤΩΝ ΤΡΙΠΟΛΗΣ' },
-  { lastName: 'ΠΑΠΑΔΑΣ', firstName: 'ΓΙΩΡΓΟΣ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΘΕΣ/ΝΙΚΗΣ' },
-  { lastName: 'ΠΑΠΑΚΥΡΙΑΚΟΥ', firstName: 'ΔΕΣΠΟΙΝΑ', schoolTitle: 'ΒΑΛΚΑΝΙΚΩΝ ΣΠΟΥΔΩΝ ΦΛΩΡΙΝΑ' },
-  { lastName: 'ΠΑΥΛΟΥ', firstName: 'ΔΗΜΗΤΡΙΟΣ', schoolTitle: 'ΓΕΩΠΟΝΙΑΣ ΑΓΡΟΤΙΚΟΥ ΠΕΡΙΒ. ΒΟΛΟΥ' },
-  { lastName: 'ΠΡΕΝΤΖΑ', firstName: 'ΕΥΘΥΜΙΑ', schoolTitle: 'ΝΟΜΙΚΗ ΑΘΗΝΑΣ' },
-  { lastName: 'ΡΑΠΤΗ', firstName: 'ΣΟΦΙΑ', schoolTitle: 'ΒΙΟΛΟΓΙΚΗΣ ΓΕΩΡΓΙΑΣ ΤΕΙ ΑΡΓΟΣΤΟΛΙ' },
-  { lastName: 'ΡΙΜΠΑΚΗΣ', firstName: 'ΑΣΤΕΡΙΟΣ', schoolTitle: 'ΗΛΕΚΤΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ -ΜΗΧΑΝΙΚΩΝ ΥΠΟΛΟΓΙΣΤΩΝ ΞΑΝΘΗ' },
-  { lastName: 'ΣΕΛΕΒΑΚΟΥ', firstName: 'ΠΑΝΑΓΙΩΤΑ', schoolTitle: 'ΤΕΧΝ/ΓΙΑΣ ΓΕΩΡΓΙΚΩΝ ΠΡΟΪΟΝΤΩΝ ΤΕΙ ΚΑΛΑΜΑΤΑΣ' },
-  { lastName: 'ΣΕΡΡΑΣ', firstName: 'ΑΝΑΣΤΑΣΙΟΣ', schoolTitle: 'ΜΗΧΑΝΙΚΩΝ ΑΡΔΕΥΣΕΩΝ ΤΕΙ ΛΑΡΙΣΑΣ' },
-  { lastName: 'ΣΙΜΙΤΖΗΣ', firstName: 'ΘΑΝΑΣΗΣ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ-ΜΗΧΑΝΙΚΩΝ ΥΠΟΛΟΓΙΣΤΩΝ Ε.Μ.Π' },
-  { lastName: 'ΣΟΥΡΑΒΛΑ', firstName: 'ΑΝΤΙΓΟΝΗ', schoolTitle: 'ΠΟΛΙΤΙΚΗΣ ΕΠΙΣΤΗΜΗΣ ΡΕΘΥΜΝΟ' },
-  { lastName: 'ΣΟΥΡΑΒΛΑΣ', firstName: 'ΙΩΑΝΝΗΣ', schoolTitle: 'ΜΗΧΑΝΟΛΟΓΙΑΣ ΤΕΙ ΚΑΒΑΛΑΣ' },
-  { lastName: 'ΣΠΑΝΟΣ', firstName: 'ΑΝΤΩΝΙΟΣ (ΙΩΑΝ)', schoolTitle: 'ΜΗΧΑΝ/ΚΩΝ ΘΕΣΣΑΛΟΝΙΚΗΣ' },
-  { lastName: 'ΣΠΑΝΟΣ', firstName: 'ΘΕΟΦΑΝΗΣ (ΑΝΔ.)', schoolTitle: 'ΦΥΣΙΚΗΣ ΙΩΑΝΝΙΝΩΝ' },
-  { lastName: 'ΣΤΡΙΓΓΟΥ', firstName: 'ΦΩΤΕΙΝΗ', schoolTitle: 'ΚΟΙΝΩΝΙΟΛΟΓΙΑΣ ΡΕΘΥΜΝΟ' },
-  { lastName: 'ΤΑΜΠΛΑΛΗΣ', firstName: 'ΧΡΗΣΤΟΣ', schoolTitle: 'ΗΛΕΚΤΡΟΛΟΓΙΑΣ ΤΕΙ ΗΡΑΚΛΕΙΟ' },
-  { lastName: 'ΤΖΑΦΕΡΟΣ', firstName: 'ΤΑΞΙΑΡΧΗΣ', schoolTitle: 'ΜΗΧΑΝΟΛΟΓΩΝ -ΑΕΡΟΝΑΥΠΗΓΩΝ ΜΗΧΑΝΙΚΩΝ ΠΑΤΡΑΣ' },
-  { lastName: 'ΤΖΙΓΙΑΝΝΗ', firstName: 'ΚΑΤΕΡΙΝΑ', schoolTitle: 'ΣΣΑΣ ΘΕΣ/ΝΙΚΗΣ' },
-  { lastName: 'ΤΡΙΚΚΑΣ', firstName: 'ΑΠΟΣΤΟΛΟΣ', schoolTitle: 'ΔΙΟΙΚΗΣΗΣ ΕΠΙΧ/ΣΕΩΝ ΤΕΙ ΣΕΡΡΩΝ' },
-  { lastName: 'ΤΣΑΜΟΥΡΗΣ', firstName: 'ΕΜΜΑΝΟΥΗΛ', schoolTitle: 'ΕΜΠΟΡΙΑΣ -ΔΙΑΦΗΜ. ΤΕΙ ΘΕΣ/ΝΙΚΗΣ' },
-  { lastName: 'ΤΣΑΠΕΤΗ', firstName: 'ΚΩΝΣΤΑΝΤΙΝΑ', schoolTitle: 'ΦΙΛΟΣΟΦΙΑΣ ΠΑΙΔΑΓΩΓΙΚΗΣ -ΨΥΧΟΛΟΓΙΑΣ ΑΘΗΝΑ' },
-  { lastName: 'ΤΣΑΠΡΟΥΝΗ', firstName: 'ΗΡΩ', schoolTitle: 'ΔΙΕΘΝΩΝ -ΕΥΡΩΠΑΪΚΩΝ ΣΠΟΥΔΩΝ ΠΕΙΡΑΙΑ' },
-  { lastName: 'ΤΣΙΑΜΑΝΤΑΣ', firstName: 'ΠΑΝΑΓΙΩΤΗΣ', schoolTitle: 'ΚΟΙΝΩΝΙΟΛΟΓΙΑΣ ΠΑΝΤΕΙΟΥ' },
-  { lastName: 'ΤΣΙΜΠΙΔΑΚΗΣ', firstName: 'ΑΝΤΩΝΙΟΣ', schoolTitle: 'ΙΑΤΡΙΚΗ ΑΘΗΝΩΝ' },
-  { lastName: 'ΤΣΟΥΡΤΗ', firstName: 'ΑΘΑΝΑΣΙΑ', schoolTitle: 'ΧΡΗΜΑΤΟΟΙΚΟΝΟΜΙΚΗΣ- ΛΟΓΙΣΤΙΚΗΣ ΤΕΙ ΠΡΕΒΕΖΑ' },
-  { lastName: 'ΦΑΡΑΚΛΙΩΤΗ', firstName: 'ΒΑΣΙΛΙΚΗ', schoolTitle: 'ΠΛΗΡΟΦΟΡΙΚΗΣ -ΤΕΧΝΟΛΟΓΙΑΣ ΥΠΟΛΟΓΙΣΤΩΝ ΤΕΙ ΛΑΜΙΑΣ' },
-  { lastName: 'ΦΟΥΝΤΑ', firstName: 'ΗΛΙΑΝΝΑ', schoolTitle: 'ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΘΕΣ/ΝΙΚΗ' },
-  { lastName: 'ΦΡΑΝΤΖΗΣ', firstName: 'ΛΑΜΠΡΟΣ', schoolTitle: 'ΜΑΘΗΜΑΤΙΚΩΝ ΠΑΤΡΑΣ' },
-  { lastName: 'ΨΑΘΑ', firstName: 'ΣΤΕΛΛΑ', schoolTitle: 'ΛΟΓΙΣΤΙΚΗΣ ΤΕΙ ΠΑΤΡΑΣ' },
 ];
