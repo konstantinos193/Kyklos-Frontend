@@ -8,7 +8,7 @@ export async function GET() {
     const iconPath = path.join(process.cwd(), 'public', 'logo.png')
     
     if (fs.existsSync(iconPath)) {
-      const iconContent = fs.readFileSync(iconPath, 'utf-8')
+      const iconContent = fs.readFileSync(iconPath)
       return new NextResponse(iconContent, {
         headers: {
           'Content-Type': 'image/png',
@@ -17,18 +17,8 @@ export async function GET() {
       })
     }
     
-    // Fallback: return a simple SVG favicon
-    const fallbackSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-      <circle cx="50" cy="50" r="40" fill="#1e40af"/>
-      <text x="50" y="60" font-size="40" text-anchor="middle" fill="white" font-weight="bold">Κ</text>
-    </svg>`
-    
-    return new NextResponse(fallbackSvg, {
-      headers: {
-        'Content-Type': 'image/svg+xml',
-        'Cache-Control': 'public, max-age=31536000, immutable',
-      },
-    })
+    // If logo.png doesn't exist, return 404
+    return new NextResponse('Favicon not found', { status: 404 })
   } catch (error) {
     return new NextResponse('Not Found', { status: 404 })
   }

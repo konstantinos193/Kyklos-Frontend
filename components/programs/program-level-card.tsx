@@ -42,14 +42,6 @@ export function ProgramLevelCard({ level }: ProgramLevelCardProps) {
 
       {/* Content */}
       <div className="p-6">
-        {/* Total Hours */}
-        <div className="mb-4 sm:mb-6 text-center">
-          <div className="inline-flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full">
-            <span className="text-2xl font-bold text-gray-800">{level.totalHours}</span>
-            <span className="text-gray-600 font-medium">Ώρες/Εβδομάδα</span>
-          </div>
-        </div>
-
         {/* Subjects (collapsible) */}
         <Accordion type="single" collapsible>
           <AccordionItem value="subjects">

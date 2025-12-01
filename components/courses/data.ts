@@ -10,13 +10,14 @@ export const coursesContent: CoursesContent = {
       title: "Γ' Λυκείου",
       category: "lykeioy",
       categoryLabel: "#Λυκείου",
-      duration: "24 ώρες",
+      // Σύνολο ωρών: 6 (Μαθηματικά) + 4 (Φυσική) + 4 (Χημεία) + 2 (Νεοελληνική) + 3 (ΑΕΠΠ) + 3 (ΑΟΘ) = 22
+      duration: "22 ώρες",
       applyText: "ΘΕΤ - ΤΕΧΝ - ΘΕΩΡ",
       applyHref: "/contact",
       moreHref: "/curriculum",
       subjects: [
         { name: "Μαθηματικά", hours: 6, icon: "📐" },
-        { name: "Φυσική", hours: 6, icon: "⚡" },
+        { name: "Φυσική", hours: 4, icon: "⚡" },
         { name: "Χημεία", hours: 4, icon: "🧪" },
         { name: "Νεοελληνική Γλώσσα", hours: 2, icon: "📚" },
         { name: "ΑΕΠΠ", hours: 3, icon: "💻" },
@@ -42,6 +43,8 @@ export const coursesContent: CoursesContent = {
       ]
     },
     {
+
+      
       id: "a-lykeioy",
       title: "Α' Λυκείου",
       category: "lykeioy",
