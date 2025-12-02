@@ -13,7 +13,7 @@ export default function ChemistryPage() {
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900">Χημεία</h1>
             <div className="mt-3 h-1 w-20 bg-gradient-to-r from-[#CF3B49] to-[#E7B109] rounded-full" />
             <p className="mt-4 text-sm sm:text-base text-gray-600 max-w-2xl">
-              Οργανική, Ανόργανη, Φυσικοχημεία — μεθοδική προετοιμασία και έμφαση στη λύση προβλημάτων.
+              Οργανική, Ανόργανη — μεθοδική προετοιμασία και έμφαση στη λύση προβλημάτων.
             </p>
           </div>
         </div>

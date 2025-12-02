@@ -44,7 +44,7 @@ export const metadata: Metadata = generateSEOMetadata({
 const SUBJECTS = [
     { href: "/curriculum/mathematics", label: "Μαθηματικά", description: "Άλγεβρα, Γεωμετρία, Ανάλυση" },
     { href: "/curriculum/physics", label: "Φυσική", description: "Μηχανική, Ηλεκτρομαγνητισμός, Κύματα" },
-    { href: "/curriculum/chemistry", label: "Χημεία", description: "Οργανική, Ανόργανη, Φυσικοχημεία" },
+    { href: "/curriculum/chemistry", label: "Χημεία", description: "Οργανική, Ανόργανη" },
     { href: "/curriculum/biology", label: "Βιολογία", description: "Κυτταρική, Γενετική, Οικολογία" },
     { href: "/curriculum/algebra", label: "Άλγεβρα", description: "Εξισώσεις, συναρτήσεις, ανισότητες" },
     { href: "/curriculum/geometry", label: "Γεωμετρία", description: "Θεωρήματα, αποδείξεις, στερεομετρία" },
