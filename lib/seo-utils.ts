@@ -356,14 +356,31 @@ export function generateWebSiteSchema() {
     "@type": "WebSite",
     name: SITE_NAME,
     url: BASE_URL,
+    inLanguage: "el-GR",
+    description: "Εξειδικευμένο φροντιστήριο Ελληνικής Γλώσσας & Λογοτεχνίας. Γυμνάσιο, Λύκειο, ΕΠΑΛ. Άρτα.",
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${BASE_URL}/search?q={search_term_string}`,
+        urlTemplate: `${BASE_URL}/blog?search={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },
+  };
+}
+
+/**
+ * Speakable schema for voice search (Google Assistant, etc.).
+ * Pass an array of short text snippets that summarize the page for voice answers.
+ */
+export function generateSpeakableSchema(config: { speakable: string[] }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    speakable: config.speakable.map((text) => ({
+      "@type": "SpeakableSpecification",
+      text,
+    })),
   };
 }
 

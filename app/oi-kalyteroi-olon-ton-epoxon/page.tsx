@@ -1,10 +1,14 @@
+import { Metadata } from "next";
 import { AboutBanner } from "@/components/about/about-banner";
 import Link from "next/link";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo-utils";
 
-export const metadata = {
-  title: 'Οι Καλύτεροι Όλων των Εποχών - ΚΥΚΛΟΣ Φροντιστήριο',
-  description: 'Οι καλύτεροι μαθητές όλων των εποχών του ΚΥΚΛΟΣ Φροντιστήριο',
-};
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Οι Καλύτεροι Όλων των Εποχών | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+  description: "Οι καλύτεροι μαθητές όλων των εποχών του ΚΥΚΛΟΣ Φροντιστήριο Άρτα. Διακρίσεις και επιτυχίες.",
+  path: "/oi-kalyteroi-olon-ton-epoxon",
+  keywords: ["καλύτεροι μαθητές", "διακρίσεις", "φροντιστήριο άρτα", "κύκλος"],
+});
 
 export default function BestOfAllTimePage() {
   return (

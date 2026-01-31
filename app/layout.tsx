@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Noto_Sans } from "next/font/google"
+import { generateWebSiteSchema } from "@/lib/seo-utils"
 
 const notoSans = Noto_Sans({
   subsets: ["latin", "greek"],
@@ -106,9 +107,15 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "your-google-verification-code",
-    yandex: "your-yandex-verification-code",
-    yahoo: "your-yahoo-verification-code",
+    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && {
+      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    }),
+    ...(process.env.NEXT_PUBLIC_YANDEX_VERIFICATION && {
+      yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
+    }),
+    ...(process.env.NEXT_PUBLIC_YAHOO_VERIFICATION && {
+      yahoo: process.env.NEXT_PUBLIC_YAHOO_VERIFICATION,
+    }),
   },
   alternates: {
     canonical: "https://kyklosedu.gr",
@@ -170,6 +177,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const webSiteSchema = generateWebSiteSchema()
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
@@ -311,6 +319,12 @@ export default function RootLayout({
   return (
     <html lang="el" data-scroll-behavior="smooth">
       <body className={`${notoSans.variable} font-sans ${GeistSans.variable} ${GeistMono.variable} bg-slate-200`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(webSiteSchema),
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

@@ -1,10 +1,14 @@
+import { Metadata } from "next";
 import { AboutBanner } from "@/components/about/about-banner";
 import Link from "next/link";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo-utils";
 
-export const metadata = {
-  title: 'Prospectus - ΚΥΚΛΟΣ Φροντιστήριο',
-  description: 'Κατεβάστε το Prospectus του ΚΥΚΛΟΣ Φροντιστήριο',
-};
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Prospectus | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+  description: "Κατεβάστε το Prospectus του ΚΥΚΛΟΣ Φροντιστήριο Άρτα. Πληροφορίες για τα προγράμματα και τις υπηρεσίες μας.",
+  path: "/prospectus",
+  keywords: ["prospectus", "φροντιστήριο άρτα", "κύκλος", "προγράμματα σπουδών"],
+});
 
 export default function ProspectusPage() {
   return (

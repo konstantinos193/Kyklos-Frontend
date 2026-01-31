@@ -1,9 +1,13 @@
+import { Metadata } from "next";
 import { AboutBanner } from "@/components/about/about-banner";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo-utils";
 
-export const metadata = {
-  title: 'Πολιτική Απορρήτου - ΚΥΚΛΟΣ Φροντιστήριο',
-  description: 'Πολιτική απορρήτου και προστασίας προσωπικών δεδομένων του ΚΥΚΛΟΣ Φροντιστήριο',
-};
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Πολιτική Απορρήτου | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+  description: "Πολιτική απορρήτου και προστασίας προσωπικών δεδομένων του ΚΥΚΛΟΣ Φροντιστήριο Άρτα.",
+  path: "/privacy",
+  keywords: ["πολιτική απορρήτου", "προστασία δεδομένων", "κύκλος φροντιστήριο"],
+});
 
 export default function PrivacyPage() {
   return (

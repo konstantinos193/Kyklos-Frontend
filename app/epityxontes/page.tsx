@@ -1,11 +1,15 @@
 import Link from 'next/link';
+import { Metadata } from "next";
 import successStories from '@/data/success-stories';
 import { EpityxontesBanner } from '@/components/epityxontes/epityxontes-banner';
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo-utils";
 
-export const metadata = {
-  title: 'Επιτυχόντες - ΚΥΚΛΟΣ Φροντιστήριο',
-  description: 'Επιτυχόντες προηγούμενων ετών',
-};
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Επιτυχόντες | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+  description: "Ιστορικό επιτυχιών ανά σχολικό έτος. Οι επιτυχίες των μαθητών μας αποτελούν την καλύτερη απόδειξη της ποιότητας της εκπαίδευσης που προσφέρουμε.",
+  path: "/epityxontes",
+  keywords: ["επιτυχόντες", "φροντιστήριο άρτα", "επιτυχίες μαθητών", "κύκλος φροντιστήριο"],
+});
 
 export default function Page() {
   return (

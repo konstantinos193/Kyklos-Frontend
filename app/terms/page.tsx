@@ -1,9 +1,13 @@
+import { Metadata } from "next";
 import { AboutBanner } from "@/components/about/about-banner";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo-utils";
 
-export const metadata = {
-  title: 'Όροι Χρήσης - ΚΥΚΛΟΣ Φροντιστήριο',
-  description: 'Όροι και προϋποθέσεις χρήσης του ιστότοπου ΚΥΚΛΟΣ Φροντιστήριο',
-};
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Όροι Χρήσης | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+  description: "Όροι και προϋποθέσεις χρήσης του ιστότοπου ΚΥΚΛΟΣ Φροντιστήριο Άρτα.",
+  path: "/terms",
+  keywords: ["όροι χρήσης", "κύκλος φροντιστήριο", "άρτα"],
+});
 
 export default function TermsPage() {
   return (
