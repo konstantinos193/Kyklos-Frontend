@@ -1,110 +1,139 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import MultiUseDetailsPage from '@/components/details/MultiUseDetailsPage';
 import { StudentsList } from '@/components/epityxontes/students-list';
-import { students2011, students2012, students2013, students2014, students2015, students2016 } from '@/components/epityxontes/students-data';
+import {
+  Student,
+  students1992,
+  students1993,
+  students1994,
+  students1995,
+  students1996,
+  students1997,
+  students1998,
+  students1999,
+  students2000,
+  students2002,
+  students2003,
+  students2004,
+  students2005,
+  students2006,
+  students2011,
+  students2012,
+  students2013,
+  students2014,
+  students2015,
+  students2016,
+  students2023,
+  students2024,
+  students2025,
+} from '@/components/epityxontes/students-data';
 
-const yearContent: Record<string, { title: string; html: string }> = {
-  'epityxontes-etos-2002-2003': {
-    title: 'Επιτυχόντες Έτος 2002-2003',
-    html: `
-<div align="justify">
-1. ΑΘΑΝΑΣΙΑΔΟΥ ΦΩΤ. ΕΚΠ/ΣΗΣ ΑΓΩΓΗΣ ΠΡ/ΚΗΣ ΗΛΙΚΙΑΣ ΑΘΗΝΑ<br>2. ΒΑΒΟΥΛΙΩΤΗΣ ΖΑΧΑΡΙΑΣ ΗΛΕΚΤΡΟΛΟΓΙΑΣ ΤΕΙ ΛΑΜΙΑΣ<br>3. ΒΑΡΒΑΡΟΓΛΟΥ ΝΙΚΟΛΑΟΣ ΧΗΜΙΚΩΝ ΜΗΧΑΝΙΚΩΝ Ε.Μ.Π<br>4. ΒΑΣΙΛΕΙΟΥ ΣΟΦΙΑ ΑΙΣΘΗΤΙΚΗΣ ΤΕΙ ΑΘΗΝΑ<br>5. ΒΑΣΙΛΗ ΜΥΡΤΩ ΝΟΜΙΚΗ ΘΕΣΣΑΛΟΝΙΚΗΣ<br>6. ΒΛΑΧΟΥ ΖΩΗ ΠΑΙΔΑΓΩΓΙΚΟ ΔΗΜ/ΚΗΣ ΕΚΠ/ΣΗΣ ΡΕΘΥΜΝΟ<br>7. ΓΕΡΑΛΗΣ ΝΙΚΟΛΑΟΣ ΗΛΕΚΤΡΟΛΟΓΙΑΣ ΤΕΙ ΛΑΜΙΑΣ<br>8. ΓΕΡΟΝΤΙΤΗΣ ΚΩΝ/ΝΟΣ ΒΙΟΛΟΓΙΑΣ ΑΘΗΝΑ<br>9. ΓΕΩΡΓΑΡΑΣ ΕΛΕΥΘΕΡΙΟΣ ΕΦΑΡΜΟΣΜΕΝΗΣ ΠΛΗΡΟΦΟΡΙΚΗΣ-ΠΟΛΥΜΕΣΩΝ ΤΕΙ ΗΡΑΚΛΕΙΟ<br>10. ΓΙΑΜΜΑ ΣΤΥΛΙΑΝΗ ΙΣΤΟΡΙΑΣ -ΑΡΧΑΙΟΛΟΓΙΑΣ ΙΩΑΝΝΙΝΩΝ<br>11. ΔΑΓΡΙΤΖΙΚΟΣ ΠΑΝΑΓΙΩΤΗΣ ΗΛΕΚΤΡΟΝΙΚΩΝ ΜΗΧΑΝΙΚΩΝ -ΜΗΧΑΝΙΚΩΝ ΥΠΟΛΟΓΙΣΤΩΝ ΧΑΝΙΑ<br>12. ΔΑΜΠΑΝΗΣ ΓΕΩΡΓΙΟΣ ΜΗΧΑΝΙΚΩΝ -ΤΕΧΝΟΛΟΓΙΑΣ ΥΠΟΛΟΓΙΣΤΩΝ ΠΑΤΡΑΣ<br>13. ΔΗΜΗΤΡΑΚΟΠΟΥΛΟΣ ΝΕΚΤΑΡΙΟΣ ΠΛΗΡΟΦΟΡΙΚΗΣ ΠΕΙΡΑΙΑ<br>14. ΔΗΜΗΤΡΙΟΥ ΚΩΝ/ΝΟΣ ΥΠΟΛΟΓΙΣΤΩΝ ΗΡΑΚΛΕΙΟΥ<br>15. ΔΗΜΟΥ ΚΩΝ/ΝΟΣ ΕΠΙΣΤΗΜΩΝ ΤΗΣ ΘΑΛΑΣΣΑΣ ΜΥΤΙΛΙΝΗ<br>16. ΔΙΑΜΑΝΤΙΔΗΣ ΔΗΜΗΤΡΙΟΣ ΗΛΕΚΤΡΟΛΟΓΩΝ-ΜΗΧΑΝΙΚΩΝ ΥΠΟΛΟΓΙΣΤΩΝ ΠΑΤΡΑΣ<br>17. ΖΑΜΠΑΚΛΗ ΕΛΕΝΑ ΔΙΕΘΝΩΝ ΟΙΚΟΝΟΜΙΚΩΝ ΣΧΕΣΕΩΝ -ΑΝΑΠΤΥΞΗΣ ΚΟΜΟΤΙΝΗ<br>18. ΖΩΓΡΑΦΟΥ ΑΛΕΞΑΝΔΡΑ ΟΡΓΑΝ. ΔΙΟΙΚ.ΕΠΙΧΕΙΡ. ΟΙΚΟΝΟΜΙΚΟ ΠΑΝΕΠΙΣΤΗΜΙΟ ΠΕΙΡΑΙΑ<br>19. ΘΕΟΔΩΡΟΠΟΥΛΟΥ ΔΙΟΝΥΣΙΑ ΜΑΙΕΥΤΙΚΗΣ ΤΕΙ ΘΕΣ/ΝΙΚΗ<br>20. ΚΑΡΒΟΥΝΙΑΡΗ ΠΑΝΑΓΙΩΤΑ ΙΑΤΡΙΚΗ ΘΕΣΣΑΛΟΝΙΚΗΣ<br>21. ΚΑΡΛΕΤΣΟΣ ΓΕΩΡΓΙΟΣ ΓΕΩΠΛΗΡΟΦΟΡΙΚΗΣ ΤΟΠΟΓΡΑΦΙΑΣ ΤΕΙ ΣΕΡΡΩΝ<br>22. ΚΟΛΟΥΤΣΟΣ ΔΗΜΟΣΘΕΝΗΣ ΓΕΩΤΕΧΝΟΛΟΠΑΣ ΚΟΖΑΝΗΣ<br>23. ΚΟΤΡΟΓΙΑΝΝΗΣ ΙΩΑΝΝΗΣ ΟΙΚΟΝΟΜΙΚΕΣ ΕΠΙΣΤΗΜΕΣ ΓΙΑΝΝΕΝΑ<br>24. ΚΟΥΡΝΗΣ ΜΑΡΙΟΣ ΟΔΟΝΤΙΑΤΡΙΚΗ ΑΘΗΝΑΣ<br>25. ΚΡΗΤΙΚΟΥ ΖΗΝΟΒΙΑ ΦΙΛΟΛΟΓΙΑΣ ΑΘΗΝΑΣ<br>26. ΛΑΖΑΡΙΔΗΣ ΛΟΥΚΑΣ ΜΗΧΑΝΟΛΟΓΙΑΣ ΤΕΙ ΠΕΙΡΑΙΑ<br>27. ΛΟΥΠΑΚΗ ΑΝΘΟΥΛΑ ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΠΑΤΡΑΣ<br>28. ΜΑΘΙΟΠΟΥΛΟΣ ΚΩΣΤΑΣ ΓΕΩΡ/ΚΩΝ ΜΗΧ. ΑΡΔΕΥΣΕΩΝ ΤΕΙ ΛΑΡΙΣΑΣ<br>29. ΜΑΚΡΗΣ ΑΝΑΣΤΑΣΙΟΣ ΚΤΗΝΙΑΤΡΙΚΟ ΣΣΑΣ ΘΕΣ/ΚΗΣ<br>30. ΜΑΛΙΣΟΒΑ ΚΑΤΕΡΙΝΑ ΜΗΧΑΝΙΚΩΝ ΣΧΕΔΙΑΣΗΣ ΠΡΟΪΟΝΤΩΝ -ΣΥΣΤΗΜΑΤΩΝ (ΣΥΡΟΣ)<br>31. ΜΑΝΟΣ ΓΑΒΡΙΗΛ ΠΛΗΡΟΦ. ΟΙΚΟΝ.ΤΕΙ ΛΕΥΚΑΔΑΣ<br>32. ΜΗΤΡΟΠΕΤΡΟΣ ΕΛΕΥΘΕΡΙΟΣ ΦΥΣΙΚΗ ΑΘΗΝΑΣ<br>33. ΜΙΧΕΛΗ ΜΑΡΙΑ ΔΙΑΙΤ.ΔΙΑΤΡΟΦΗΣ ΧΑΡΟΚΟΠΟΙΟΥ ΑΘΗΝΑ<br>34. ΜΠΑΟΣ ΕΥΑΓΓΕΛΟΣ ΟΙΚΟΝΟΜΙΚΟ ΠΑΝΕΠΙΣΤΗΜΙΟ ΑΘΗΝΩΝ<br>35. ΜΠΑΣΟΥΚΟΥ ΖΩΗ ΓΕΩΡΓΙΚΗΣ ΕΚΜΕΤΑΛΛΕΥΣΗΣ ΤΕΙ ΘΕΣ/ΝΙΚΗΣ<br>36. ΜΠΟΥΓΑΣ ΧΡΗΣΤΟΣ ΜΑΘΗΜΑΤΙΚΩΝ ΑΘΗΝΑΣ<br>37. ΜΠΟΥΛΟΥΓΟΥΡΗ ΣΤΑΜΑΤΙΑ ΑΓΓΛΙΚΗΣ ΦΙΛΟΛΟΓΙΑΣ ΑΘΗΝΑ<br>38. ΜΠΟΥΛΟΥΚΟΣ ΓΕΩΡΠΟΣ ΔΙΟΙΚΗΣΗΣ ΜΟΝΑΔΩΝ ΥΓΕΙΑΣ -ΠΡΟΝΟΙΑΣ ΤΕΙ ΚΑΛΑΜΑΤΑΣ<br>39. ΜΥΡΚΟΥ ΑΙΚΑΤΕΡΙΝΗ ΦΙΛΟΛΟΓΙΑΣ ΑΘΗΝΑ<br>40. ΝΙΚΟΛΟΥΣΟΥ ΖΑΧΑΡΟΥΛΑ ΕΠΙΣΤΗΜΗΣ -ΤΕΧΝΟΛΟΓΙΑΣ ΥΛΙΚΩΝ ΙΩΑΝΝΙΝΩΝ<br>41. ΝΙΚΟΣΛΑΒΙΝΟΣ ΘΩΜΑΣ ΑΥΤΟΜΑΤΙΣΜΟΥ ΤΕΙ ΧΑΛΚΙΔΑΣ<br>42. ΝΟΝΑ ΜΑΡΙΑ ΦΙΛΟΛΟΓΙΑΣ ΑΘΗΝΑΣ<br>43. ΝΤΟΥΜΑΝΗΣ ΑΘΑΝΑΣΙΟΣ ΠΛΗΡΟΦΟΡΙΚΗΣ ΤΕΙ ΘΕΣΣΑΛΟΝΙΚΗΣ
-<br>44. ΝΤΡΕΚΗΣ ΚΩΝ/ΝΟΣ ΛΟΓΙΣΤΙΚΗΣ ΤΕΙ ΚΟΖΑΝΗΣ<br>45. ΠΑΛΑΜΟΥΡΔΑΣ ΚΩΝ/ΝΟΣ ΜΑΘΗΜΑΤΙΚΟ ΑΘΗΝΩΝ<br>46. ΠΑΛΑΣΚΑ ΗΡΑΚΛΕΙΑ ΜΗΧΑΝΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ Α.Π.ΘΕΣΣΑΛΟΝΙΚΗΣ<br>47. ΠΑΠΑΒΑΣΙΛΕΙΟΥ ΒΑΣΙΛΙΚΗ ΠΟΛ. ΔΟΜ. ΕΡΓΩΝ ΤΕΙ ΗΡΑΚΛΕΙΟ<br>48. ΠΑΠΑΓΕΩΡΓΙΟΥ ΝΙΚΟΛΑΟΣ ΕΠΙΣΤΗΜΗΣ -ΤΕΧΝΟΛΟΓΙΑΣ ΥΠΟΛΟΓΙΣΤΩΝ ΤΡΙΠΟΛΗΣ<br>49. ΠΑΠΑΔΑΣ ΓΙΩΡΓΟΣ ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΘΕΣ/ΝΙΚΗΣ<br>50. ΠΑΠΑΚΥΡΙΑΚΟΥ ΔΕΣΠΟΙΝΑ ΒΑΛΚΑΝΙΚΩΝ ΣΠΟΥΔΩΝ ΦΛΩΡΙΝΑ<br>51. ΠΑΥΛΟΥ ΔΗΜΗΤΡΙΟΣ ΓΕΩΠΟΝΙΑΣ ΑΓΡΟΤΙΚΟΥ ΠΕΡΙΒ. ΒΟΛΟΥ<br>52. ΠΡΕΝΤΖΑ ΕΥΘΥΜΙΑ ΝΟΜΙΚΗ ΑΘΗΝΑΣ<br>53. ΡΑΠΤΗ ΣΟΦΙΑ ΒΙΟΛΟΓΙΚΗΣ ΓΕΩΡΓΙΑΣ ΤΕΙ ΑΡΓΟΣΤΟΛΙ<br>54. ΡΙΜΠΑΚΗΣ ΑΣΤΕΡΙΟΣ ΗΛΕΚΤΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ -ΜΗΧΑΝΙΚΩΝ ΥΠΟΛΟΓΙΣΤΩΝ ΞΑΝΘΗ<br>55. ΣΕΛΕΒΑΚΟΥ ΠΑΝΑΓΙΩΤΑ ΤΕΧΝ/ΓΙΑΣ ΓΕΩΡΓΙΚΩΝ ΠΡΟΪΟΝΤΩΝ ΤΕΙ ΚΑΛΑΜΑΤΑΣ<br>56. ΣΕΡΡΑΣ ΑΝΑΣΤΑΣΙΟΣ ΜΗΧΑΝΙΚΩΝ ΑΡΔΕΥΣΕΩΝ ΤΕΙ ΛΑΡΙΣΑΣ<br>57. ΣΙΜΙΤΖΗΣ ΘΑΝΑΣΗΣ ΗΛΕΚΤΡΟΛΟΓΩΝ ΜΗΧΑΝΙΚΩΝ-ΜΗΧΑΝΙΚΩΝ ΥΠΟΛΟΓΙΣΤΩΝ Ε.Μ.Π<br>58. ΣΟΥΡΑΒΛΑ ΑΝΤΙΓΟΝΗ ΠΟΛΙΤΙΚΗΣ ΕΠΙΣΤΗΜΗΣ ΡΕΘΥΜΝΟ<br>59. ΣΟΥΡΑΒΛΑΣ ΙΩΑΝΝΗΣ ΜΗΧΑΝΟΛΟΓΙΑΣ ΤΕΙ ΚΑΒΑΛΑΣ<br>60. ΣΠΑΝΟΣ ΑΝΤΩΝΙΟΣ (ΙΩΑΝ) ΜΗΧΑΝ/ΚΩΝ ΘΕΣΣΑΛΟΝΙΚΗΣ<br>61. ΣΠΑΝΟΣ ΘΕΟΦΑΝΗΣ (ΑΝΔ.) ΦΥΣΙΚΗΣ ΙΩΑΝΝΙΝΩΝ<br>62. ΣΤΡΙΓΓΟΥ ΦΩΤΕΙΝΗ ΚΟΙΝΩΝΙΟΛΟΓΙΑΣ ΡΕΘΥΜΝΟ<br>63. ΤΑΜΠΛΑΛΗΣ ΧΡΗΣΤΟΣ ΗΛΕΚΤΡΟΛΟΓΙΑΣ ΤΕΙ ΗΡΑΚΛΕΙΟ<br>64. ΤΖΑΦΕΡΟΣ ΤΑΞΙΑΡΧΗΣ ΜΗΧΑΝΟΛΟΓΩΝ -ΑΕΡΟΝΑΥΠΗΓΩΝ ΜΗΧΑΝΙΚΩΝ ΠΑΤΡΑΣ<br>65. ΤΖΙΓΙΑΝΝΗ ΚΑΤΕΡΙΝΑ ΣΣΑΣ ΘΕΣ/ΝΙΚΗΣ<br>66. ΤΡΙΚΚΑΣ ΑΠΟΣΤΟΛΟΣ ΔΙΟΙΚΗΣΗΣ ΕΠΙΧ/ΣΕΩΝ ΤΕΙ ΣΕΡΡΩΝ<br>67. ΤΣΑΜΟΥΡΗΣ ΕΜΜΑΝΟΥΗΛ ΕΜΠΟΡΙΑΣ -ΔΙΑΦΗΜ. ΤΕΙ ΘΕΣ/ΝΙΚΗΣ<br>68. ΤΣΑΠΕΤΗ ΚΩΝΣΤΑΝΤΙΝΑ ΦΙΛΟΣΟΦΙΑΣ ΠΑΙΔΑΓΩΓΙΚΗΣ -ΨΥΧΟΛΟΓΙΑΣ ΑΘΗΝΑ<br>69. ΤΣΑΠΡΟΥΝΗ ΗΡΩ ΔΙΕΘΝΩΝ -ΕΥΡΩΠΑΪΚΩΝ ΣΠΟΥΔΩΝ ΠΕΙΡΑΙΑ<br>70. ΤΣΙΑΜΑΝΤΑΣ ΠΑΝΑΓΙΩΤΗΣ ΚΟΙΝΩΝΙΟΛΟΓΙΑΣ ΠΑΝΤΕΙΟΥ<br>71. ΤΣΙΜΠΙΔΑΚΗΣ ΑΝΤΩΝΙΟΣ ΙΑΤΡΙΚΗ ΑΘΗΝΩΝ<br>72. ΤΣΟΥΡΤΗ ΑΘΑΝΑΣΙΑ ΧΡΗΜΑΤΟΟΙΚΟΝΟΜΙΚΗΣ- ΛΟΓΙΣΤΙΚΗΣ ΤΕΙ ΠΡΕΒΕΖΑ<br>73. ΦΑΡΑΚΛΙΩΤΗ ΒΑΣΙΛΙΚΗ ΠΛΗΡΟΦΟΡΙΚΗΣ -ΤΕΧΝΟΛΟΓΙΑΣ ΥΠΟΛΟΓΙΣΤΩΝ ΤΕΙ ΛΑΜΙΑΣ<br>74. ΦΟΥΝΤΑ ΗΛΙΑΝΝΑ ΟΙΚΟΝΟΜΙΚΩΝ ΕΠΙΣΤΗΜΩΝ ΘΕΣ/ΝΙΚΗ<br>75. ΦΡΑΝΤΖΗΣ ΛΑΜΠΡΟΣ ΜΑΘΗΜΑΤΙΚΩΝ ΠΑΤΡΑΣ<br>76. ΨΑΘΑ ΣΤΕΛΛΑ ΛΟΓΙΣΤΙΚΗΣ ΤΕΙ ΠΑΤΡΑΣ<br><br>
-</div>
-    `,
-  },
-};
+interface YearPageConfig {
+  startYear: number;
+  students: Student[];
+}
 
-const studentsByYear: Record<string, typeof students2011> = {
-  'epityxontes-etos-2011-2012': students2011,
-  'epityxontes-etos-2012-2013': students2012,
-  'epityxontes-etos-2013-2014': students2013,
-  'epityxontes-etos-2014-2015': students2014,
-  'epityxontes-etos-2015-2016': students2015,
-  'epityxontes-etos-2016-2017': students2016,
-};
-
-const categories = [
-  { label: 'Επιτυχόντες Έτος 2016-2017', href: '/epityxontes/epityxontes-etos-2016-2017' },
-  { label: 'Επιτυχόντες Έτος 2015-2016', href: '/epityxontes/epityxontes-etos-2015-2016' },
-  { label: 'Επιτυχόντες Έτος 2014-2015', href: '/epityxontes/epityxontes-etos-2014-2015' },
-  { label: 'Επιτυχόντες Έτος 2013-2014', href: '/epityxontes/epityxontes-etos-2013-2014' },
-  { label: 'Επιτυχόντες Έτος 2012-2013', href: '/epityxontes/epityxontes-etos-2012-2013' },
-  { label: 'Επιτυχόντες Έτος 2011-2012', href: '/epityxontes/epityxontes-etos-2011-2012' },
+const yearConfigs: YearPageConfig[] = [
+  { startYear: 2025, students: students2025 },
+  { startYear: 2024, students: students2024 },
+  { startYear: 2023, students: students2023 },
+  { startYear: 2016, students: students2016 },
+  { startYear: 2015, students: students2015 },
+  { startYear: 2014, students: students2014 },
+  { startYear: 2013, students: students2013 },
+  { startYear: 2012, students: students2012 },
+  { startYear: 2011, students: students2011 },
+  { startYear: 2006, students: students2006 },
+  { startYear: 2005, students: students2005 },
+  { startYear: 2004, students: students2004 },
+  { startYear: 2003, students: students2003 },
+  { startYear: 2002, students: students2002 },
+  { startYear: 2000, students: students2000 },
+  { startYear: 1999, students: students1999 },
+  { startYear: 1998, students: students1998 },
+  { startYear: 1997, students: students1997 },
+  { startYear: 1996, students: students1996 },
+  { startYear: 1995, students: students1995 },
+  { startYear: 1994, students: students1994 },
+  { startYear: 1993, students: students1993 },
+  { startYear: 1992, students: students1992 },
 ];
+
+const pageConfigs = yearConfigs.map(({ startYear, students }) => {
+  const endYear = startYear + 1;
+  return {
+    slug: `epityxontes-etos-${startYear}-${endYear}`,
+    title: `Επιτυχόντες Έτος ${startYear}-${endYear}`,
+    students,
+  };
+});
+
+type PageConfig = (typeof pageConfigs)[number];
+
+const pageConfigBySlug: Record<string, PageConfig> = Object.fromEntries(
+  pageConfigs.map((config) => [config.slug, config]),
+);
+
+const categories = pageConfigs.map((config) => ({
+  label: config.title,
+  href: `/epityxontes/${config.slug}`,
+}));
+
+export function generateStaticParams() {
+  return pageConfigs.map(({ slug }) => ({ slug }));
+}
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const item = yearContent[slug];
-  const students = studentsByYear[slug];
+  const pageConfig = pageConfigBySlug[slug];
 
-  // If we have students data (even if empty), use the component-based approach
-  if (students !== undefined) {
-    return (
-      <section className="blog-details-page py-10 md:py-12">
-        <div className="container mx-auto max-w-6xl px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-8">
-              <div className="blog-details-content">
-                <div className="details-content mt-6">
-                  <h3 className="title text-2xl md:text-3xl font-semibold text-gray-900">
-                    {slug === 'epityxontes-etos-2011-2012' && 'Επιτυχόντες Έτος 2011-2012'}
-                    {slug === 'epityxontes-etos-2012-2013' && 'Επιτυχόντες Έτος 2012-2013'}
-                    {slug === 'epityxontes-etos-2013-2014' && 'Επιτυχόντες Έτος 2013-2014'}
-                    {slug === 'epityxontes-etos-2014-2015' && 'Επιτυχόντες Έτος 2014-2015'}
-                    {slug === 'epityxontes-etos-2015-2016' && 'Επιτυχόντες Έτος 2015-2016'}
-                    {slug === 'epityxontes-etos-2016-2017' && 'Επιτυχόντες Έτος 2016-2017'}
-                  </h3>
-                  <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 lg:p-7 shadow-sm">
-                    {students.length > 0 ? (
-                      <StudentsList students={students} />
-                    ) : (
-                      <p className="text-gray-600">Δεν υπάρχουν διαθέσιμα δεδομένα για αυτό το έτος.</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+  if (!pageConfig) return notFound();
 
-            <div className="lg:col-span-4">
-              <div className="blog-sidebar right-sidebar pt-4 lg:pt-5">
-                <div className="blog-sidebar-category mt-6">
-                  <div className="sidebar-title">
-                    <h4 className="title text-lg font-semibold text-gray-900">Επιτυχόντες</h4>
-                  </div>
-                  <ul className="category-items mt-3 space-y-2">
-                    {categories.map((cat) => (
-                      <li key={cat.href}>
-                        <div className="form-radio">
-                          <label>
-                            <Link href={cat.href} className="text-slate-700 hover:text-[#CE3B49] hover:underline">
-                              {cat.label}
-                            </Link>
-                          </label>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+  return (
+    <section className="blog-details-page py-10 md:py-12">
+      <div className="container mx-auto max-w-6xl px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-8">
+            <div className="blog-details-content">
+              <div className="details-content mt-6">
+                <h3 className="title text-2xl md:text-3xl font-semibold text-gray-900">
+                  {pageConfig.title}
+                </h3>
+                <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 lg:p-7 shadow-sm">
+                  {pageConfig.students.length > 0 ? (
+                    <StudentsList students={pageConfig.students} />
+                  ) : (
+                    <p className="text-gray-600">Δεν υπάρχουν διαθέσιμα δεδομένα για αυτό το έτος.</p>
+                  )}
                 </div>
               </div>
             </div>
           </div>
+
+          <div className="lg:col-span-4">
+            <div className="blog-sidebar right-sidebar pt-4 lg:pt-5">
+              <div className="blog-sidebar-category mt-6">
+                <div className="sidebar-title">
+                  <h4 className="title text-lg font-semibold text-gray-900">Επιτυχόντες</h4>
+                </div>
+                <ul className="category-items mt-3 space-y-2">
+                  {categories.map((cat) => (
+                    <li key={cat.href}>
+                      <div className="form-radio">
+                        <label>
+                          <Link href={cat.href} className="text-slate-700 hover:text-[#CE3B49] hover:underline">
+                            {cat.label}
+                          </Link>
+                        </label>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
-    );
-  }
-
-  // Fallback to HTML content for older years
-  if (!item) return notFound();
-
-  return (
-    <MultiUseDetailsPage
-      title={item.title}
-      htmlContent={item.html}
-      categories={categories}
-    />
+      </div>
+    </section>
   );
 }
-
-

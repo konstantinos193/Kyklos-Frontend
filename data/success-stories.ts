@@ -3,14 +3,36 @@ export interface SuccessStoryItem {
   href: string;
 }
 
-export const successStories: SuccessStoryItem[] = [
-  { title: "Επιτυχόντες Έτος 2016-2017", href: "/epityxontes/epityxontes-etos-2016-2017" },
-  { title: "Επιτυχόντες Έτος 2015-2016", href: "/epityxontes/epityxontes-etos-2015-2016" },
-  { title: "Επιτυχόντες Έτος 2014-2015", href: "/epityxontes/epityxontes-etos-2014-2015" },
-  { title: "Επιτυχόντες Έτος 2013-2014", href: "/epityxontes/epityxontes-etos-2013-2014" },
-  { title: "Επιτυχόντες Έτος 2012-2013", href: "/epityxontes/epityxontes-etos-2012-2013" },
-  { title: "Επιτυχόντες Έτος 2011-2012", href: "/epityxontes/epityxontes-etos-2011-2012" },
-];
+const availableStartYears = [
+  2025,
+  2024,
+  2023,
+  2016,
+  2015,
+  2014,
+  2013,
+  2012,
+  2011,
+  2006,
+  2005,
+  2004,
+  2003,
+  2002,
+  2000,
+  1999,
+  1998,
+  1997,
+  1996,
+  1995,
+  1994,
+  1993,
+  1992,
+] as const;
+
+export const successStories: SuccessStoryItem[] = availableStartYears.map((startYear) => ({
+  title: `Επιτυχόντες Έτος ${startYear}-${startYear + 1}`,
+  href: `/epityxontes/epityxontes-etos-${startYear}-${startYear + 1}`,
+}));
 
 export default successStories;
 
