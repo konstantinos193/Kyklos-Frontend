@@ -80,6 +80,7 @@ let _subjectGroups: SubjectGroup[] | null = null;
 function getMathFiles(): PanhellenicFile[] {
   if (!_mathFiles) {
     _mathFiles = [
+      { fileName: 'math_2025.pdf', displayName: 'Μαθηματικά 2025', subject: 'math', year: 2025, url: createFileUrl('math', 'math_2025.pdf') },
       { fileName: 'math_2024.pdf', displayName: 'Μαθηματικά 2024', subject: 'math', year: 2024, url: createFileUrl('math', 'math_2024.pdf') },
       { fileName: 'math_2023.pdf', displayName: 'Μαθηματικά 2023', subject: 'math', year: 2023, url: createFileUrl('math', 'math_2023.pdf') },
       { fileName: 'math_2022.pdf', displayName: 'Μαθηματικά 2022', subject: 'math', year: 2022, url: createFileUrl('math', 'math_2022.pdf') },
@@ -97,6 +98,7 @@ function getMathFiles(): PanhellenicFile[] {
 function getPhysicsFiles(): PanhellenicFile[] {
   if (!_physicsFiles) {
     _physicsFiles = [
+      { fileName: 'fusiki_2025.pdf', displayName: 'Φυσική 2025', subject: 'physics', year: 2025, url: createFileUrl('physics', 'fusiki_2025.pdf') },
       { fileName: 'fusiki_2024.pdf', displayName: 'Φυσική 2024', subject: 'physics', year: 2024, url: createFileUrl('physics', 'fusiki_2024.pdf') },
       { fileName: 'fusiki_2023.pdf', displayName: 'Φυσική 2023', subject: 'physics', year: 2023, url: createFileUrl('physics', 'fusiki_2023.pdf') },
       { fileName: 'fusiki_2022.pdf', displayName: 'Φυσική 2022', subject: 'physics', year: 2022, url: createFileUrl('physics', 'fusiki_2022.pdf') },
@@ -114,6 +116,7 @@ function getPhysicsFiles(): PanhellenicFile[] {
 function getXimiaFiles(): PanhellenicFile[] {
   if (!_ximiaFiles) {
     _ximiaFiles = [
+      { fileName: 'ximeia_2025.pdf', displayName: 'Χημεία 2025', subject: 'ximia', year: 2025, url: createFileUrl('ximia', 'ximeia_2025.pdf') },
       { fileName: 'ximeia_2024.pdf', displayName: 'Χημεία 2024', subject: 'ximia', year: 2024, url: createFileUrl('ximia', 'ximeia_2024.pdf') },
       { fileName: 'ximeia_2023.pdf', displayName: 'Χημεία 2023', subject: 'ximia', year: 2023, url: createFileUrl('ximia', 'ximeia_2023.pdf') },
       { fileName: 'ximeia_2022.pdf', displayName: 'Χημεία 2022', subject: 'ximia', year: 2022, url: createFileUrl('ximia', 'ximeia_2022.pdf') },
