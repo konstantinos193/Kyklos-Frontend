@@ -32,7 +32,8 @@ export const footerData: FooterData = {
     { name: "TikTok", href: "https://www.tiktok.com/@frontistirio_kyklos_1990?_t=ZN-8zYFeNjMcNi&_r=1", icon: null }
   ],
   legal: {
-    copyright: "© 2025 adinfiinity. All rights reserved.",
+    // Additional trailing legal text; year and domain are handled dynamically in the component
+    copyright: "All rights reserved.",
     termsHref: "/terms",
     privacyHref: "/privacy"
   }

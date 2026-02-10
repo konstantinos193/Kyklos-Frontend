@@ -1,5 +1,23 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { AboutBanner } from "@/components/about/about-banner";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo-utils";
+
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Επικαιρότητα Εκπαίδευσης | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+  description:
+    "Εκπαιδευτικά νέα, ανακοινώσεις από σχολεία και πανεπιστήμια και ενημέρωση για την επικαιρότητα στην εκπαίδευση από το φροντιστήριο ΚΥΚΛΟΣ στην Άρτα.",
+  keywords: [
+    "επικαιρότητα εκπαίδευση",
+    "εκπαιδευτικά νέα",
+    "πανεπιστήμια νέα",
+    "φροντιστήριο άρτα",
+    "φροντιστήρια άρτα",
+    "κυκλος φροντιστηριο",
+  ],
+  path: "/current-affairs",
+  type: "website",
+});
 
 export default function CurrentAffairsPage() {
   const categories = [

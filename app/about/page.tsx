@@ -5,15 +5,26 @@ import { AboutMissionVision } from "@/components/about/about-mission-vision";
 import { AboutStaff } from "@/components/about/about-staff";
 import { AboutValues } from "@/components/about/about-values";
 import { AboutSection } from "@/components/about-section";
-import { generateMetadata as generateSEOMetadata, generateWebPageSchema, generateBreadcrumbSchema, generateOrganizationSchema } from "@/lib/seo-utils";
+import {
+  generateMetadata as generateSEOMetadata,
+  generateWebPageSchema,
+  generateBreadcrumbSchema,
+  generateOrganizationSchema,
+} from "@/lib/seo-utils";
 
 export const metadata = generateSEOMetadata({
-  title: "Σχετικά με εμάς | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
-  description: "Γνωρίστε το ΚΥΚΛΟΣ Φροντιστήριο στην Άρτα! 30+ χρόνια εμπειρίας στην εκπαίδευση, 95% επιτυχία στις Πανελλαδικές εξετάσεις. Εξειδικευμένοι καθηγητές, σύγχρονες εγκαταστάσεις και προσωποποιημένη προετοιμασία για Γυμνάσιο & Λύκειο.",
+  title: "Σχετικά με εμάς | Φροντιστήριο ΚΥΚΛΟΣ στην Άρτα",
+  description:
+    "Γνωρίστε το ΚΥΚΛΟΣ Φροντιστήριο στην Άρτα. Φροντιστήριο μέσης εκπαίδευσης με 30+ χρόνια εμπειρίας, 95% επιτυχία στις Πανελλαδικές και δεκάδες επιτυχόντες από τα φροντιστήρια στην Άρτα.",
   keywords: [
     "σχετικά με εμάς",
-    "φροντιστήριο άρτα ιστορία",
+    "φροντιστήριο άρτα",
+    "φροντιστηρια αρτα",
+    "φροντιστήρια άρτα",
+    "φροντηστηρια αρτα",
     "φροντιστήριο κύκλος άρτα",
+    "κυκλος φροντιστηριο",
+    "κυκλοσ φροντιστηριο",
     "εμπειρία φροντιστηρίου",
     "καθηγητές φροντιστηρίου άρτα",
     "εγκαταστάσεις φροντιστηρίου",
@@ -21,9 +32,7 @@ export const metadata = generateSEOMetadata({
     "εκπαιδευτική φιλοσοφία",
     "στόχοι φροντιστηρίου",
     "ιστορία φροντιστηρίου άρτα",
-    "φροντιστήριο άρτα",
-    "μαθησιακό κέντρο",
-    "εκπαίδευση άρτα"
+    "εκπαίδευση άρτα",
   ],
   path: "/about",
   type: "website",
