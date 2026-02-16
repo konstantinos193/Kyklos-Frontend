@@ -1,0 +1,21 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📞 General Support
+    url: https://kyklosedu.gr/contact
+    about: For general questions about ΚΥΚΛΟΣ Εκπαίδευση, please visit our contact page
+    
+  - name: 🎓 Educational Inquiries
+    url: mailto:info@kyklosedu.gr
+    about: For questions about courses, enrollment, or educational programs
+    
+  - name: 🐛 Bug Reports
+    url: https://github.com/konstantinos193/Kyklos-Frontend/issues/new?assignees=&labels=bug&template=bug_report.md
+    about: Report a bug or technical issue with the website
+    
+  - name: ✨ Feature Requests
+    url: https://github.com/konstantinos193/Kyklos-Frontend/issues/new?assignees=&labels=enhancement&template=feature_request.md
+    about: Suggest a new feature or improvement
+    
+  - name: 🔒 Security Issues
+    url: mailto:security@kyklosedu.gr
+    about: For security vulnerabilities or concerns (please report privately)

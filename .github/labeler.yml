@@ -1,0 +1,169 @@
+# Automatic labeling configuration
+# Based on file paths and content in issues and PRs
+
+# Bug reports
+bug:
+  - "**/bug_report.md"
+  - "bug:"
+  - "fix:"
+  - "issue:"
+  - "problem:"
+  - "error:"
+  - "broken:"
+  - "doesn't work:"
+
+# Feature requests
+enhancement:
+  - "**/feature_request.md"
+  - "feat:"
+  - "feature:"
+  - "enhancement:"
+  - "add:"
+  - "implement:"
+  - "new:"
+
+# Documentation
+documentation:
+  - "**/*.md"
+  - "**/docs/**"
+  - "docs:"
+  - "documentation:"
+  - "readme:"
+  - "guide:"
+
+# Dependencies
+dependencies:
+  - "**/package.json"
+  - "**/package-lock.json"
+  - "**/pnpm-lock.yaml"
+  - "**/yarn.lock"
+  - "deps:"
+  - "dependency:"
+  - "npm:"
+  - "yarn:"
+  - "pnpm:"
+
+# UI/UX
+ui:
+  - "**/components/**"
+  - "**/styles/**"
+  - "**/*.css"
+  - "**/*.scss"
+  - "**/*.module.css"
+  - "ui:"
+  - "design:"
+  - "frontend:"
+  - "interface:"
+
+# Backend/Server
+backend:
+  - "**/api/**"
+  - "**/lib/**"
+  - "**/server/**"
+  - "api:"
+  - "server:"
+  - "backend:"
+  - "database:"
+
+# Configuration
+configuration:
+  - "**/*.config.*"
+  - "**/.*rc*"
+  - "**/.env*"
+  - "config:"
+  - "setup:"
+  - "install:"
+
+# Testing
+testing:
+  - "**/*.test.*"
+  - "**/*.spec.*"
+  - "**/__tests__/**"
+  - "**/test/**"
+  - "test:"
+  - "testing:"
+  - "coverage:"
+
+# Performance
+performance:
+  - "performance:"
+  - "optimize:"
+  - "speed:"
+  - "slow:"
+  - "fast:"
+  - "cache:"
+
+# Security
+security:
+  - "**/SECURITY.md"
+  - "security:"
+  - "vulnerability:"
+  - "auth:"
+  - "permission:"
+  - "secure:"
+
+# Accessibility
+accessibility:
+  - "a11y:"
+  - "accessibility:"
+  - "screen reader:"
+  - "keyboard:"
+  - "wcag:"
+
+# Mobile
+mobile:
+  - "mobile:"
+  - "responsive:"
+  - "phone:"
+  - "tablet:"
+  - "touch:"
+
+# Internationalization
+i18n:
+  - "**/i18n/**"
+  - "**/locales/**"
+  - "**/lang/**"
+  - "i18n:"
+  - "translation:"
+  - "locale:"
+  - "greek:"
+  - "english:"
+
+# Priority labels
+priority/high:
+  - "urgent:"
+  - "critical:"
+  - "high priority:"
+  - "asap:"
+
+priority/medium:
+  - "medium priority:"
+  - "normal:"
+  - "regular:"
+
+priority/low:
+  - "low priority:"
+  - "nice to have:"
+  - "minor:"
+  - "optional:"
+
+# Size labels
+size/XL:
+  - "xl:"
+  - "extra large:"
+  - "huge:"
+
+size/L:
+  - "l:"
+  - "large:"
+  - "big:"
+
+size/M:
+  - "m:"
+  - "medium:"
+  - "normal:"
+
+size/S:
+  - "s:"
+  - "small:"
+  - "tiny:"

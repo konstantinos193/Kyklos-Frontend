@@ -1,0 +1,54 @@
+name: Welcome New Contributors
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      
+    steps:
+    - uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        issue-message: |
+          🎓 Welcome to ΚΥΚΛΟΣ Εκπαίδευση!
+          
+          Thank you for opening your first issue! We're excited to have you contribute to our Greek language education platform.
+          
+          📋 What happens next:
+          - Our team will review your issue shortly
+          - We may ask for additional information if needed
+          - We'll label the issue appropriately for tracking
+          
+          🤝 Want to contribute more?
+          - Check out our [contributing guidelines](../CONTRIBUTING.md)
+          - Look at [good first issues](../issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+          - Join our discussions
+          
+          🇬🇷 Σας ευχαριστούμε για τη συνεισφορά σας!
+          
+        pr-message: |
+          🎓 Welcome to ΚΥΚΛΟΣ Εκπαίδευση!
+          
+          Thank you for your first pull request! We appreciate you taking the time to contribute to our Greek language education platform.
+          
+          📋 What happens next:
+          - Automated checks will run on your PR
+          - Our team will review your changes
+          - We may request changes or ask questions
+          - Once approved, we'll merge your contribution
+          
+          ✨ Before we proceed:
+          - Make sure you've read our [contributing guidelines](../CONTRIBUTING.md)
+          - Ensure your code follows our style guidelines
+          - Test your changes thoroughly
+          
+          🤝 Thank you for helping us improve Greek education!
+          🇬🇷 Σας ευχαριστούμε για τη συνεισφορά σας!
