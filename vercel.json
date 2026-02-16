@@ -1,0 +1,5 @@
+{
+  "buildCommand": "yarn build --webpack",
+  "installCommand": "yarn install",
+  "framework": "nextjs"
+}

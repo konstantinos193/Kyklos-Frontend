@@ -18,10 +18,22 @@ const nextConfig = {
       },
     ]
   },
+  // Force HTTPS and handle redirects properly
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains',
+          },
+        ],
+      },
+    ]
+  },
   turbopack: {
-    resolveAlias: {
-      canvas: canvasStubPath,
-    },
+    root: process.cwd(),
   },
   // experimental: {
   //   turbopackFileSystemCacheForDev: true, // Disabled due to Windows compatibility issues

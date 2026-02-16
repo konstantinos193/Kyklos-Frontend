@@ -4,6 +4,7 @@ import { AboutBanner } from "@/components/about/about-banner";
 import { useBlogPosts } from "@/hooks/use-blog";
 import { BlogCard } from "@/components/blog/blog-card";
 import { useState } from "react";
+import { generateBreadcrumbSchema, generateWebPageSchema } from "@/lib/seo-utils";
 
 export default function BlogPage() {
   const [page, setPage] = useState(1);
@@ -14,8 +15,37 @@ export default function BlogPage() {
     search: searchTerm || undefined 
   });
 
+  // Structured data
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Αρχική", url: "/" },
+    { name: "Blog", url: "/blog" },
+  ]);
+
+  const webPageSchema = generateWebPageSchema({
+    name: "Blog | ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
+    description: "Διαβάστε τα τελευταία άρθρα και νέα από το ΚΥΚΛΟΣ Φροντιστήριο στην Άρτα. Εκπαιδευτικό υλικό, συμβουλές για τις πανελλήνιες εξετάσεις και νέα για τον εκπαιδευτικό τομέα.",
+    url: "/blog",
+    breadcrumb: [
+      { name: "Αρχική", url: "/" },
+      { name: "Blog", url: "/blog" },
+    ],
+  });
+
   return (
-    <main>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webPageSchema),
+        }}
+      />
+      <main>
       <AboutBanner
         title="Blog"
         backgroundImage={
@@ -23,6 +53,18 @@ export default function BlogPage() {
         }
         overlayOpacity={0.35}
       />
+
+      {/* Introduction */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-lg text-gray-600 leading-relaxed">
+            Καλώς ήρθατε στο blog του φροντηστηρίου ΚΥΚΛΟΣ! Εδώ θα βρείτε εκπαιδευτικά άρθρα, 
+            συμβουλές για τις πανελλήνιες εξετάσεις, νέα για τον εκπαιδευτικό τομέα και χρήσιμες πληροφορίες 
+            για μαθητές και γονείς. Η ομάδα των καθηγητών μας μοιράζεται την εμπειρία της για να σας βοηθήσει 
+            να πετύχετε τους εκπαιδευτικούς σας στόχους.
+          </p>
+        </div>
+      </section>
 
       {/* Search */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -96,13 +138,32 @@ export default function BlogPage() {
           </>
         ) : (
           <div className="text-center py-12">
-            <p className="text-gray-600">
+            <p className="text-gray-600 mb-4">
               {searchTerm ? "Δεν βρέθηκαν άρθρα για την αναζήτησή σας." : "Δεν υπάρχουν διαθέσιμα άρθρα αυτή τη στιγμή."}
             </p>
+            {!searchTerm && (
+              <div className="space-y-4">
+                <p className="text-gray-500">
+                  Εξερευνήστε τις ενότητες του φροντηστηρίου μας:
+                </p>
+                <div className="flex flex-wrap justify-center gap-3">
+                  <a href="/curriculum" className="inline-flex items-center px-4 py-2 bg-[#E7B109] text-white rounded-lg hover:bg-[#d4a008] transition-colors">
+                    Πρόγραμμα Σπουδών
+                  </a>
+                  <a href="/current-affairs" className="inline-flex items-center px-4 py-2 bg-[#CE3B49] text-white rounded-lg hover:bg-[#b83442] transition-colors">
+                    Επικαιρότητα
+                  </a>
+                  <a href="/contact" className="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                    Επικοινωνία
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </section>
     </main>
+    </>
   );
 }
 
