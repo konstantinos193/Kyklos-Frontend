@@ -4,13 +4,13 @@ import { HeroData } from "./types";
 export const heroData: HeroData = {
   slides: [],
   title: {
-    main: "ΚΥΚΛΟΣ Εκπαίδευση",
-    subtitle: "Εξειδικευμένο Φροντιστήριο για Γυμνάσιο & Λύκειο"
+    main: "ΚΥΚΛΟΣ Φροντιστήριο",
+    subtitle: "Κορυφαίο Φροντιστήριο στην Άρτα για Γυμνάσιο & Λύκειο"
   },
   description: {
     text: "Το ΚΥΚΛΟΣ Φροντιστήριο προσφέρει ποιοτική εκπαίδευση σε μαθητές Γυμνασίου και Λυκείου, με προετοιμασία για τις Πανελλαδικές εξετάσεις. Μαθήματα Ελληνικής Γλώσσας & Λογοτεχνίας με έμπειρους καθηγητές και σύγχρονες μεθόδους διδασκαλίας.",
     highlights: [
-      { text: "Γυμνασίου και Λυκείου", color: "text-[#E7B109]", weight: "font-semibold" },
+      { text: "Φροντιστήρια Άρτα", color: "text-[#E7B109]", weight: "font-semibold" },
       { text: "Πανελλαδικές εξετάσεις", color: "text-[#CF3B49]", weight: "font-semibold" },
       { text: "Ελληνικής Γλώσσας & Λογοτεχνίας", color: "text-[#E7B109]", weight: "font-semibold" }
     ]

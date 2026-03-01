@@ -20,7 +20,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  // Windows optimizations
+  // Mobile optimizations
   viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#1e40af" },
@@ -34,17 +34,17 @@ export const metadata: Metadata = {
     default: "ΚΥΚΛΟΣ Φροντιστήριο Άρτα",
     template: "%s | ΚΥΚΛΟΣ Φροντιστήριο Άρτα"
   },
-  description: "ΚΥΚΛΟΣ Φροντιστήριο στην Άρτα για Γυμνάσιο, Λύκειο & ΕΠΑΛ. Ολοκληρωμένη προετοιμασία για Πανελλαδικές εξετάσεις με υψηλά ποσοστά επιτυχίας.",
+  description: "ΚΥΚΛΟΣ Φροντιστήρια στην Άρτα. Εξειδικευμένα φροντιστήρια για Γυμνάσιο, Λύκειο & ΕΠΑΛ. Υψηλά ποσοστά επιτυχίας στις Πανελλαδικές εξετάσεις.",
   keywords: [
     // Top queries from Google Search Console (exact & close variants)
-    "φροντιστήριο",
-    "φροντιστήριο άρτα",
+    "κυκλοσ φροντηστηριο",
     "φροντιστηρια αρτα",
     "φροντιστήρια άρτα",
     "φροντηστηρια αρτα",
+    "φροντιστήριο",
+    "φροντιστήριο άρτα",
     "φροντιστήρια",
     "κυκλος φροντιστηριο",
-    "κυκλοσ φροντιστηριο",
     "κύκλος φροντιστήριο",
     // Existing long‑tail keywords
     "φροντιστήριο ελληνομάθεια άρτα",
@@ -191,9 +191,9 @@ export default function RootLayout({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
-    "name": "ΚΥΚΛΟΣ Εκπαίδευση",
-    "alternateName": "Φροντιστήριο Κύκλος",
-    "description": "Εξειδικευμένο φροντιστήριο Ελληνικής Γλώσσας & Λογοτεχνίας. 30+ έτη εμπειρίας, 95% επιτυχία, 500+ μαθητές.",
+    "name": "ΚΥΚΛΟΣ Φροντιστήριο",
+    "alternateName": "κυκλοσ φροντηστηριο",
+    "description": "Κορυφαίο φροντιστήριο στην Άρτα για Γυμνάσιο, Λύκειο & ΕΠΑΛ. 30+ έτη εμπειρίας, 95% επιτυχία, 500+ μαθητές.",
     "url": "https://kyklosedu.gr",
     "logo": "https://kyklosedu.gr/logo.png",
     "image": "https://kyklosedu.gr/logo.png",

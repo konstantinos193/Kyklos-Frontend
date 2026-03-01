@@ -10,6 +10,7 @@ import { Loader2, User, Key, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { getApiUrl } from '@/lib/api-url';
 import TokenManager from '@/lib/token-manager';
+import * as Sentry from "@sentry/nextjs";
 
 interface StudentLoginFormProps {
   onSuccess?: (student: any) => void;
@@ -24,71 +25,93 @@ export default function StudentLoginForm({ onSuccess, redirectTo }: StudentLogin
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!studentId.trim()) {
-      setError('Παρακαλώ εισαγάγετε τον κωδικό μαθητή');
-      return;
-    }
-
-    // Allow alphanumeric IDs like S12345, 2025-001, etc. Keep it permissive but length-checked
-    const idPattern = /^[A-Z0-9-]{3,20}$/i;
-    if (!idPattern.test(studentId)) {
-      setError('Μη έγκυρη μορφή κωδικού μαθητή. Επιτρέπονται γράμματα/αριθμοί και παύλες.');
-      return;
-    }
-
-    setIsLoading(true);
-    setError('');
-
-    try {
-      const response = await fetch(`${getApiUrl()}/api/auth/student-login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ studentId: studentId.trim() }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        // Handle error responses
-        setError(data.message || 'Μη έγκυρος κωδικός μαθητή. Ελέγξτε και δοκιμάστε ξανά.');
-        return;
-      }
-
-      if (data.success) {
-        toast({
-          title: "Καλώς ήρθατε!",
-          description: `${data.student.firstName} ${data.student.lastName}`,
-        });
-
-        // IMPORTANT: Clear any admin tokens to prevent cross-contamination
-        TokenManager.clearAdminTokens();
-        TokenManager.setStudentToken(data.token, data.student);
-
-        // Call success callback
-        if (onSuccess) {
-          onSuccess(data.student);
+    return Sentry.startSpan(
+      {
+        op: "ui.click",
+        name: "Student Login Form Submit",
+      },
+      async (span) => {
+        span.setAttribute("studentIdLength", studentId.length);
+        span.setAttribute("redirectTo", redirectTo || "/student/dashboard");
+        
+        e.preventDefault();
+        
+        if (!studentId.trim()) {
+          setError('Παρακαλώ εισαγάγετε τον κωδικό μαθητή');
+          return;
         }
 
-        // Redirect if specified - use window.location.replace to prevent back button issues
-        if (redirectTo) {
-          window.location.replace(redirectTo);
-        } else {
-          // Default redirect to student dashboard
-          window.location.replace('/student/dashboard');
+        // Allow alphanumeric IDs like S12345, 2025-001, etc. Keep it permissive but length-checked
+        const idPattern = /^[A-Z0-9-]{3,20}$/i;
+        if (!idPattern.test(studentId)) {
+          setError('Μη έγκυρη μορφή κωδικού μαθητή. Επιτρέπονται γράμματα/αριθμοί και παύλες.');
+          return;
         }
-      } else {
-        setError(data.message || 'Μη έγκυρος κωδικός μαθητή. Ελέγξτε και δοκιμάστε ξανά.');
+
+        setIsLoading(true);
+        setError('');
+
+        try {
+          const response = await Sentry.startSpan(
+            {
+              op: "http.client",
+              name: `POST ${getApiUrl()}/api/auth/student-login`,
+            },
+            async () => {
+              return await fetch(`${getApiUrl()}/api/auth/student-login`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ studentId: studentId.trim() }),
+              });
+            }
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            // Handle error responses
+            setError(data.message || 'Μη έγκυρος κωδικός μαθητή. Ελέγξτε και δοκιμάστε ξανά.');
+            return;
+          }
+
+          if (data.success) {
+            span.setAttribute("loginSuccess", true);
+            toast({
+              title: "Καλώς ήρθατε!",
+              description: `${data.student.firstName} ${data.student.lastName}`,
+            });
+
+            // IMPORTANT: Clear any admin tokens to prevent cross-contamination
+            TokenManager.clearAdminTokens();
+            TokenManager.setStudentToken(data.token, data.student);
+
+            // Call success callback
+            if (onSuccess) {
+              onSuccess(data.student);
+            }
+
+            // Redirect if specified - use window.location.replace to prevent back button issues
+            if (redirectTo) {
+              window.location.replace(redirectTo);
+            } else {
+              // Default redirect to student dashboard
+              window.location.replace('/student/dashboard');
+            }
+          } else {
+            span.setAttribute("loginSuccess", false);
+            setError(data.message || 'Μη έγκυρος κωδικός μαθητή. Ελέγξτε και δοκιμάστε ξανά.');
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          Sentry.captureException(error);
+          setError('Δεν ήταν δυνατή η σύνδεση με τον διακομιστή. Δοκιμάστε αργότερα.');
+        } finally {
+          setIsLoading(false);
+        }
       }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError('Δεν ήταν δυνατή η σύνδεση με τον διακομιστή. Δοκιμάστε αργότερα.');
-    } finally {
-      setIsLoading(false);
-    }
+    );
   };
 
   const handleIdChange = (value: string) => {
