@@ -34,7 +34,7 @@ jobs:
       run: npm run type-check
       
     - name: Bundle size check
-      uses: preactjs/compressed-size-action@v2
+      uses: preactjs/compressed-size-action@v3
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
         exclude: "{**/*.test.{js,ts,tsx},**/*.stories.{js,ts,tsx}}"
